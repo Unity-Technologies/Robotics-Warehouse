@@ -61,6 +61,7 @@ public class WarehouseManager : MonoBehaviour
             m_horizontal = ParamReader.appParams.m_horizontal;
             m_numBots = ParamReader.appParams.m_numBots;
             m_dropoff = ParamReader.appParams.m_dropoff;
+            m_floorType = (FloorType)Enum.Parse(typeof(FloorType), ParamReader.appParams.m_floorType);
             m_lighting = (LightingType)Enum.Parse(typeof(LightingType), ParamReader.appParams.m_lighting);
             m_percentLight = ParamReader.appParams.m_percentLight;
             m_quitAfterSeconds = ParamReader.appParams.m_quitAfterSeconds;
@@ -438,7 +439,7 @@ public class WarehouseManager : MonoBehaviour
         param.m_horizontal = m_horizontal;
         param.m_numBots = m_numBots;
         param.m_dropoff = m_dropoff;
-        param.m_floorType = m_floorType;
+        param.m_floorType = m_floorType.ToString();
         param.m_lighting = m_lighting.ToString();
         param.m_generateFloorBoxes = m_generateFloorBoxes;
         param.m_generateFloorDebris = m_generateFloorDebris;

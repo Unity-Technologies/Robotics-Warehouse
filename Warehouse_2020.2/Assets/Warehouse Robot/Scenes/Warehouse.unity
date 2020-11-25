@@ -295,8 +295,8 @@ MonoBehaviour:
   m_dropoff: 3
   m_floorType: 0
   m_lighting: 2
-  m_generateFloorBoxes: 0
-  m_generateFloorDebris: 1
+  m_generateFloorBoxes: 0.61
+  m_generateFloorDebris: 0.074
   m_percentLight: 1
   m_quitAfterSeconds: 120
 --- !u!4 &365455498

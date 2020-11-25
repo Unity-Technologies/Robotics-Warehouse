@@ -32,11 +32,14 @@ public class ParamGenerator : EditorWindow {
     private bool _vertical;
     private string _numbots;
     private string _dropoff;
+    private FloorType _floorType;
     private bool _light_randomized;
     private bool _light_morning;
     private bool _light_afternoon;
     private bool _light_evening;
     private bool _light_none;
+    private string _generateFloorBoxes;
+    private string _generateFloorDebris;
     private string _percentLight;
 
     private int _quitAfterSeconds;
@@ -49,6 +52,8 @@ public class ParamGenerator : EditorWindow {
     private List<string> _numbots_parsed;
     private List<string> _dropoff_parsed;
     private List<string> _light_parsed;
+    private List<string> _generateFloorBoxes_parsed;
+    private List<string> _generateFloorDebris_parsed;
     private List<string> _percentLight_parsed;
 
 	private Rect _rectButtonGen;
@@ -184,7 +189,7 @@ public class ParamGenerator : EditorWindow {
 		Event e = Event.current;
 
 		// Control buttons
-		_rectButtonGen = new Rect(new Vector2(10, 325), new Vector2(200, 50));
+		_rectButtonGen = new Rect(new Vector2(10, 400), new Vector2(200, 50));
         
 		DrawButtons();
         _width = EditorGUILayout.TextField("Width of warehouse", _width);
@@ -195,11 +200,14 @@ public class ParamGenerator : EditorWindow {
         _vertical = EditorGUILayout.ToggleLeft("Vertical shelf layout?", _vertical);
         _numbots = EditorGUILayout.TextField("Number of bots", _numbots);
         _dropoff = EditorGUILayout.TextField("Number of dropoff stations on each wall", _dropoff);
+        _floorType = (FloorType)EditorGUILayout.EnumPopup("Floor Type", _floorType);
         _light_morning = EditorGUILayout.ToggleLeft("Morning lighting", _light_morning);
         _light_afternoon = EditorGUILayout.ToggleLeft("Afternoon lighting", _light_afternoon);
         _light_evening = EditorGUILayout.ToggleLeft("Evening lighting", _light_evening);
         _light_randomized = EditorGUILayout.ToggleLeft("Randomized lighting", _light_randomized);
         _light_none = EditorGUILayout.ToggleLeft("No lighting", _light_none);
+        _generateFloorBoxes = EditorGUILayout.TextField("% chance to generate floor box", _generateFloorBoxes);
+        _generateFloorDebris = EditorGUILayout.TextField("Density of floor debris", _generateFloorDebris);
         _percentLight = EditorGUILayout.TextField("% of ceiling lights on", _percentLight);
         _quitAfterSeconds = EditorGUILayout.IntSlider("quitAfterSeconds", _quitAfterSeconds, 30, 600);
 	}
@@ -299,9 +307,11 @@ public class ParamGenerator : EditorWindow {
 
         _numbots_parsed = _numbots.Split(',').ToList();
         _dropoff_parsed = _dropoff.Split(',').ToList();
+        _generateFloorBoxes_parsed = _generateFloorBoxes.Split(',').ToList();
+        _generateFloorDebris_parsed = _generateFloorDebris.Split(',').ToList();
         _percentLight_parsed = _percentLight.Split(',').ToList();
 
-        return new List<List<string>>() { _width_parsed, _length_parsed, _rows_parsed, _cols_parsed, _horizontal_parsed, _numbots_parsed, _dropoff_parsed, _light_parsed, _percentLight_parsed };
+        return new List<List<string>>() { _width_parsed, _length_parsed, _rows_parsed, _cols_parsed, _horizontal_parsed, _numbots_parsed, _dropoff_parsed, _light_parsed, _generateFloorBoxes_parsed, _generateFloorDebris_parsed, _percentLight_parsed };
     }
 
     private AppParam AssignValues(List<string> lists){
@@ -313,8 +323,12 @@ public class ParamGenerator : EditorWindow {
         tmp.m_horizontal = bool.Parse(lists[4]);
         tmp.m_numBots = int.Parse(lists[5]);
         tmp.m_dropoff = int.Parse(lists[6]);
+        // tmp.m_floorType = Enum.Parse(typeof(FloorType), lists[7]).ToString();
+        tmp.m_floorType = _floorType.ToString();
         tmp.m_lighting = Enum.Parse(typeof(LightingType), lists[7]).ToString();
         tmp.m_percentLight = float.Parse(lists[8]);
+        tmp.m_generateFloorBoxes = float.Parse(lists[9]);
+        tmp.m_generateFloorDebris = float.Parse(lists[10]);
         tmp.m_quitAfterSeconds = _quitAfterSeconds;
         
         return tmp;

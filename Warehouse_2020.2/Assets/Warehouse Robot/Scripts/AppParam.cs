@@ -12,7 +12,7 @@ public class AppParam
     public bool m_horizontal = true;
     public int m_numBots = 3;
     public int m_dropoff = 10;
-    public FloorType m_floorType = FloorType.PolishedCement;
+    public string m_floorType = "PolishedCement";
     public string m_lighting = "Afternoon";
     public float m_generateFloorBoxes = 0f;
     public float m_generateFloorDebris = 0f;
