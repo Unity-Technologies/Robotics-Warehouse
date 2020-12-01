@@ -7,7 +7,7 @@ PhysicMaterial:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PolishedCement
-  dynamicFriction: 0.42
+  dynamicFriction: 0.4
   staticFriction: 0.4
   bounciness: 0.5
   frictionCombine: 0

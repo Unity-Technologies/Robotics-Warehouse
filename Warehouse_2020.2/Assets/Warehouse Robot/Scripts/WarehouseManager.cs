@@ -38,9 +38,11 @@ public class WarehouseManager : MonoBehaviour
     public FloorType m_floorType;
     public LightingType m_lighting = LightingType.Afternoon;
     [Range(0.0f, 1.0f)]
-    public float m_generateFloorBoxes;
+    public float m_generateFloorBoxes = 0.2f;
     [Range(0.0f, 1.0f)]
-    public float m_generateFloorDebris;
+    public float m_generateFloorDebris = 0.25f;
+    [Range(0.0f, 0.1f)]
+    public float m_debrisSize = 0.04f;
     [Range(0.0f, 1.0f)]
     public float m_percentLight = 0.0f;
     public int m_quitAfterSeconds = 60;
@@ -53,6 +55,14 @@ public class WarehouseManager : MonoBehaviour
     readonly Quaternion _vRot = Quaternion.identity;
     readonly Quaternion _hRot = Quaternion.Euler(0, 90, 0);
     const float _pathHeight = 0.0001f;
+
+    void Awake(){
+        if (!m_botOn) {
+            Destroy(GameObject.FindWithTag("Robot"));
+            m_numBots = 0;
+        }
+        else Destroy(GameObject.FindWithTag("MainCamera"));
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -67,48 +77,50 @@ public class WarehouseManager : MonoBehaviour
             m_dropoff = ParamReader.appParams.m_dropoff;
             m_floorType = (FloorType)Enum.Parse(typeof(FloorType), ParamReader.appParams.m_floorType);
             m_lighting = (LightingType)Enum.Parse(typeof(LightingType), ParamReader.appParams.m_lighting);
+            m_generateFloorBoxes = ParamReader.appParams.m_generateFloorBoxes;
+            m_generateFloorDebris = ParamReader.appParams.m_generateFloorDebris;
+            m_debrisSize = ParamReader.appParams.m_debrisSize;
             m_percentLight = ParamReader.appParams.m_percentLight;
             m_quitAfterSeconds = ParamReader.appParams.m_quitAfterSeconds;
         }
-
-        if (!m_botOn) Destroy(GameObject.FindWithTag("Robot"));
-        else Destroy(GameObject.FindWithTag("MainCamera"));
 
         GenerateWarehouse();
 
         var shelves = GenerateShelves();
         var sleepPos = GenerateSleepPosition();
 
-        // Spawn bots
-        for (int i = 1; i < m_numBots; i++){
-            Instantiate(m_botPrefab, Vector3.zero, Quaternion.identity);
-        }
-
-        // Assign robot goals
-        var bots = new List<GameObject>(GameObject.FindGameObjectsWithTag("Robot"));
-
-        if (bots.Count > sleepPos.Count){
-            Debug.LogError("Too many bots for width of warehouse!");
-        }
-
         var waypoints = GenerateWaypoints();
         GenerateRandomBoxes(waypoints);
         _dropoffs = GenerateDropoff(_paths);
 
-        foreach (var go in bots) {
-            var b = go.GetComponent<RobotAgent>();
+        // Spawn bots
+        if (m_botOn){
+            for (int i = 1; i < m_numBots; i++){
+                Instantiate(m_botPrefab, Vector3.zero, Quaternion.identity);
+            }
 
-            if (sleepPos.Count > 0){
-                // Set spawn/end location
-                int station = UnityEngine.Random.Range(0, sleepPos.Count);
-                b.SetSpawn(sleepPos[station]);
+            // Assign robot goals
+            var bots = new List<GameObject>(GameObject.FindGameObjectsWithTag("Robot"));
 
-                // Set values
-                b.SetDropoffs(_dropoffs);
-                b.SetShelves(shelves);
+            if (bots.Count > sleepPos.Count){
+                Debug.LogError("Too many bots for width of warehouse!");
+            }
 
-                // Don't allow bots to have the same location
-                sleepPos.RemoveAt(station);
+            foreach (var go in bots) {
+                var b = go.GetComponent<RobotAgent>();
+
+                if (sleepPos.Count > 0){
+                    // Set spawn/end location
+                    int station = UnityEngine.Random.Range(0, sleepPos.Count);
+                    b.SetSpawn(sleepPos[station]);
+
+                    // Set values
+                    b.SetDropoffs(_dropoffs);
+                    b.SetShelves(shelves);
+
+                    // Don't allow bots to have the same location
+                    sleepPos.RemoveAt(station);
+                }
             }
         }
 
@@ -191,7 +203,7 @@ public class WarehouseManager : MonoBehaviour
         var floorPos = floorTile.localPosition;
 
         for(int i = 0; i < (int)(m_generateFloorDebris * 100); i++){
-            var pos = new Vector3(floorPos.x + Random.Range(-minDist,minDist), floorPos.y + 0.5f, floorPos.z + Random.Range(-minDist,minDist));
+            var pos = new Vector3(floorPos.x + Random.Range(-minDist,minDist), floorPos.y + 0.75f, floorPos.z + Random.Range(-minDist,minDist));
 
             var randShape = Random.Range(0, 4);
             GameObject obj;
@@ -213,7 +225,7 @@ public class WarehouseManager : MonoBehaviour
                     break;
                 
             }
-            obj.transform.localScale = new Vector3(0.04f, 0.04f, 0.04f);
+            obj.transform.localScale = new Vector3(Random.Range(0.005f, m_debrisSize), Random.Range(0.005f, m_debrisSize), Random.Range(0.005f, m_debrisSize));
             obj.transform.parent = _parentDebris;
             obj.transform.position = pos;
             obj.transform.rotation = Random.rotation;
@@ -363,6 +375,8 @@ public class WarehouseManager : MonoBehaviour
         var shelfParent = new GameObject("Shelves").transform;
         var pathParent = new GameObject("Paths").transform;
 
+        if (!m_botOn) m_roadPrefab = new GameObject("PathLocation");
+
         for (var i = 1; i < m_cols + 1; i++){
             bool colPath = false;
             for (var j = 1; j < m_rows + 1; j++){
@@ -376,13 +390,13 @@ public class WarehouseManager : MonoBehaviour
                 if (!colPath && i < m_cols){
                     v = Instantiate(m_roadPrefab, new Vector3(o.transform.position.x + (c/2), _pathHeight, 0), _vRot, pathParent);
                     v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, m_length / 10f);
-                    v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+                    if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
                     _paths.Add(v);
                     colPath = true;
                 }
                 if (i == 1 && j < m_rows){
                     h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, o.transform.position.z + (r/2)), _hRot, pathParent);
-                    h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+                    if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
                     h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, m_width / 10f);
                     _paths.Add(h);
                 }
@@ -393,27 +407,27 @@ public class WarehouseManager : MonoBehaviour
 
         // Station path
         h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, -(m_length / 2)), _hRot, pathParent);
-        h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
         h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, m_width / 10f);
 
         // First path
         v = Instantiate(m_roadPrefab, new Vector3(-(m_width / 2) + c/2, _pathHeight, 0), _vRot, pathParent);
-        v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
         v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, m_length / 10f);
         h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, -(m_length / 2) + r/2), _hRot, pathParent);
-        h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
         h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, m_width / 10f);
         _paths.Add(v);
         _paths.Add(h);
 
         // Last path
         v = Instantiate(m_roadPrefab, new Vector3(m_width / 2 - (c/2), _pathHeight, 0), _vRot, pathParent);
-        v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
         v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, m_length / 10f);
         h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, m_length /2 - (r/2)), _hRot, pathParent);
-        h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
         h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, m_width / 10f);
-        h.GetComponent<NavMeshSurface>().BuildNavMesh();
+        if (m_botOn) h.GetComponent<NavMeshSurface>().BuildNavMesh();
         _paths.Add(v);
         _paths.Add(h);
 
@@ -450,6 +464,7 @@ public class WarehouseManager : MonoBehaviour
         param.m_lighting = m_lighting.ToString();
         param.m_generateFloorBoxes = m_generateFloorBoxes;
         param.m_generateFloorDebris = m_generateFloorDebris;
+        param.m_debrisSize = m_debrisSize;
         param.m_percentLight = m_percentLight;
         param.m_quitAfterSeconds = m_quitAfterSeconds;
         

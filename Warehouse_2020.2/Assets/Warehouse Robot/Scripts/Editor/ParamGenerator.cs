@@ -40,6 +40,7 @@ public class ParamGenerator : EditorWindow {
     private bool _light_none;
     private string _generateFloorBoxes;
     private string _generateFloorDebris;
+    private string _debrisSize;
     private string _percentLight;
 
     private int _quitAfterSeconds;
@@ -54,6 +55,7 @@ public class ParamGenerator : EditorWindow {
     private List<string> _light_parsed;
     private List<string> _generateFloorBoxes_parsed;
     private List<string> _generateFloorDebris_parsed;
+    private List<string> _debrisSize_parsed;
     private List<string> _percentLight_parsed;
 
 	private Rect _rectButtonGen;
@@ -208,6 +210,7 @@ public class ParamGenerator : EditorWindow {
         _light_none = EditorGUILayout.ToggleLeft("No lighting", _light_none);
         _generateFloorBoxes = EditorGUILayout.TextField("% chance to generate floor box", _generateFloorBoxes);
         _generateFloorDebris = EditorGUILayout.TextField("Density of floor debris", _generateFloorDebris);
+        _debrisSize = EditorGUILayout.TextField("Max size of floor debris", _debrisSize);
         _percentLight = EditorGUILayout.TextField("% of ceiling lights on", _percentLight);
         _quitAfterSeconds = EditorGUILayout.IntSlider("quitAfterSeconds", _quitAfterSeconds, 30, 600);
 	}
@@ -309,9 +312,10 @@ public class ParamGenerator : EditorWindow {
         _dropoff_parsed = _dropoff.Split(',').ToList();
         _generateFloorBoxes_parsed = _generateFloorBoxes.Split(',').ToList();
         _generateFloorDebris_parsed = _generateFloorDebris.Split(',').ToList();
+        _debrisSize_parsed = _debrisSize.Split(',').ToList();
         _percentLight_parsed = _percentLight.Split(',').ToList();
 
-        return new List<List<string>>() { _width_parsed, _length_parsed, _rows_parsed, _cols_parsed, _horizontal_parsed, _numbots_parsed, _dropoff_parsed, _light_parsed, _generateFloorBoxes_parsed, _generateFloorDebris_parsed, _percentLight_parsed };
+        return new List<List<string>>() { _width_parsed, _length_parsed, _rows_parsed, _cols_parsed, _horizontal_parsed, _numbots_parsed, _dropoff_parsed, _light_parsed, _percentLight_parsed, _generateFloorBoxes_parsed, _generateFloorDebris_parsed, _debrisSize_parsed };
     }
 
     private AppParam AssignValues(List<string> lists){
@@ -323,12 +327,12 @@ public class ParamGenerator : EditorWindow {
         tmp.m_horizontal = bool.Parse(lists[4]);
         tmp.m_numBots = int.Parse(lists[5]);
         tmp.m_dropoff = int.Parse(lists[6]);
-        // tmp.m_floorType = Enum.Parse(typeof(FloorType), lists[7]).ToString();
         tmp.m_floorType = _floorType.ToString();
         tmp.m_lighting = Enum.Parse(typeof(LightingType), lists[7]).ToString();
         tmp.m_percentLight = float.Parse(lists[8]);
         tmp.m_generateFloorBoxes = float.Parse(lists[9]);
         tmp.m_generateFloorDebris = float.Parse(lists[10]);
+        tmp.m_debrisSize = float.Parse(lists[11]);
         tmp.m_quitAfterSeconds = _quitAfterSeconds;
         
         return tmp;

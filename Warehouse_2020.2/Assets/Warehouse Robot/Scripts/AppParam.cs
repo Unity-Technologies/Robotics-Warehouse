@@ -15,7 +15,8 @@ public class AppParam
     public string m_floorType = "PolishedCement";
     public string m_lighting = "Afternoon";
     public float m_generateFloorBoxes = 0f;
-    public float m_generateFloorDebris = 0f;
+    public float m_generateFloorDebris = 0f; 
+    public float m_debrisSize = 0f; 
     public float m_percentLight = 1.0f;
     public int m_quitAfterSeconds = 60;
 
@@ -33,6 +34,7 @@ public class AppParam
                "\nm_lighting: " + m_lighting +
                "\nm_generateFloorBoxes: " + m_generateFloorBoxes +
                "\nm_generateFloorDebris: " + m_generateFloorDebris +
+               "\nm_debrisSize: " + m_debrisSize +
                "\nm_percentLight: " + m_percentLight +
                "\nm_quitAfterSeconds: " + m_quitAfterSeconds;
     }
