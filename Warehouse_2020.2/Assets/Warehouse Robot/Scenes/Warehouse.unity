@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebd4b9c9c0ac940ccbce976daeb1893e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_botOn: 0
   m_shelfPrefab: {fileID: 2320965680562459459, guid: 32ebf166e42304ddc80e0a743b25fb4f,
     type: 3}
   m_botPrefab: {fileID: 629419111111397101, guid: 45d093c7bf81e4ebfb12fff9b75a906d,
@@ -295,8 +296,8 @@ MonoBehaviour:
   m_dropoff: 3
   m_floorType: 0
   m_lighting: 2
-  m_generateFloorBoxes: 0.61
-  m_generateFloorDebris: 0.074
+  m_generateFloorBoxes: 0.485
+  m_generateFloorDebris: 0.728
   m_percentLight: 1
   m_quitAfterSeconds: 120
 --- !u!4 &365455498
@@ -330,11 +331,11 @@ GameObject:
   - component: {fileID: 1370472972}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1370472966
 MonoBehaviour:
   m_ObjectHideFlags: 0
