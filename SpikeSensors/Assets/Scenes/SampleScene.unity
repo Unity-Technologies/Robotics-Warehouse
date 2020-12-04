@@ -229,6 +229,8 @@ GameObject:
   - component: {fileID: 438634021}
   - component: {fileID: 438634020}
   - component: {fileID: 438634019}
+  - component: {fileID: 438634022}
+  - component: {fileID: 438634023}
   m_Layer: 0
   m_Name: RobotPose
   m_TagString: Untagged
@@ -243,14 +245,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438634018}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db04a3fd9240ceb479b0fb02323ecc03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ros: {fileID: 2054088334}
-  publishIntervalSeconds: 0.1
   topic: lidar
+  ros: {fileID: 2054088334}
+  publishIntervalSeconds: 1
   markerPrefab: {fileID: 5437047134283521934, guid: 374a97c433736934c92e63efb00c6654, type: 3}
 --- !u!114 &438634020
 MonoBehaviour:
@@ -264,9 +266,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3e2e7971cd87f4488efa5a8043a5ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  topic: pose
   ros: {fileID: 2054088334}
   publishIntervalSeconds: 0.1
-  topic: pose
 --- !u!4 &438634021
 Transform:
   m_ObjectHideFlags: 0
@@ -281,6 +283,44 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &438634022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438634018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50c0d38fa3b6430459564a83f5b9e212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: laser_scan
+  ros: {fileID: 2054088334}
+  time_between_scans: 0.1
+  min_range: 0
+  max_range: 1000
+  angle_deg_min: -45
+  angle_deg_max: 45
+  measurements_per_scan: 10
+  time_between_measurements: 0.01
+  markerPrefab: {fileID: 5437047134283521934, guid: 374a97c433736934c92e63efb00c6654, type: 3}
+--- !u!114 &438634023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438634018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 371b9a8b0f2172440967466798c7005a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: imu
+  ros: {fileID: 2054088334}
+  publishIntervalSeconds: 0.1
+  rb: {fileID: 1515105061}
 --- !u!1 &632536811
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,7 +713,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1515105059}
   m_LocalRotation: {x: -0, y: -0, z: 0.4344666, w: 0.900688}
-  m_LocalPosition: {x: -3.527, y: -2.103, z: -1.09}
+  m_LocalPosition: {x: -3.23, y: 7.74, z: 0.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -993,7 +1033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7acef0b79454c9b4dae3f8139bc4ba77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hostName: 192.168.99.4
+  hostName: 192.168.1.93
   hostPort: 10000
   overrideUnityIP: 
   unityPort: 5005

@@ -6,11 +6,12 @@ using ROSGeometry;
 
 public class FakeLidarSensor : IntervalPublisher
 {
-    public string topic;
+    protected override string RegisterMessageName => RosMessageTypes.Sensor.PointCloud.RosMessageName;
     List<RosMessageTypes.Geometry.Point32> collectedPoints = new List<RosMessageTypes.Geometry.Point32>();
     List<GameObject> markers = new List<GameObject>();
     List<GameObject> inactiveMarkers = new List<GameObject>();
     public GameObject markerPrefab;
+
     public override void DoPublish()
     {
         ros.Send(topic, new RosMessageTypes.Sensor.PointCloud(

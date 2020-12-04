@@ -5,7 +5,7 @@ using ROSGeometry;
 
 public class PoseSensor : IntervalPublisher
 {
-    public string topic;
+    protected override string RegisterMessageName => RosMessageTypes.Geometry.Transform.RosMessageName;
 
     public override void DoPublish()
     {

@@ -8,6 +8,11 @@ public class CollisionSensor : MonoBehaviour
     public ROSConnection ros;
     public string topic;
 
+    private void Start()
+    {
+        ros.RegisterPublisher(topic, RosMessageTypes.Geometry.Point32.RosMessageName);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.gameObject.CompareTag("Floor"))
