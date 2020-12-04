@@ -288,7 +288,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b33f0bc2b78db642a758f07826d0dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  labels: []
+  labels:
+  - column
 --- !u!1 &1241700020277550981
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,6 +346,11 @@ MonoBehaviour:
   - {fileID: 13400000, guid: 7636376f753df48f8b745c126edb4ae0, type: 2}
   - {fileID: 13400000, guid: 042127e5ad19a48afbec7d1aa440d766, type: 2}
   - {fileID: 13400000, guid: 22c3860751986467787eec50327bf6af, type: 2}
+  FloorTextures:
+  - {fileID: 2100000, guid: 71649fdce09f40a4c81a0768cf1f46f8, type: 2}
+  - {fileID: 2100000, guid: 89c8b91c56a71d946ad58f5ae4b77b2f, type: 2}
+  - {fileID: 2100000, guid: 34e9eeeed5ea5c2479eea302c9abb189, type: 2}
+  - {fileID: 2100000, guid: 5f1e510f8904a324ba99253c0e3c0bc2, type: 2}
 --- !u!1 &1842839636141511565
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,6 +554,7 @@ GameObject:
   - component: {fileID: 3917651732717746614}
   - component: {fileID: 1391010652848227892}
   - component: {fileID: 7317272735333458374}
+  - component: {fileID: 2746061800219343933}
   - component: {fileID: 4568134388391648251}
   m_Layer: 0
   m_Name: Wall
@@ -619,6 +626,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2746061800219343933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4948248006112660086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b33f0bc2b78db642a758f07826d0dd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labels:
+  - wall
+  - 
 --- !u!65 &4568134388391648251
 BoxCollider:
   m_ObjectHideFlags: 0

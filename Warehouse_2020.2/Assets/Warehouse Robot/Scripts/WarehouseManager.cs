@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 using Warehouse;
 
 namespace Warehouse {
-    public enum FloorType { PolishedCement, Hardwood, LowPlyCarpet, ShagCarpet }
+    public enum FloorType { PolishedCement, Hardwood, LowPileCarpet, HighPileCarpet }
     public enum LightingType { Randomized, Morning, Afternoon, Evening, None }
 }
 
@@ -43,6 +43,7 @@ public class WarehouseManager : MonoBehaviour
     public float m_generateFloorDebris = 0.25f;
     [Range(0.0f, 0.1f)]
     public float m_debrisSize = 0.04f;
+    public bool m_debrisKinematic = false;
     [Range(0.0f, 1.0f)]
     public float m_percentLight = 0.0f;
     public int m_quitAfterSeconds = 60;
@@ -203,7 +204,7 @@ public class WarehouseManager : MonoBehaviour
         var floorPos = floorTile.localPosition;
 
         for(int i = 0; i < (int)(m_generateFloorDebris * 100); i++){
-            var pos = new Vector3(floorPos.x + Random.Range(-minDist,minDist), floorPos.y + 0.75f, floorPos.z + Random.Range(-minDist,minDist));
+            var pos = new Vector3(floorPos.x + Random.Range(-minDist,minDist), floorPos.y + 0.01f, floorPos.z + Random.Range(-minDist,minDist));
 
             var randShape = Random.Range(0, 4);
             GameObject obj;
@@ -234,7 +235,7 @@ public class WarehouseManager : MonoBehaviour
             lab.labels.Add("debris");
 
             var rb = obj.AddComponent<Rigidbody>();
-
+            rb.isKinematic = m_debrisKinematic;
         }
     }
 
@@ -305,7 +306,8 @@ public class WarehouseManager : MonoBehaviour
         for (var i = 1; i < m_width / floorTileSize.x + 1; i++){
             for (var j = 1; j < m_length / floorTileSize.z + 1; j++){
                 var floor = Instantiate(floorTile, new Vector3(i * floorTileSize.x - (m_width / 2 + floorTileSize.x * 0.75f), 0, j * floorTileSize.z - (m_length / 2 + floorTileSize.z * 0.75f)), _vRot, parentTransform);
-                floor.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+                floor.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetPhysicMaterial(m_floorType);
+                floor.GetComponent<MeshRenderer>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
                 GenerateFloorDebris(floor.transform);
 
                 var ceiling = Instantiate(ceilingTile, new Vector3(floor.transform.position.x, wallTileSize.y, floor.transform.position.z), _vRot, parentTransform);
@@ -390,13 +392,13 @@ public class WarehouseManager : MonoBehaviour
                 if (!colPath && i < m_cols){
                     v = Instantiate(m_roadPrefab, new Vector3(o.transform.position.x + (c/2), _pathHeight, 0), _vRot, pathParent);
                     v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, m_length / 10f);
-                    if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+                    if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetPhysicMaterial(m_floorType);
                     _paths.Add(v);
                     colPath = true;
                 }
                 if (i == 1 && j < m_rows){
                     h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, o.transform.position.z + (r/2)), _hRot, pathParent);
-                    if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+                    if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetPhysicMaterial(m_floorType);
                     h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, m_width / 10f);
                     _paths.Add(h);
                 }
@@ -407,29 +409,31 @@ public class WarehouseManager : MonoBehaviour
 
         // Station path
         h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, -(m_length / 2)), _hRot, pathParent);
-        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetPhysicMaterial(m_floorType);
         h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, m_width / 10f);
 
         // First path
         v = Instantiate(m_roadPrefab, new Vector3(-(m_width / 2) + c/2, _pathHeight, 0), _vRot, pathParent);
-        if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetPhysicMaterial(m_floorType);
         v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, m_length / 10f);
         h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, -(m_length / 2) + r/2), _hRot, pathParent);
-        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetPhysicMaterial(m_floorType);
         h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, m_width / 10f);
         _paths.Add(v);
         _paths.Add(h);
 
         // Last path
         v = Instantiate(m_roadPrefab, new Vector3(m_width / 2 - (c/2), _pathHeight, 0), _vRot, pathParent);
-        if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) v.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetPhysicMaterial(m_floorType);
         v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, m_length / 10f);
         h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, m_length /2 - (r/2)), _hRot, pathParent);
-        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetMaterial(m_floorType);
+        if (m_botOn) h.GetComponent<BoxCollider>().material = m_warehousePrefab.GetComponent<ParameterSettings>().GetPhysicMaterial(m_floorType);
         h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, m_width / 10f);
         if (m_botOn) h.GetComponent<NavMeshSurface>().BuildNavMesh();
         _paths.Add(v);
         _paths.Add(h);
+
+        if (!m_botOn) Destroy(m_roadPrefab);
 
         return shelves;
     }
