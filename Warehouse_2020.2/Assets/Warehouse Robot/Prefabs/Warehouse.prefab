@@ -349,8 +349,8 @@ MonoBehaviour:
   FloorTextures:
   - {fileID: 2100000, guid: 71649fdce09f40a4c81a0768cf1f46f8, type: 2}
   - {fileID: 2100000, guid: 89c8b91c56a71d946ad58f5ae4b77b2f, type: 2}
-  - {fileID: 2100000, guid: 34e9eeeed5ea5c2479eea302c9abb189, type: 2}
-  - {fileID: 2100000, guid: 5f1e510f8904a324ba99253c0e3c0bc2, type: 2}
+  - {fileID: 2100000, guid: 95f0b7e66b2f741ccae9e9f3d48cae8c, type: 2}
+  - {fileID: 2100000, guid: 44c06f81b21274d0f998c8f5d822f863, type: 2}
 --- !u!1 &1842839636141511565
 GameObject:
   m_ObjectHideFlags: 0
