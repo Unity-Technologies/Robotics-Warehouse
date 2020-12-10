@@ -10,6 +10,7 @@ public class AppParam
     public int m_rows = 4;
     public int m_cols = 3;
     public bool m_horizontal = true;
+    public float m_maxShelfRotation = 0f;
     public int m_numBots = 3;
     public int m_dropoff = 10;
     public string m_floorType = "PolishedCement";
@@ -28,6 +29,7 @@ public class AppParam
                "\nm_rows: " + m_rows +
                "\nm_cols: " + m_cols +
                "\nm_horizontal: " + m_horizontal +
+               "\nm_maxShelfRotation: " + m_maxShelfRotation +
                "\nm_numBots: " + m_numBots +
                "\nm_dropoff: " + m_dropoff +
                "\nm_floorType: " + m_floorType +

@@ -292,6 +292,7 @@ MonoBehaviour:
   m_rows: 3
   m_cols: 5
   m_horizontal: 1
+  m_maxShelfRotation: 20
   m_numBots: 0
   m_dropoff: 3
   m_floorType: 0

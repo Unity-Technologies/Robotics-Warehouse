@@ -33,19 +33,16 @@ public class WarehouseManager : MonoBehaviour
     public int m_rows;
     public int m_cols;
     public bool m_horizontal;           // true if shelves aligned on X-axis
+    [Range(0.0f, 90.0f)] public float m_maxShelfRotation = 0f;
     public int m_numBots;
     public int m_dropoff;
     public FloorType m_floorType;
     public LightingType m_lighting = LightingType.Afternoon;
-    [Range(0.0f, 1.0f)]
-    public float m_generateFloorBoxes = 0.2f;
-    [Range(0.0f, 1.0f)]
-    public float m_generateFloorDebris = 0.25f;
-    [Range(0.0f, 0.1f)]
-    public float m_debrisSize = 0.04f;
+    [Range(0.0f, 1.0f)] public float m_generateFloorBoxes = 0.2f;
+    [Range(0.0f, 1.0f)] public float m_generateFloorDebris = 0.25f;
+    [Range(0.0f, 0.1f)] public float m_debrisSize = 0.04f;
     public bool m_debrisKinematic = false;
-    [Range(0.0f, 1.0f)]
-    public float m_percentLight = 0.0f;
+    [Range(0.0f, 1.0f)] public float m_percentLight = 0.0f;
     public int m_quitAfterSeconds = 60;
 
     NavMeshSurface _navmeshSurface;
@@ -74,6 +71,7 @@ public class WarehouseManager : MonoBehaviour
             m_rows = ParamReader.appParams.m_rows;
             m_cols = ParamReader.appParams.m_cols;
             m_horizontal = ParamReader.appParams.m_horizontal;
+            m_maxShelfRotation = ParamReader.appParams.m_maxShelfRotation;
             m_numBots = ParamReader.appParams.m_numBots;
             m_dropoff = ParamReader.appParams.m_dropoff;
             m_floorType = (FloorType)Enum.Parse(typeof(FloorType), ParamReader.appParams.m_floorType);
@@ -386,6 +384,7 @@ public class WarehouseManager : MonoBehaviour
                 if (m_horizontal){
                     o.transform.rotation = Quaternion.Euler(0, 90, 0);
                 }
+                o.transform.Rotate(0, Random.Range(-m_maxShelfRotation, m_maxShelfRotation), 0, Space.Self);
                 shelves.Add(o);
 
                 // need to instantiate only once per row and once per column
@@ -462,6 +461,7 @@ public class WarehouseManager : MonoBehaviour
         param.m_rows = m_rows;
         param.m_cols = m_cols;
         param.m_horizontal = m_horizontal;
+        param.m_maxShelfRotation = m_maxShelfRotation;
         param.m_numBots = m_numBots;
         param.m_dropoff = m_dropoff;
         param.m_floorType = m_floorType.ToString();
