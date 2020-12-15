@@ -40,12 +40,13 @@ public class WarehouseManager : MonoBehaviour
     public LightingType m_lighting = LightingType.Afternoon;
     [Range(0.0f, 1.0f)] public float m_generateFloorBoxes = 0.2f;
     [Range(0.0f, 1.0f)] public float m_generateFloorDebris = 0.25f;
-    [Range(0.0f, 0.1f)] public float m_debrisSize = 0.04f;
+    [Range(0.0f, 1.0f)] public float m_debrisSize = 0.04f;
     public bool m_debrisKinematic = false;
     [Range(0.0f, 1.0f)] public float m_percentLight = 0.0f;
     public int m_quitAfterSeconds = 60;
 
     NavMeshSurface _navmeshSurface;
+    GameObject _parentGenerated;
     GameObject _parentWarehouse;
     Transform _parentDebris;
     List<GameObject> _paths = new List<GameObject>();
@@ -55,6 +56,12 @@ public class WarehouseManager : MonoBehaviour
     const float _pathHeight = 0.0001f;
 
     void Awake(){
+        // If warehouse already exists, don't instantiate anything new
+        if (GameObject.Find("GeneratedWarehouse") != null){
+            Destroy(GameObject.FindWithTag("Robot"));
+            Destroy(this.gameObject);
+        }
+
         if (!m_botOn) {
             Destroy(GameObject.FindWithTag("Robot"));
             m_numBots = 0;
@@ -82,6 +89,8 @@ public class WarehouseManager : MonoBehaviour
             m_percentLight = ParamReader.appParams.m_percentLight;
             m_quitAfterSeconds = ParamReader.appParams.m_quitAfterSeconds;
         }
+        
+        _parentGenerated = new GameObject("GeneratedWarehouse");
 
         GenerateWarehouse();
 
@@ -181,6 +190,7 @@ public class WarehouseManager : MonoBehaviour
         cur = new Vector3(left, 0f, top + 2f);
 
         var parentDropoff = new GameObject("Dropoffs").transform;
+        parentDropoff.parent = _parentGenerated.transform;
 
         while (cur.x < right + pickC){
             var b = new GameObject("Dropoff").transform;
@@ -195,7 +205,10 @@ public class WarehouseManager : MonoBehaviour
     }
 
     private void GenerateFloorDebris(Transform floorTile){
-        if (_parentDebris == null) _parentDebris = new GameObject("Debris").transform;
+        if (_parentDebris == null) {
+            _parentDebris = new GameObject("Debris").transform;
+            _parentDebris.parent = _parentGenerated.transform;
+        }
 
         var dist = floorTile.GetComponent<Renderer>().bounds.size;
         var minDist = dist.x / 2 - 0.1f;
@@ -228,6 +241,7 @@ public class WarehouseManager : MonoBehaviour
             obj.transform.parent = _parentDebris;
             obj.transform.position = pos;
             obj.transform.rotation = Random.rotation;
+            obj.GetComponent<Renderer>().material = Resources.Load<Material>($"Materials/Debris");
 
             var lab = obj.AddComponent<Labeling>();
             lab.labels.Add("debris");
@@ -241,6 +255,7 @@ public class WarehouseManager : MonoBehaviour
         var boxPrefab0 = m_shelfPrefab.GetComponentInChildren<Shelve>().m_boxes[0];
         var boxPrefab1 = m_shelfPrefab.GetComponentInChildren<Shelve>().m_boxes[1];
         var parentBoxes = new GameObject("FloorBoxes").transform;
+        parentBoxes.parent = _parentGenerated.transform;
 
         float rand = Random.Range(0f, 1f);
 
@@ -300,6 +315,7 @@ public class WarehouseManager : MonoBehaviour
 
         if (_parentWarehouse == null) _parentWarehouse = new GameObject("Warehouse");
         var parentTransform = _parentWarehouse.transform;
+        parentTransform.parent = _parentGenerated.transform;
 
         for (var i = 1; i < m_width / floorTileSize.x + 1; i++){
             for (var j = 1; j < m_length / floorTileSize.z + 1; j++){
@@ -373,7 +389,9 @@ public class WarehouseManager : MonoBehaviour
         GameObject h;
 
         var shelfParent = new GameObject("Shelves").transform;
+        shelfParent.parent = _parentGenerated.transform;
         var pathParent = new GameObject("Paths").transform;
+        pathParent.parent = _parentGenerated.transform;
 
         if (!m_botOn) m_roadPrefab = new GameObject("PathLocation");
 
@@ -445,6 +463,7 @@ public class WarehouseManager : MonoBehaviour
         var cur = new Vector3(-m_width / 2, 0.0f, -m_length / 2);
 
         var parentStations = new GameObject("Stations").transform;
+        parentStations.parent = _parentGenerated.transform;
 
         while (cur.x < (m_width / 2) - botSize.x * 2){
             Instantiate(m_stationPrefab, new Vector3(cur.x, 0.0000001f, cur.z), Quaternion.identity, parentStations);

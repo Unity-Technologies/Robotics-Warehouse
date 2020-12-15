@@ -299,8 +299,8 @@ MonoBehaviour:
   m_lighting: 2
   m_generateFloorBoxes: 0.2
   m_generateFloorDebris: 0.25
-  m_debrisSize: 0.04
-  m_debrisKinematic: 1
+  m_debrisSize: 0.05
+  m_debrisKinematic: 0
   m_percentLight: 1
   m_quitAfterSeconds: 120
 --- !u!4 &365455498
