@@ -102,7 +102,6 @@ public class RobotAgent : MonoBehaviour
                     // remove box from robot, create one at dropoff
                     Destroy(transform.GetChild(0).gameObject);
                     var box = Instantiate(m_boxPhysics, new Vector3(_target.x, _target.y + 2f, _target.z + 1), Quaternion.identity);
-                    box.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
 
                     m_state = RobotState.ToShelf;
                     _targetShelf = _shelves[Random.Range(0, _shelves.Count)];
