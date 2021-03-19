@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,59 +8,70 @@ using RosSharp;
 namespace Unity.Simulation.Warehouse {
     public class RigidbodySpawner : MonoBehaviour
     {
-        public GameObject LocationPicker;
-        public GameObject m_box;
-        private Vector3 m_boxDims;
-        private int m_debrisSpawn;
-        private GameObject m_spawnedBoxes;
+        public GameObject locationPicker;
+        public GameObject box;
+        private Vector3 boxDims;
+        private int debrisSpawn;
+        private GameObject spawned;
+        private Bounds pickerArea;
 
         // Start is called before the first frame update
         void Start()
         {
-            HidePicker();
+            ShowPicker(false);
         }
 
-        public void SpawnBoxes(){
+        public void SpawnBoxes()
+        {
+            pickerArea = locationPicker.GetComponent<Renderer>().bounds;
             var boxIn = transform.Find("SpawnBoxes").GetComponent<InputField>().text.Split(',');
             if (boxIn.Length != 3){
                 Debug.LogError($"Invalid box input dimensions!");
                 return;
             }
 
-            if (m_spawnedBoxes != null) {
-                Destroy(m_spawnedBoxes);
+            if (spawned != null) 
+            {
+                Destroy(spawned);
             }
                 
-            m_spawnedBoxes = new GameObject("Spawned");
-            m_boxDims = new Vector3(int.Parse(boxIn[0]), int.Parse(boxIn[1]), int.Parse(boxIn[2]));
+            spawned = new GameObject("Spawned");
+            boxDims = new Vector3(int.Parse(boxIn[0]), int.Parse(boxIn[1]), int.Parse(boxIn[2]));
             
-            var boxSize = m_box.GetComponentInChildren<Renderer>().bounds.size;
-            for (int i = 0; i < m_boxDims[0]; i++){
-                for (int j = 0; j < m_boxDims[1]; j++){
-                    for (int k = 0; k < m_boxDims[2]; k++){
-                        var o = Instantiate(m_box, new Vector3(i * boxSize.x, k * boxSize.y, j * boxSize.z), Quaternion.identity, m_spawnedBoxes.transform);
+            var boxSize = box.GetComponentInChildren<Renderer>().bounds.size;
+            for (int i = 0; i < boxDims[0]; i++)
+            {
+                for (int j = 0; j < boxDims[1]; j++)
+                {
+                    for (int k = 0; k < boxDims[2]; k++)
+                    {
+                        var o = Instantiate(box, new Vector3(i * boxSize.x, k * boxSize.y, j * boxSize.z), Quaternion.identity, spawned.transform);
                         Destroy(o.GetComponent<BoxDropoff>());
                     }
                 }
             }
 
-            m_spawnedBoxes.transform.position = LocationPicker.transform.position;
+            spawned.transform.position = locationPicker.transform.position;
         }
 
-        public void SpawnDebris(){
-            m_debrisSpawn = int.Parse(transform.Find("SpawnDebris").GetComponent<InputField>().text);
+        public void SpawnDebris()
+        {
+            pickerArea = locationPicker.GetComponent<Renderer>().bounds;
+            debrisSpawn = int.Parse(transform.Find("SpawnDebris").GetComponent<InputField>().text);
 
-            if (m_spawnedBoxes != null) {
-                Destroy(m_spawnedBoxes);
+            if (spawned != null) 
+            {
+                Destroy(spawned);
             }
                 
-            m_spawnedBoxes = new GameObject("Spawned");
+            spawned = new GameObject("Spawned");
 
-            var size = GameObject.FindObjectOfType<WarehouseManager>().GetEditorParams().m_debrisSize;
-            var isKinematic = GameObject.FindObjectOfType<WarehouseManager>().GetEditorParams().m_debrisKinematic;
+            var size = WarehouseManager.instance.m_debrisSize;
+            var isKinematic = WarehouseManager.instance.m_debrisKinematic;
 
-            for (int i = 0; i < m_debrisSpawn; i++){
-                var randShape = UnityEngine.Random.Range(0, 4);
+            for (int i = 0; i < debrisSpawn; i++)
+            {
+                var randShape = Random.Range(0, 4);
                 GameObject obj;
                 switch(randShape){
                     case 0:
@@ -81,12 +91,12 @@ namespace Unity.Simulation.Warehouse {
                         break;
                     
                 }
-                var pos = new Vector3(UnityEngine.Random.Range(-size * 5,size * 5), 0, UnityEngine.Random.Range(-size * 5,size * 5));
+                var pos = new Vector3(Random.Range(pickerArea.center.x - pickerArea.extents.x/2, pickerArea.center.x + pickerArea.extents.x/2), size/2, Random.Range(pickerArea.center.z - pickerArea.extents.z/2, pickerArea.center.z + pickerArea.extents.z/2));
                 
-                obj.transform.localScale = new Vector3(UnityEngine.Random.Range(0.005f, size), UnityEngine.Random.Range(0.005f, size), UnityEngine.Random.Range(0.005f, size));
-                obj.transform.parent = m_spawnedBoxes.transform;
+                obj.transform.localScale = new Vector3(Random.Range(0.005f, size), Random.Range(0.005f, size), Random.Range(0.005f, size));
+                obj.transform.parent = spawned.transform;
                 obj.transform.localPosition = pos;
-                obj.transform.rotation = UnityEngine.Random.rotation;
+                obj.transform.rotation = Random.rotation;
                 obj.GetComponent<Renderer>().material = Resources.Load<Material>($"Materials/Debris");
 
                 var lab = obj.AddComponent<Labeling>();
@@ -96,15 +106,12 @@ namespace Unity.Simulation.Warehouse {
                 rb.isKinematic = isKinematic;
             }
 
-            m_spawnedBoxes.transform.position = LocationPicker.transform.position;
+            spawned.transform.position = locationPicker.transform.position;
         }
 
-        public void ShowPicker(){
-            LocationPicker.SetActive(true);
-        }
-
-        public void HidePicker(){
-            LocationPicker.SetActive(false);
+        public void ShowPicker(bool show)
+        {
+            locationPicker.SetActive(show);
         }
     };
 }

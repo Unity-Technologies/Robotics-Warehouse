@@ -130,6 +130,16 @@
       "dependencies": {},
       "hash": "b75c1fa508989fb7502bfcc0a1a89a318758b61c"
     },
+    "com.unity.robotics.simulation-control": {
+      "version": "git@github.com:peifeng-unity/Unity-Robotics-Simulation-Control.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "1.1.2",
+        "com.unity.perception": "0.8.0-preview.2"
+      },
+      "hash": "35a7a3ddd676df173496cd0d770bffd4ab2b0940"
+    },
     "com.unity.robotics.urdf-importer": {
       "version": "https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.2.0",
       "depth": 0,

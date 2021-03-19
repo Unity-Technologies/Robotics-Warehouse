@@ -24,6 +24,15 @@ public class CollisionConstraint : PlacementConstraint
     public float z;
     public float radius;
 
+    public CollisionConstraint() {}
+
+    public CollisionConstraint(float tx, float tz, float tradius)
+    {
+        this.x = tx;
+        this.z = tz;
+        this.radius = tradius;
+    }
+
     public override bool Passes(float placementX, float placementZ, float objectRadius)
     {
         Vector2 placementPt = new Vector2(placementX, placementZ);
@@ -34,57 +43,20 @@ public class CollisionConstraint : PlacementConstraint
     }
 }
 
-public class ReachabilityConstraint : PlacementConstraint
-{
-    /* Checks if an object is placed close enough to the robot arm to be reached. */
-
-    public enum LimitType { min, max };
-
-    public float robotX;
-    public float robotZ;
-    public float robotReachabilityLimit;
-    public LimitType limitType;
-
-    public override bool Passes(float placementX, float placementZ, float objectRadius)
-    {
-        Vector2 placementPt = new Vector2(placementX, placementZ);
-        Vector2 basePt = new Vector2(robotX, robotZ);
-        float distance = Vector2.Distance(placementPt, basePt);
-        if (limitType == LimitType.max)
-        {
-            bool pass = distance < robotReachabilityLimit;
-            return pass;
-        }
-        else
-        {
-            return distance > robotReachabilityLimit;
-        }
-    }
-}
-
 public class SurfaceObjectPlacer
 {
-    private GameObject plane;
+    private Bounds bounds;
     private FloatParameter random; //[0, 1]
-    private ReachabilityConstraint minRobotReachability;
-    private ReachabilityConstraint maxRobotReachability;
     private int maxPlacementTries = 100;
 
 
     private List<PlacementConstraint> collisionConstraints = new List<PlacementConstraint>();
 
 
-    public SurfaceObjectPlacer(
-        GameObject plane,
-        FloatParameter random,
-        ReachabilityConstraint minRobotReachability,
-        ReachabilityConstraint maxRobotReachability,
-        int maxPlacementTries)
+    public SurfaceObjectPlacer(Bounds bounds, FloatParameter random, int maxPlacementTries)
     {
-        this.plane = plane;
+        this.bounds = bounds;
         this.random = random;
-        this.minRobotReachability = minRobotReachability;
-        this.maxRobotReachability = maxRobotReachability;
         this.maxPlacementTries = maxPlacementTries;
     }
 
@@ -94,9 +66,8 @@ public class SurfaceObjectPlacer
         collisionConstraints = new List<PlacementConstraint>();
     }
 
-    public bool PlaceObject(GameObject obj, bool respectMaxRobotReachability)
+    public bool PlaceObject(GameObject obj)
     {
-        Bounds planeBounds = plane.GetComponent<Renderer>().bounds;
         if (obj.activeInHierarchy)
         {
             // try to sample a valid point
@@ -104,8 +75,8 @@ public class SurfaceObjectPlacer
             float radius = objBounds.extents.magnitude;
             float heightAbovePlane = objBounds.extents.y;
 
-            List<PlacementConstraint> constraints = GetAllConstraints(respectMaxRobotReachability);
-            Vector3? point = SampleValidGlobalPointOnPlane(radius, constraints, planeBounds, respectMaxRobotReachability);
+            List<PlacementConstraint> constraints = GetAllConstraints();
+            Vector3? point = SampleValidGlobalPointOnPlane(radius, constraints, bounds);
 
             if (point.HasValue)
             {
@@ -132,14 +103,14 @@ public class SurfaceObjectPlacer
 
     // PRIVATE HELPERS
 
-    private Vector3? SampleValidGlobalPointOnPlane(float objectRadius, List<PlacementConstraint> constraints, Bounds planeBounds, bool respectMaxRobotReachability)
+    private Vector3? SampleValidGlobalPointOnPlane(float objectRadius, List<PlacementConstraint> constraints, Bounds bounds)
     {
         // return a valid point and if not found one it return null 
         int tries = 0;
 
         while (tries < maxPlacementTries)
         {
-            Vector3 point = SampleGlobalPointOnPlane(objectRadius, planeBounds, respectMaxRobotReachability);
+            Vector3 point = SampleGlobalPointOnPlane(objectRadius, bounds);
             bool valid = PassesConstraints(point, objectRadius, constraints);
             if (valid) { return point; }
 
@@ -148,49 +119,30 @@ public class SurfaceObjectPlacer
         return null;
     }
 
-    private List<PlacementConstraint> GetAllConstraints(bool respectMaxRobotReachability)
+    private List<PlacementConstraint> GetAllConstraints()
     {
         // return a list of all the constraints: combination of permanent constraint and additional constraint like the maxReachabilityConstraint or the 
         // collision constraint 
         List<PlacementConstraint> allConstraints = new List<PlacementConstraint>();
         allConstraints.AddRange(collisionConstraints);
-        allConstraints.Add(minRobotReachability);
-        if (respectMaxRobotReachability)
-        {
-            allConstraints.Add(maxRobotReachability);
-        }
         return allConstraints;
     }
 
-    private Vector3 SampleGlobalPointOnPlane(float minEdgeDistance, Bounds planeBounds, bool respectMaxRobotReachability)
+    private Vector3 SampleGlobalPointOnPlane(float minEdgeDistance, Bounds bounds)
     {
-        Rect planePlacementZone = PlanePlacementZone(planeBounds, minEdgeDistance);
-        if (respectMaxRobotReachability)
-        {
-            Rect withinMaxReachZone = MaxReachabilityPlacementZone(maxRobotReachability);
-            planePlacementZone = Intersection(planePlacementZone, withinMaxReachZone);
-        }
+        Rect planePlacementZone = PlanePlacementZone(bounds, minEdgeDistance);
 
         Vector2 randomPlanePoint = RandomPointInRect(planePlacementZone);
-        Vector3 globalPt = new Vector3(randomPlanePoint.x, planeBounds.center.y, randomPlanePoint.y);
+        Vector3 globalPt = new Vector3(randomPlanePoint.x, bounds.center.y, randomPlanePoint.y);
         return globalPt;
     }
 
-
-    private static Rect MaxReachabilityPlacementZone(ReachabilityConstraint maxRobotReachability)
+    private static Rect PlanePlacementZone(Bounds bounds, float minEdgeDistance)
     {
-        float x = maxRobotReachability.robotX - maxRobotReachability.robotReachabilityLimit;
-        float z = maxRobotReachability.robotZ - maxRobotReachability.robotReachabilityLimit;
-        float size = maxRobotReachability.robotReachabilityLimit * 2;
-        return new Rect(x, z, size, size);
-    }
-
-    private static Rect PlanePlacementZone(Bounds planeBounds, float minEdgeDistance)
-    {
-        float x = planeBounds.center.x - planeBounds.extents.x + minEdgeDistance;
-        float z = planeBounds.center.z - planeBounds.extents.z + minEdgeDistance;
-        float dx = (planeBounds.extents.x - minEdgeDistance) * 2;
-        float dz = (planeBounds.extents.z - minEdgeDistance) * 2;
+        float x = bounds.center.x - bounds.extents.x + minEdgeDistance;
+        float z = bounds.center.z - bounds.extents.z + minEdgeDistance;
+        float dx = (bounds.extents.x - minEdgeDistance) * 2;
+        float dz = (bounds.extents.z - minEdgeDistance) * 2;
         return new Rect(x, z, dx, dz);
     }
 

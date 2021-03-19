@@ -28,11 +28,17 @@ namespace Unity.Simulation.Warehouse {
         public GameObject m_warehousePrefab;
 
         public AppParam appParam;
+        private static AppParam _instance;
+        public static AppParam instance
+        {
+            get 
+            {
+                return _instance;
+            }
+        }
 
-        NavMeshSurface _navmeshSurface;
         GameObject _parentGenerated;
         GameObject _parentWarehouse;
-        Transform _parentDebris;
         List<GameObject> _paths = new List<GameObject>();
         List<GameObject> _dropoffs = new List<GameObject>();
         readonly Quaternion _vRot = Quaternion.identity;
@@ -45,6 +51,8 @@ namespace Unity.Simulation.Warehouse {
             if (Configuration.Instance.IsSimulationRunningInCloud()) {
                 appParam = ParamReader.appParams;
             }
+            
+            _instance = appParam;
 
             if (!m_generate) return;
             
@@ -57,7 +65,6 @@ namespace Unity.Simulation.Warehouse {
             var sleepPos = GenerateSleepPosition();
 
             var waypoints = GenerateWaypoints();
-            // GenerateRandomBoxes(waypoints);
             _dropoffs = GenerateDropoff(_paths);
 
             // Spawn bots
@@ -139,73 +146,6 @@ namespace Unity.Simulation.Warehouse {
             return objects;
         }
 
-        private void GenerateFloorDebris(Transform floorTile){
-            if (_parentDebris == null) {
-                _parentDebris = new GameObject("Debris").transform;
-                _parentDebris.parent = _parentGenerated.transform;
-            }
-
-            var dist = floorTile.GetComponent<Renderer>().bounds.size;
-            var minDist = dist.x / 2 - 0.1f;
-            var floorPos = floorTile.localPosition;
-
-            for(int i = 0; i < (int)(appParam.m_generateFloorDebris * 100); i++){
-                var pos = new Vector3(floorPos.x + Random.Range(-minDist,minDist), floorPos.y + 0.01f, floorPos.z + Random.Range(-minDist,minDist));
-
-                var randShape = Random.Range(0, 4);
-                GameObject obj;
-                switch(randShape){
-                    case 0:
-                        obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        break;
-                    case 1:
-                        obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        break;
-                    case 2:
-                        obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                        break;
-                    case 3:
-                        obj = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                        break;
-                    default:
-                        obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        break;
-                    
-                }
-                obj.transform.localScale = new Vector3(Random.Range(0.005f, appParam.m_debrisSize), Random.Range(0.005f, appParam.m_debrisSize), Random.Range(0.005f, appParam.m_debrisSize));
-                obj.transform.parent = _parentDebris;
-                obj.transform.position = pos;
-                obj.transform.rotation = Random.rotation;
-                obj.GetComponent<Renderer>().material = Resources.Load<Material>($"Materials/Debris");
-
-                var lab = obj.AddComponent<Labeling>();
-                lab.labels.Add("debris");
-
-                var rb = obj.AddComponent<Rigidbody>();
-                rb.isKinematic = appParam.m_debrisKinematic;
-            }
-        }
-
-        // private void GenerateRandomBoxes(List<Vector3> waypoints){
-        //     var boxPrefab0 = m_shelfPrefab.GetComponentInChildren<Shelve>().m_boxes[0];
-        //     var boxPrefab1 = m_shelfPrefab.GetComponentInChildren<Shelve>().m_boxes[1];
-        //     var parentBoxes = new GameObject("FloorBoxes").transform;
-        //     parentBoxes.parent = _parentGenerated.transform;
-
-        //     float rand = Random.Range(0f, 1f);
-
-        //     foreach (var pt in waypoints){
-        //         if (rand < appParam.m_generateFloorBoxes) {
-        //             int rand_box = Random.Range(0, 2);
-        //             var box = rand_box == 1 ? boxPrefab1 : boxPrefab0;
-        //             var b = Instantiate(box, new Vector3(pt.x, 1, pt.z), Quaternion.identity, parentBoxes);
-        //             b.transform.rotation = Random.rotation;
-        //             b.transform.localScale *= 0.0075f;
-        //         }
-        //         rand = Random.Range(0f, 1f);
-        //     }
-        // }
-
         // Generate bot waypoint system
         private List<Vector3> GenerateWaypoints(){
             var pts = new List<Vector3>();
@@ -256,7 +196,6 @@ namespace Unity.Simulation.Warehouse {
                 for (var j = 1; j < appParam.m_length / floorTileSize.z + 1; j++){
                     var floor = Instantiate(floorTile, new Vector3(i * floorTileSize.x - (appParam.m_width / 2 + floorTileSize.x * 0.75f), 0, j * floorTileSize.z - (appParam.m_length / 2 + floorTileSize.z * 0.75f)), _vRot, parentTransform);
                     floor.AddComponent<MaterialRandomizerTag>();
-                    GenerateFloorDebris(floor.transform);
 
                     var ceiling = Instantiate(ceilingTile, new Vector3(floor.transform.position.x, wallTileSize.y, floor.transform.position.z), _vRot, parentTransform);
                     Instantiate(skylight, new Vector3(ceiling.transform.position.x, ceiling.transform.position.y + ceilingTileSize.y, ceiling.transform.position.z), _vRot, parentTransform);
@@ -279,9 +218,6 @@ namespace Unity.Simulation.Warehouse {
                         if ((i % 2 == 0) && (j % 2 == 0)){
                             var light = Instantiate(lightTile, new Vector3(ceiling.transform.position.x + floorTileSize.x/2, ceiling.transform.position.y - glulamSize.y, ceiling.transform.position.z + floorTileSize.z/2), Quaternion.identity, parentTransform);
                             float rand = UnityEngine.Random.Range(0.0f, 1.0f);
-                            // if (rand > appParam.m_percentLight){
-                            //     light.GetComponentInChildren<Light>().enabled = false;
-                            // }
                         }
                         if (i == 1){
                             var g = Instantiate(glulam, new Vector3(0, ceiling.transform.position.y - glulamSize.y/2, ceiling.transform.position.z + floorTileSize.z/2), Quaternion.identity, parentTransform);
@@ -339,8 +275,6 @@ namespace Unity.Simulation.Warehouse {
                     }
                 }
             }
-
-            // Edge paths
 
             // Station path
             h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, -(appParam.m_length / 2)), _hRot, pathParent);

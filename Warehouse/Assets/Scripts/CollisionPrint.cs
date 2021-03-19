@@ -10,5 +10,4 @@ public class CollisionPrint : MonoBehaviour
             Debug.Log($"{collision.gameObject.name} (on {collision.transform.root}) collided with {gameObject.name}");
         }
     }
-    
 }

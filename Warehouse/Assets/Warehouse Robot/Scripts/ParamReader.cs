@@ -26,9 +26,6 @@ namespace Unity.Simulation.Warehouse {
                 appParams = Configuration.Instance.GetAppParams<AppParam>();
             } else {
                 appParams = GameObject.FindObjectOfType<WarehouseManager>().GetEditorParams();
-                // var appParamFilename = "default_app_param.json";
-                // Configuration.Instance.SimulationConfig.app_param_uri = string.Format("file://{0}/StreamingAssets/{1}", Application.dataPath, appParamFilename) ;
-                // Debug.Log(Configuration.Instance.SimulationConfig.app_param_uri);
             }
 
 
@@ -47,6 +44,7 @@ namespace Unity.Simulation.Warehouse {
         // Exit sim after simulation has ran for quitAfterSeconds defined in AppParams.
         void Update()
         {
+            if (appParams.m_quitAfterSeconds == 0) return;
             _simElapsedSeconds += Time.deltaTime;
 
             if (_simElapsedSeconds >= appParams.m_quitAfterSeconds)
