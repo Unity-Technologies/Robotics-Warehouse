@@ -1,0 +1,33 @@
+{
+    "seed": 539662031,
+    "sunAngle": {
+        "hour": [
+            0,
+            24
+        ],
+        "dayOfTheYear": [
+            0,
+            365
+        ],
+        "latitude": [
+            -90,
+            90
+        ]
+    },
+    "objectRotation": {
+        "x": [
+            0,
+            360
+        ],
+        "y": [
+            0,
+            360
+        ],
+        "z": [
+            0,
+            360
+        ]
+    },
+    "robotPlacementDist": 0.5,
+    "boxSpawnChance": 0.5
+}

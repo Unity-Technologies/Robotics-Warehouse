@@ -1,0 +1,176 @@
+{
+  "constants": {
+    "totalFrames": 1000,
+    "randomSeed": 539662031
+  },
+  "randomizers": {
+    "groups": {
+      "LocalRotationRandomizer": {
+        "metadata": {
+          "name": "",
+          "description": ""
+        },
+        "items": {
+          "rotation": {
+            "param": {
+              "metadata": {
+                "name": "",
+                "description": ""
+              },
+              "items": {
+                "x": {
+                  "samplerOptions": {
+                    "metadata": {
+                      "name": "",
+                      "description": ""
+                    },
+                    "uniform": {
+                      "min": 0.0,
+                      "max": 360.0
+                    }
+                  }
+                },
+                "y": {
+                  "samplerOptions": {
+                    "metadata": {
+                      "name": "",
+                      "description": ""
+                    },
+                    "uniform": {
+                      "min": 0.0,
+                      "max": 360.0
+                    }
+                  }
+                },
+                "z": {
+                  "samplerOptions": {
+                    "metadata": {
+                      "name": "",
+                      "description": ""
+                    },
+                    "uniform": {
+                      "min": 0.0,
+                      "max": 360.0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "RobotPlacementRandomizer": {
+        "metadata": {
+          "name": "",
+          "description": ""
+        },
+        "items": {
+          "distFromEdge": {
+            "scalar": {
+              "metadata": {
+                "name": "",
+                "description": ""
+              },
+              "value": {
+                "num": 0.5
+              }
+            }
+          }
+        }
+      },
+      "SunAngleRandomizer": {
+        "metadata": {
+          "name": "",
+          "description": ""
+        },
+        "items": {
+          "hour": {
+            "param": {
+              "metadata": {
+                "name": "",
+                "description": ""
+              },
+              "items": {
+                "value": {
+                  "samplerOptions": {
+                    "metadata": {
+                      "name": "",
+                      "description": ""
+                    },
+                    "uniform": {
+                      "min": 0.0,
+                      "max": 24.0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "dayOfTheYear": {
+            "param": {
+              "metadata": {
+                "name": "",
+                "description": ""
+              },
+              "items": {
+                "value": {
+                  "samplerOptions": {
+                    "metadata": {
+                      "name": "",
+                      "description": ""
+                    },
+                    "uniform": {
+                      "min": 0.0,
+                      "max": 365.0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "latitude": {
+            "param": {
+              "metadata": {
+                "name": "",
+                "description": ""
+              },
+              "items": {
+                "value": {
+                  "samplerOptions": {
+                    "metadata": {
+                      "name": "",
+                      "description": ""
+                    },
+                    "uniform": {
+                      "min": -90.0,
+                      "max": 90.0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ShelfBoxRandomizer": {
+        "metadata": {
+          "name": "",
+          "description": ""
+        },
+        "items": {
+          "boxSpawnChance": {
+            "scalar": {
+              "metadata": {
+                "name": "",
+                "description": ""
+              },
+              "value": {
+                "num": 0.10400000214576721
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

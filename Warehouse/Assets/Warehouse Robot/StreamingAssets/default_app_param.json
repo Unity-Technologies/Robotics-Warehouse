@@ -1,0 +1,12 @@
+{
+    "m_width":50,
+    "m_length":50,
+    "m_rows":4,
+    "m_cols":3,
+    "m_horizontal":true,
+    "m_numBots":3,
+    "m_dropoff":10,
+    "m_lighting":"Afternoon",
+    "m_percentLight":1.0,
+    "m_quitAfterSeconds":60
+}
