@@ -1,136 +1,129 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers;
+using UnityEngine.Perception.Randomization.Samplers;
+using UnityEngine.Perception.Randomization.Parameters;
 using Unity.Robotics.SimulationControl;
+
+using Object = UnityEngine.Object;
 
 public class CustomSimulationControl : SimulationControlBuilder
 {
-    public float distanceToMove = 1f;
     SimulationManager simulationManager;
+    PerceptionRandomizeScenario scenario;
 
     public override INode Build()
     {
         simulationManager = GameObject.FindObjectOfType<SimulationManager>();
+        scenario = GameObject.FindObjectOfType<PerceptionRandomizeScenario>();
 
         Parallel root = new Parallel();
 
         Sequence robot = new Sequence("Turtlebot");
         root.children.Add(robot);
-        // robot.children.Add(new Skip());
+        robot.children.Add(new Skip());
 
-        Sequence scenarios = new Sequence();
+        Sequence sequence = new Sequence();
 
-        Repeat repeat = new Repeat(scenarios, 4);
+        Repeat repeat = new Repeat(sequence, 4);
         robot.children.Add(repeat);
         robot.children.Add(new QuitSimulation());
 
+        // Initialize setup
+        Sequence init = new Sequence("Initialization");
+        init.children.Add(new InitializeSimulation(scenario));
+        sequence.children.Add(init);
+
         // Randomize scene
-        Sequence firstScenario = new Sequence("Scene Generation");
-        firstScenario.children.Add(new PerceptionRandomize(GameObject.FindObjectOfType<PerceptionRandomizeScenario>()));
-        // firstScenario.children.Add(new Randomize(simulationManager));
-        firstScenario.children.Add(new RealtimeWait(500));
-        scenarios.children.Add(firstScenario);
-
-    //     // Move bot, wait for movement, check for collision
-    //     Sequence secondScenario = new Sequence("Move Turtlebot");
-    //     secondScenario.children.Add(new MoveTurtleBot(simulationManager, 2.0f));
-
-    //     // // Check for goal task
-    //     // var race = new Race();
-    //     // race.children.Add(new CollideWithGoal(GameObject.Find("Goal")));
-    //     // race.children.Add(new Not(new RealtimeWait(10000)));
-    //     // secondScenario.children.Add(race);
-
-    //     secondScenario.children.Add(new CollideWithGoal(GameObject.Find("Goal")));
-
-    //     scenarios.children.Add(secondScenario);
-
-    //     // Fallback fallback = new Fallback();
-    //     // fallback.children.Add(root);
-    //     // fallback.children.Add(new QuitSimulation());
+        Sequence generate = new Sequence("Scene Generation");
+        generate.children.Add(new PerceptionRandomize(scenario));
+        generate.children.Add(new RealtimeWait(1000));
+        sequence.children.Add(generate);  
 
         return root;
     }
 }
 
-// public class CollideWithGoal : TaskNode
-// {
-//     private TestRobotCollision cubeCollisions;
+public class InitializeSimulation : TaskNode
+{
+    Param param;
+    PerceptionRandomizeScenario scenario;
 
-//     public CollideWithGoal(GameObject goal)
-//     {
-//         cubeCollisions = goal.GetComponent<TestRobotCollision>();
-//     }
+    public InitializeSimulation(PerceptionRandomizeScenario s)
+    {
+        scenario = s;
+    }
+    protected override void Task()
+    {
+        LoadParams(PlayerPrefs.GetString("selectedParam", "default_params"));
+        Object.Destroy(scenario.GetComponent<SimulationManager>());
+        Succeed();
+        Debug.Log("Finished InitializeSimulation");
+    }
 
-//     protected override void Task()
-//     {
-//         if (cubeCollisions.collision.Count > 1)
-//         {
-//             if (cubeCollisions.collision.Contains("Box") || cubeCollisions.collision.Contains("right_tire_0") || cubeCollisions.collision.Contains("left_tire_0")){
-//                 Debug.Log($"Task complete: collision detected");
-//                 Succeed();
-//             }
-//             // else if (cubeCollisions.collision.Contains("Wall")){
-//             //     Debug.Log($"Ran into a wall, failing");
-//             //     Fail();
-//             // }
-//             Debug.Log("Clearing goal; starting new collision check task");
-//             cubeCollisions.collision.Clear();
-//         }
-//     }
-// }
+    void LoadParams(string selectedFile) 
+    {
+        Debug.Log($"Loading params from {selectedFile}");
+        TextAsset file = Resources.Load<TextAsset>(selectedFile);
+        if (file == null) {
+            Debug.LogError($"File does not exist {selectedFile}");
+            return;
+        }
 
-// public class Randomize : TaskNode
-// {
-//     private SimulationManager simulationManager;
+        string dataAsJson = file.text;
+        param = JsonUtility.FromJson<Param>(dataAsJson);
 
-//     public Randomize(SimulationManager simulationManager)
-//     {
-//         this.simulationManager = simulationManager;
-//     }
+        InitializeScenario();
+    }
 
-//     protected override void Task()
-//     {
-//         simulationManager.GenerateEnvironment();
-//         Debug.Log($"Task complete: generated environment");
-//         Succeed();
-//     }
-// }
+    void InitializeScenario() 
+    {
+        scenario.constants.randomSeed = param.seed;
+        var randomizers = scenario.randomizers;
+        foreach(var r in randomizers)
+        {
+            if (r is SunAngleRandomizer) 
+            {
+                var sun = (SunAngleRandomizer)r;
+                sun.hour = new FloatParameter { value = new UniformSampler(param.sunAngle.hour[0], param.sunAngle.hour[1]) };
+                sun.dayOfTheYear = new FloatParameter { value = new UniformSampler(param.sunAngle.dayOfTheYear[0], param.sunAngle.dayOfTheYear[1]) };
+                sun.latitude = new FloatParameter { value = new UniformSampler(param.sunAngle.latitude[0], param.sunAngle.latitude[1]) };
+            }
+            else if (r is TestLocalRotationRandomizer)
+            {
+                var rot = ((TestLocalRotationRandomizer)r).rotation;
+                rot.x = new UniformSampler(param.objectRotation.x[0], param.objectRotation.x[1]);
+                rot.y = new UniformSampler(param.objectRotation.y[0], param.objectRotation.y[1]);
+                rot.z = new UniformSampler(param.objectRotation.z[0], param.objectRotation.z[1]);
+            }
+            else if (r is TestRobotPlacementRandomizer) {
+                ((TestRobotPlacementRandomizer)r).distFromEdge = param.robotPlacementDist;
+            }
+            else if (r is MaterialRandomizer) {
+                
+            }
+            else if (r is ShelfBoxRandomizer) {
+                ((ShelfBoxRandomizer)r).boxSpawnChance = param.boxSpawnChance;
+            }
+        }
+    }
+}
 
-// public class MoveTurtleBot : TaskNode
-// {
-//     private SimulationManager simulationManager;
-//     private float distance;
-//     private Vector3[] signals;
-//     private int counter = 0;
+public class Skip : TaskNode
+{
+    bool isSkipped = false;
 
-//     public MoveTurtleBot(SimulationManager simulationManager, float distance)
-//     {
-//         this.simulationManager = simulationManager;
-//         this.distance = distance;
-//         signals = new Vector3[] {new Vector3(0, distance), new Vector3(0, -distance), new Vector3(distance, 0), new Vector3(-distance, 0)};
-//     }
-
-//     protected override void Task()
-//     {
-//         simulationManager.MoveTurtleBot(signals[counter]);
-//         Debug.Log($"Task {counter} complete: Sent move {signals[counter]} to turtlebot");
-//         Succeed();
-//         counter++;
-//     }
-// }
-
-// public class Skip : TaskNode
-// {
-//     bool isSkipped = false;
-
-//     protected override void Task()
-//     {
-//         if (!isSkipped)
-//         {
-//             isSkipped = true;
-//         }
-//         else
-//         {
-//             Succeed();
-//         }
-//     }
-// }
+    protected override void Task()
+    {
+        if (!isSkipped)
+        {
+            isSkipped = true;
+        }
+        else
+        {
+            Succeed();
+        }
+    }
+}

@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 public class TestRobotPlacementRandomizer : Randomizer
 {
     public GameObject[] floorObjects;
-    public GameObject tmpPrefabToSpawn;
+    public GameObject prefabToSpawn;
     public float distFromEdge;
     GameObject spawnedObject;
     GameObject spawnedConstraint;
@@ -29,7 +29,7 @@ public class TestRobotPlacementRandomizer : Randomizer
     {
         int randIdx = Mathf.FloorToInt(random.Sample() * floorObjects.Length);
         var pt = SamplePoint(floorObjects[randIdx], distFromEdge, 10);
-        spawnedObject = GameObject.Instantiate(tmpPrefabToSpawn, pt, Quaternion.identity);
+        spawnedObject = GameObject.Instantiate(prefabToSpawn, pt, Quaternion.identity);
     }
 
     protected override void OnIterationEnd()

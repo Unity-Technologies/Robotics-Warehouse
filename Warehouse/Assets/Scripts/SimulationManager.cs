@@ -4,18 +4,19 @@ using UnityEngine;
 using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers;
 using UnityEngine.Perception.Randomization.Samplers;
 using UnityEngine.Perception.Randomization.Parameters;
+using Unity.Robotics.SimulationControl;
 
 public class SimulationManager : MonoBehaviour
 {
     public GameObject goalObj;
     Param param;
-    AMRScenario scenario;
+    PerceptionRandomizeScenario scenario;
     bool isInitialized = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        scenario = GetComponent<AMRScenario>();
+        scenario = GetComponent<PerceptionRandomizeScenario>();
         LoadParams(PlayerPrefs.GetString("selectedParam", "default_params"));
         scenario.Randomize();
         AssignColliders();

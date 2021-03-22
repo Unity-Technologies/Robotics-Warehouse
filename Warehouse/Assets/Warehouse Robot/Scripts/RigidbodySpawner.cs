@@ -91,7 +91,7 @@ namespace Unity.Simulation.Warehouse {
                         break;
                     
                 }
-                var pos = new Vector3(Random.Range(pickerArea.center.x - pickerArea.extents.x/2, pickerArea.center.x + pickerArea.extents.x/2), size/2, Random.Range(pickerArea.center.z - pickerArea.extents.z/2, pickerArea.center.z + pickerArea.extents.z/2));
+                var pos = new Vector3(Random.Range(pickerArea.center.x - pickerArea.extents.x, pickerArea.center.x + pickerArea.extents.x), size/2, Random.Range(pickerArea.center.z - pickerArea.extents.z, pickerArea.center.z + pickerArea.extents.z));
                 
                 obj.transform.localScale = new Vector3(Random.Range(0.005f, size), Random.Range(0.005f, size), Random.Range(0.005f, size));
                 obj.transform.parent = spawned.transform;
