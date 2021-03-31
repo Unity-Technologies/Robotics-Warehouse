@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d0176327854820ab53adc46cbec7c1, type: 3}
+  m_Name: SemanticSegmentationLabelConfig
+  m_EditorClassIdentifier: 
+  m_LabelEntries:
+  - label: path
+    color: {r: 0, g: 0, b: 1, a: 1}
+  - label: bot
+    color: {r: 1, g: 0, b: 0, a: 1}
+  - label: station
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - label: box
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - label: wall
+    color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  - label: skylight
+    color: {r: 0.41359273, g: 1, b: 0.1547842, a: 1}
+  - label: ceiling
+    color: {r: 0.86388767, g: 0.3532207, b: 1, a: 1}
+  - label: light
+    color: {r: 0.9958437, g: 0.16574109, b: 1, a: 1}
+  - label: purlin
+    color: {r: 0.19602096, g: 1, b: 0.26202795, a: 1}
+  - label: shelf
+    color: {r: 1, g: 0.3971873, b: 0.26132083, a: 1}
+  - label: beam
+    color: {r: 0.0061811805, g: 0.81071234, b: 1, a: 1}
+  - label: ground
+    color: {r: 0.05696398, g: 1, b: 0.82912904, a: 1}
+  - label: dropoff
+    color: {r: 0, g: 1, b: 0, a: 1}
+  - label: dropped_box
+    color: {r: 1, g: 0.32381457, b: 0.12512136, a: 1}
