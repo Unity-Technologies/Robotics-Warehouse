@@ -1,10 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Perception.GroundTruth;
 using RosSharp;
+using Unity.Simulation.Warehouse;
 
 public class RigidbodySpawner : MonoBehaviour
 {
@@ -100,60 +98,61 @@ public class RigidbodySpawner : MonoBehaviour
 
     public void ShowRobot()
     {
-        if (!RobotInitiated)
-        {
-            ImportSettings settings = ImportSettings.DefaultSettings();
-            GameObject rob = RosSharp.Urdf.Editor.UrdfRobotExtensions.Create("/Users/vidur.vij/Desktop/Robotics-AMR-Spike/Warehouse_2020.2/Assets/turtlebot3/model.urdf", settings);
-            if (rob == null)
-                Debug.Log("nope");
-            //Tile Constraint
-            GameObject tiltConstraint = new GameObject("TiltConstraint");
-            //tiltConstraint.transform.parent = rob.transform;
-            ConfigurableJoint constraint = tiltConstraint.AddComponent<ConfigurableJoint>();
-            tiltConstraint.GetComponent<Rigidbody>().isKinematic = true;
-            constraint.angularXMotion = ConfigurableJointMotion.Locked;
-            constraint.angularZMotion = ConfigurableJointMotion.Locked;
-            GameObject baseLink = GameObject.Find("base_link");
-            constraint.connectedArticulationBody = baseLink.GetComponent<ArticulationBody>();
-
-            //Remove Collisions
-            Collider[] casterCollider = GameObject.Find("caster_back_right_link").GetComponentsInChildren<Collider>();
-            foreach (Collider col in casterCollider)
-                DestroyImmediate(col);
-
-            Collider[] casterCollider2 = GameObject.Find("caster_back_left_link").GetComponentsInChildren<Collider>();
-            foreach (Collider col in casterCollider2)
-                DestroyImmediate(col);
-            //DestroyController
-            DestroyImmediate(rob.GetComponent<RosSharp.Control.Controller>());
-            //TensorUpdate
-            Vector3 inertiaup = new Vector3(1, 1, 1);
-            GameObject wheel1 = GameObject.Find("wheel_left_link").gameObject;
-            GameObject wheel2 = GameObject.Find("wheel_right_link").gameObject;
-            //DestroyImmediate(wheel1.GetComponent<JointControl>());
-            //DestroyImmediate(wheel2.GetComponent<JointControl>());
-            InertiaTensorUpdate wheel1up = wheel1.gameObject.AddComponent<InertiaTensorUpdate>();
-            InertiaTensorUpdate wheel2up = wheel2.gameObject.AddComponent<InertiaTensorUpdate>();
-            wheel1up.inertiaTensor = wheel2up.inertiaTensor = inertiaup;
-
-            //AddController
-            RosSharp.Control.Goal goal = rob.AddComponent<RosSharp.Control.Goal>();
-            RosSharp.Control.AGVController controller = rob.AddComponent<RosSharp.Control.AGVController>();
-            controller.wheel1 = wheel1;
-            controller.wheel2 = wheel2;
-            controller.goalFunc = goal;
-            controller.centerPoint = baseLink;
-            controller.forceLimit = 100;
-            controller.damping = 100;
-            controller.maxLinearSpeed = .2f;
-            controller.maxRotationalSpeed = .2f;
-            Robot = rob;
-            RobotInitiated = true;
-        }
-
-        Robot.transform.position = LocationPicker.transform.position;
-        Debug.Log(Robot.transform.position);
-        Debug.Log(LocationPicker.transform.position);
+        // This function doesn't look like it's getting called anywhere, so commenting out for now...
+//        if (!RobotInitiated)
+//        {
+//            ImportSettings settings = ImportSettings.DefaultSettings();
+//            GameObject rob = RosSharp.Urdf.Editor.UrdfRobotExtensions.Create("/Users/vidur.vij/Desktop/Robotics-AMR-Spike/Warehouse_2020.2/Assets/turtlebot3/model.urdf", settings);
+//            if (rob == null)
+//                Debug.Log("nope");
+//            //Tile Constraint
+//            GameObject tiltConstraint = new GameObject("TiltConstraint");
+//            //tiltConstraint.transform.parent = rob.transform;
+//            ConfigurableJoint constraint = tiltConstraint.AddComponent<ConfigurableJoint>();
+//            tiltConstraint.GetComponent<Rigidbody>().isKinematic = true;
+//            constraint.angularXMotion = ConfigurableJointMotion.Locked;
+//            constraint.angularZMotion = ConfigurableJointMotion.Locked;
+//            GameObject baseLink = GameObject.Find("base_link");
+//            constraint.connectedArticulationBody = baseLink.GetComponent<ArticulationBody>();
+//
+//            //Remove Collisions
+//            Collider[] casterCollider = GameObject.Find("caster_back_right_link").GetComponentsInChildren<Collider>();
+//            foreach (Collider col in casterCollider)
+//                DestroyImmediate(col);
+//
+//            Collider[] casterCollider2 = GameObject.Find("caster_back_left_link").GetComponentsInChildren<Collider>();
+//            foreach (Collider col in casterCollider2)
+//                DestroyImmediate(col);
+//            //DestroyController
+//            DestroyImmediate(rob.GetComponent<RosSharp.Control.Controller>());
+//            //TensorUpdate
+//            Vector3 inertiaup = new Vector3(1, 1, 1);
+//            GameObject wheel1 = GameObject.Find("wheel_left_link").gameObject;
+//            GameObject wheel2 = GameObject.Find("wheel_right_link").gameObject;
+//            //DestroyImmediate(wheel1.GetComponent<JointControl>());
+//            //DestroyImmediate(wheel2.GetComponent<JointControl>());
+//            InertiaTensorUpdate wheel1up = wheel1.gameObject.AddComponent<InertiaTensorUpdate>();
+//            InertiaTensorUpdate wheel2up = wheel2.gameObject.AddComponent<InertiaTensorUpdate>();
+//            wheel1up.inertiaTensor = wheel2up.inertiaTensor = inertiaup;
+//
+//            //AddController
+//            RosSharp.Control.Goal goal = rob.AddComponent<RosSharp.Control.Goal>();
+//            RosSharp.Control.AGVController controller = rob.AddComponent<RosSharp.Control.AGVController>();
+//            controller.wheel1 = wheel1;
+//            controller.wheel2 = wheel2;
+//            controller.goalFunc = goal;
+//            controller.centerPoint = baseLink;
+//            controller.forceLimit = 100;
+//            controller.damping = 100;
+//            controller.maxLinearSpeed = .2f;
+//            controller.maxRotationalSpeed = .2f;
+//            Robot = rob;
+//            RobotInitiated = true;
+//        }
+//
+//        Robot.transform.position = LocationPicker.transform.position;
+//        Debug.Log(Robot.transform.position);
+//        Debug.Log(LocationPicker.transform.position);
     }
 
     public void ShowPicker(){

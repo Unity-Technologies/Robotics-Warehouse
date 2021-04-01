@@ -17,7 +17,7 @@ public class SimulationManager : MonoBehaviour
     void Start()
     {
         scenario = GetComponent<PerceptionRandomizeScenario>();
-        LoadParams(PlayerPrefs.GetString("selectedParam", "default_params"));
+        LoadParams(PlayerPrefs.GetString("selectedParam", "param_1"));
         scenario.Randomize();
         AssignColliders();
     }
