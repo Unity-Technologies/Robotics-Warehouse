@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4724801744166485904}
   - component: {fileID: 3655149654258306793}
+  - component: {fileID: -3393065250773477675}
   m_Layer: 0
   m_Name: ROSConnectionPrefab
   m_TagString: Untagged
@@ -52,3 +53,15 @@ MonoBehaviour:
   readChunkSize: 2048
   awaitDataReadRetry: 10
   showHUD: 1
+--- !u!114 &-3393065250773477675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7718135686683245475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e22dfed9de9543ce99aa7e1ab505588, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
