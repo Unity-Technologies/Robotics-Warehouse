@@ -1,52 +1,63 @@
-using System;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
 using UnityEngine;
-using UnityEditor;
+using Unity.Simulation;
 
-using Debug = UnityEngine.Debug;
-
-public enum SimulationType { BUILD, EDITOR }
-public class ParamReader
-{
-    // #if UNITY_EDITOR
-    public static void ReadParamFromCLI()
+namespace Unity.Simulation.Warehouse {
+    public class ParamReader : MonoBehaviour
     {
-        string[] arguments = Environment.GetCommandLineArgs();
+        // Loggers
+        Unity.Simulation.Logger _paramLogger;
 
-        int startIdx = Array.IndexOf(arguments, "ParamReader.ReadParamFromCLI");
+        // App Params
+        public static AppParam appParams = new AppParam();
 
-        var simType = (SimulationType)Enum.Parse(typeof(SimulationType), arguments[startIdx + 1]);
+        // Internal tracking
+        float _simElapsedSeconds;
         
-        PlayerPrefs.SetString("selectedParam", arguments[startIdx + 2]);
-        Debug.Log($"Selecting file: {PlayerPrefs.GetString("selectedParam")}");
-
-        switch (simType) 
+        void Awake()
         {
-            // case SimulationType.BUILD:
-            //     PerformBuild();
-            //     break;
-            case SimulationType.EDITOR:
-                EditorApplication.ExecuteMenuItem("Edit/Play");
-                break;
-            default:
-                break;
+            // Create loggers for AppParams for debugging purposes
+            _paramLogger = new Unity.Simulation.Logger("ParamReader");
+            _simElapsedSeconds = 0;
+
+            // NOTE: AppParams can be loaded anytime except during `RuntimeInitializeLoadType.BeforeSceneLoad`
+            // If the simulation is running locally load app_param_1.json
+            if (Configuration.Instance.IsSimulationRunningInCloud()) {
+                appParams = Configuration.Instance.GetAppParams<AppParam>();
+            } else {
+                appParams = GameObject.FindObjectOfType<WarehouseManager>().GetEditorParams();
+            }
+
+
+            // Check if AppParam file was passed during command line execution
+            if (appParams != null)
+            {
+                // Log AppParams to Player.Log file and Editor Console
+                Debug.Log(appParams.ToString());
+
+                // Log AppParams to DataLogger
+                _paramLogger.Log(appParams);
+                _paramLogger.Flushall();
+            }
         }
+
+        // Exit sim after simulation has ran for quitAfterSeconds defined in AppParams.
+        void Update()
+        {
+            if (appParams.m_quitAfterSeconds == 0) return;
+            _simElapsedSeconds += Time.deltaTime;
+
+            if (_simElapsedSeconds >= appParams.m_quitAfterSeconds)
+            {
+                Debug.Log($"Sim elapsed timeout: {_simElapsedSeconds}");
+                Application.Quit();
+                #if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+                #endif
+            }
+        }
+
+        public float GetElapsedSeconds(){ return _simElapsedSeconds; }
     }
 
-    // static void PerformBuild()
-    // {
-    //     // Get filename.
-    //     string path = Application.persistentDataPath;
-    //     string[] levels = new string[] {"Assets/Scenes/Test.unity"};
-
-    //     Debug.Log($"Built file to {path + "/BuiltTest.app"}");
-
-    //     // Build player.
-    //     BuildPipeline.BuildPlayer(levels, path + "/BuiltTest.app", BuildTarget.StandaloneOSX, BuildOptions.None);
-    // }
-
-    // #endif // UNITY_EDITOR
 }

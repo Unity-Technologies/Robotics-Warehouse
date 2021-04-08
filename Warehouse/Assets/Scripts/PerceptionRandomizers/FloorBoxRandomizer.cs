@@ -57,11 +57,6 @@ public class FloorBoxRandomizer : Randomizer
             o.AddComponent<RotationRandomizerTag>();
         }
 
-        // Add TurtleBot as a collision constraint
-        var turtleBot = GameObject.FindObjectOfType<AGVController>(); // Re-finding on each iteration because turtlebot is destroyed
-        turtleConstraint = new CollisionConstraint(turtleBot.transform.position.x, turtleBot.transform.position.z, turtleBot.trackWidth);
-        constraints.Add(turtleConstraint);
-
         // Begin placement interation
         placer.IterationStart();
         
