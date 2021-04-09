@@ -36,11 +36,7 @@ namespace Unity.Simulation.Warehouse {
 
         // Start is called before the first frame update
         void Awake()
-        {
-            if (Configuration.Instance.IsSimulationRunningInCloud()) {
-                appParam = ParamReader.appParams;
-            }
-            
+        {            
             _instance = appParam;
             
             _parentGenerated = new GameObject("GeneratedWarehouse");
