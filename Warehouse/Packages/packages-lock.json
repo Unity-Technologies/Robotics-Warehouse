@@ -184,8 +184,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.simulation.core": {
-      "version": "0.0.10-preview.23",
-      "depth": 0,
+      "version": "0.0.10-preview.22",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
