@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Unity.Robotics.SimulationControl;
 using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers;
 
 
 namespace Unity.Simulation.Warehouse {
-    public enum FloorType { PolishedCement, Hardwood, LowPileCarpet, HighPileCarpet }
-    public enum LightingType { Randomized, Morning, Afternoon, Evening, None }
-
     public class WarehouseManager : MonoBehaviour
     {
         [Header("Warehouse Prefabs")]
@@ -30,25 +28,32 @@ namespace Unity.Simulation.Warehouse {
         GameObject _parentWarehouse;
         List<GameObject> _paths = new List<GameObject>();
         List<GameObject> _dropoffs = new List<GameObject>();
-        readonly Quaternion _vRot = Quaternion.identity;
-        readonly Quaternion _hRot = Quaternion.Euler(0, 90, 0);
-        const float _pathHeight = 0.0001f;
+        public static Quaternion _vRot = Quaternion.identity;
+        public static Quaternion _hRot = Quaternion.Euler(0, 90, 0);
+        public static float _pathHeight = 0.0001f;
 
         // Start is called before the first frame update
         void Awake()
         {            
+            if (GameObject.FindObjectsOfType<WarehouseManager>().Length > 1) 
+            {
+                Destroy(GameObject.FindObjectsOfType<WarehouseManager>()[1].gameObject);
+            }
             _instance = appParam;
-            
-            _parentGenerated = new GameObject("GeneratedWarehouse");
-            //_parentGenerated.tag = "Generated";
+            _parentGenerated = GameObject.Find("GeneratedWarehouse");
+            if (_parentGenerated == null)
+            {
+                _parentGenerated = new GameObject("GeneratedWarehouse");
+                //_parentGenerated.tag = "Generated";
 
-            GenerateWarehouse();
+                GenerateWarehouse();
 
-            var shelves = GenerateShelves();
-            var stations = GenerateStations();
+                var shelves = GenerateShelves();
+                var stations = GenerateStations();
 
-            var waypoints = GenerateWaypoints();
-            _dropoffs = GenerateDropoff(_paths);
+                var waypoints = GenerateWaypoints();
+                _dropoffs = GenerateDropoff(_paths);       
+            }
         }
 
         private List<GameObject> GenerateDropoff(List<GameObject> paths){
