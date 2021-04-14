@@ -11,6 +11,7 @@ public class EditorWarehouseGeneration
     static WarehouseManager warehouseManager;
     static GameObject parentGenerated;
     static List<GameObject> shelves;
+    static PerceptionRandomizationScenario scenario;
     
     [MenuItem("Simulation/Generate Warehouse")]
     static void Generate()
@@ -28,12 +29,7 @@ public class EditorWarehouseGeneration
         GenerateWarehouse();
         shelves = GenerateShelves();
 
-        var scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
-        var randomizers = scenario.activeRandomizers;
-        foreach (var r in randomizers)
-        {
-            ((PerceptionRandomizer)r).OnEditorIteration();
-        }
+        IncrementIteration();
     }
 
     static void GenerateWarehouse() 
@@ -130,18 +126,22 @@ public class EditorWarehouseGeneration
 
         var shelfSize = warehouseManager.m_shelfPrefab.transform.Find("Rack").GetComponent<Renderer>().bounds.size;
 
-        if (shelfSize.y >= c){
+        if (shelfSize.y >= c)
+        {
             Debug.LogWarning("Shelf columns will overlap with no space to navigate.");
         }
-        if (shelfSize.x >= r){
+        if (shelfSize.x >= r)
+        {
             Debug.LogWarning("Shelf rows will overlap with no space to navigate.");
         }
 
         var shelfParent = new GameObject("Shelves").transform;
         shelfParent.parent = parentGenerated.transform;
 
-        for (var i = 1; i < warehouseManager.appParam.m_cols + 1; i++){
-            for (var j = 1; j < warehouseManager.appParam.m_rows + 1; j++){
+        for (var i = 1; i < warehouseManager.appParam.m_cols + 1; i++)
+        {
+            for (var j = 1; j < warehouseManager.appParam.m_rows + 1; j++)
+            {
                 GameObject o = PrefabUtility.InstantiatePrefab(warehouseManager.m_shelfPrefab) as GameObject;
                 o.transform.position = new Vector3(c * i - (warehouseManager.appParam.m_width / 2), 0, r * j - (warehouseManager.appParam.m_length / 2));
                 o.transform.parent = shelfParent;
@@ -151,8 +151,20 @@ public class EditorWarehouseGeneration
         return shelves;
     }
 
-    [MenuItem("Simulation/Reset Warehouse", true)]
-    static bool DeleteWarehouse() 
+    [MenuItem("Simulation/Increment Iteration")]
+    static void IncrementIteration() 
+    {
+        if (scenario == null)
+            scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
+        var randomizers = scenario.activeRandomizers;
+        foreach (var r in randomizers)
+        {
+            ((PerceptionRandomizer)r).OnEditorIteration();
+        }
+    }
+
+    [MenuItem("Simulation/Reset Warehouse")]
+    static void DeleteWarehouse() 
     {
         var warehouse = GameObject.Find("GeneratedWarehouse");
         var spawned = GameObject.Find("SpawnedBoxes");
@@ -160,9 +172,25 @@ public class EditorWarehouseGeneration
         {
             Object.DestroyImmediate(warehouse);
             Object.DestroyImmediate(spawned);
-            return true;
         }
-        return false;
+    }
+
+    [MenuItem("Simulation/Generate Warehouse", true)]
+    static bool ValidateGenerate()
+    {
+        return (GameObject.FindObjectOfType<WarehouseManager>() != null);
+    }
+
+    [MenuItem("Simulation/Increment Iteration", true)]
+    static bool ValidateIncrement()
+    {
+        return (scenario != null && GameObject.Find("GeneratedWarehouse") != null);
+    }
+
+    [MenuItem("Simulation/Reset Warehouse", true)]
+    static bool ValidateReset()
+    {
+        return (GameObject.Find("GeneratedWarehouse") != null);
     }
 
     [CustomEditor(typeof(WarehouseManager))]
@@ -173,7 +201,7 @@ public class EditorWarehouseGeneration
             DrawDefaultInspector();
 
             var warehouse = (WarehouseManager)target;
-            var scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
+            scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Generate Warehouse"))
             {
@@ -185,11 +213,7 @@ public class EditorWarehouseGeneration
                     scenario.Randomize();   
                 else
                 {
-                    var randomizers = scenario.activeRandomizers;
-                    foreach (var r in randomizers)
-                    {
-                        ((PerceptionRandomizer)r).OnEditorIteration();
-                    }
+                    IncrementIteration();
                 }
             }
             if (GUILayout.Button("Delete Warehouse"))
