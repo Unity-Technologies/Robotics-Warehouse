@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8095125946893382546}
   - component: {fileID: 8095125946893382550}
-  - component: {fileID: -7318733554474796636}
+  - component: {fileID: 7100074317435966469}
   m_Layer: 0
   m_Name: WarehouseManager
   m_TagString: Untagged
@@ -64,7 +64,7 @@ MonoBehaviour:
     m_debrisSize: 0.025
     m_debrisKinematic: 0
     m_quitAfterSeconds: 0
---- !u!114 &-7318733554474796636
+--- !u!114 &7100074317435966469
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -79,6 +79,8 @@ MonoBehaviour:
   m_Randomizers:
   - id: 0
   - id: 1
+  - id: 2
+  - id: 3
   constants:
     randomSeed: 539662031
   references:
@@ -96,7 +98,7 @@ MonoBehaviour:
           - 0.5
           uniform: 1
           m_Sampler:
-            id: 2
+            id: 4
           m_Categories:
           - {fileID: 2678313873110462349, guid: 105bacf345599411fbe2630849441c1d, type: 3}
           - {fileID: 3409260191325896975, guid: 37cebb7ddfec2458a88240fda8a699e4, type: 3}
@@ -111,6 +113,75 @@ MonoBehaviour:
         numObjectToSpawn: 1
         maxPlacementTries: 100
     00000002:
+      type: {class: LocalRotationRandomizer, ns: , asm: Assembly-CSharp}
+      data:
+        m_Enabled: 1
+        collapsed: 0
+        rotation:
+          collapsed: 0
+          x:
+            id: 5
+          y:
+            id: 6
+          z:
+            id: 7
+    00000003:
+      type: {class: MaterialRandomizer, ns: , asm: Assembly-CSharp}
+      data:
+        m_Enabled: 1
+        collapsed: 0
+        material:
+          collapsed: 0
+          probabilities:
+          - 0.25
+          - 0.25
+          - 0.25
+          - 0.25
+          uniform: 1
+          m_Sampler:
+            id: 8
+          m_Categories:
+          - material: {fileID: 2100000, guid: 71649fdce09f40a4c81a0768cf1f46f8, type: 2}
+            dynamicFriction: 0.2
+            staticFriction: 0.2
+          - material: {fileID: 2100000, guid: 89c8b91c56a71d946ad58f5ae4b77b2f, type: 2}
+            dynamicFriction: 0.5
+            staticFriction: 0.5
+          - material: {fileID: 2100000, guid: 96895972da32e4bb09fc4888b00d5111, type: 2}
+            dynamicFriction: 0.7
+            staticFriction: 0.7
+          - material: {fileID: 2100000, guid: 279db58e1a64545b08636fb68f88a0de, type: 2}
+            dynamicFriction: 1
+            staticFriction: 1
+    00000004:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: 0
+          maximum: 1
+    00000005:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: 0
+          maximum: 0
+    00000006:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: -15
+          maximum: 15
+    00000007:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: 0
+          maximum: 0
+    00000008:
       type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
         asm: Unity.Perception.Runtime}
       data:

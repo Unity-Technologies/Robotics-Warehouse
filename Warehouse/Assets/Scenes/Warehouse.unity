@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   configFilePath:
-  - /Users/peifeng.jing/Desktop/SimulatorControlProject/Robotics-AMR-Spike/Warehouse/Assets/Resources/Configs/warehouse.json
+  - Assets/Resources/Configs/warehouse.json
 --- !u!4 &1243530624
 Transform:
   m_ObjectHideFlags: 0

@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Samplers;
+using Unity.Robotics.SimulationControl;
 
-public class RobotStandaloneRandomizer : Randomizer
+public class RobotStandaloneRandomizer : PerceptionRandomizer
 {
     private GameObject[] floorObjects;
     public float distFromEdge;

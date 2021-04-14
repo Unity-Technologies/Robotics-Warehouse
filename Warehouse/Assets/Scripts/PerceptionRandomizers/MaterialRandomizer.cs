@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Samplers;
+using Unity.Robotics.SimulationControl;
 
 [Serializable]
 public class MaterialToFriction 
@@ -19,7 +20,7 @@ public class MaterialToFriction
 /// </summary>
 [Serializable]
 [AddRandomizerMenu("Perception/Material Randomizer")]
-public class MaterialRandomizer : Randomizer
+public class MaterialRandomizer : PerceptionRandomizer
 {
     public MaterialToFrictionParameter material;
 
@@ -29,6 +30,8 @@ public class MaterialRandomizer : Randomizer
     protected override void OnIterationStart()
     {
         var tags = tagManager.Query<MaterialRandomizerTag>();
+        if (!Application.isPlaying)
+            tags = GameObject.FindObjectsOfType<MaterialRandomizerTag>();
         var sample = material.Sample();
         foreach (var tag in tags)
         {

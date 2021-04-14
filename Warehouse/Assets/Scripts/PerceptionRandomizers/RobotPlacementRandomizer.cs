@@ -4,13 +4,14 @@ using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Samplers;
 using Object = UnityEngine.Object;
+using Unity.Robotics.SimulationControl;
 
 /// <summary>
 /// TODO
 /// </summary>
 [Serializable]
 [AddRandomizerMenu("Residential Interiors/Robot Placement")]
-public class RobotPlacementRandomizer : Randomizer
+public class RobotPlacementRandomizer : PerceptionRandomizer
 {
     public GameObject[] floorObjects;
     public GameObject prefabToSpawn;

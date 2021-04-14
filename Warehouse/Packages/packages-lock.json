@@ -131,7 +131,7 @@
       "hash": "2b09bf7e77e270b789676aef69a9b5f5c55e4315"
     },
     "com.unity.robotics.simulation-control": {
-      "version": "git@github.com:Unity-Technologies/Robotics-Simulation-Control.git",
+      "version": "https://github.com/Unity-Technologies/Robotics-Simulation-Control.git#amanda/randomizer",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -139,7 +139,7 @@
         "com.unity.perception": "0.8.0-preview.2",
         "nuget.moq": "1.0.0"
       },
-      "hash": "8fb8cbf5fb0ddc0186213751557ac40ea5007e75"
+      "hash": "8a5787bbeea4ab55030503ba40f7040ee67256b8"
     },
     "com.unity.robotics.urdf-importer": {
       "version": "https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer",

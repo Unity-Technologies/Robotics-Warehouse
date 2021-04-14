@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Samplers;
+using Unity.Robotics.SimulationControl;
 
 using Object = UnityEngine.Object;
 
@@ -11,7 +12,7 @@ namespace UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers
 {
     [Serializable]
     [AddRandomizerMenu("Perception/Shelf Box Randomizer")]
-    public class ShelfBoxRandomizer : Randomizer
+    public class ShelfBoxRandomizer : PerceptionRandomizer
     {
         public GameObjectParameter boxParameter;
         [Range(0, 1f)] public float boxSpawnChance = 0.5f;
@@ -21,6 +22,7 @@ namespace UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers
 
         protected override void OnScenarioStart()
         {
+            // TODO: why does query return nothing in editor mode?
             var tags = tagManager.Query<ShelfBoxRandomizerTag>();
             if (!Application.isPlaying)
                 tags = GameObject.FindObjectsOfType<ShelfBoxRandomizerTag>();
@@ -62,13 +64,6 @@ namespace UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers
                     Object.Destroy(b);
             }
             spawnedBoxes.Clear();
-        }
-
-        public void EditorIteration()
-        {
-            OnIterationEnd();
-            OnScenarioStart();
-            OnIterationStart();
         }
     }
 }

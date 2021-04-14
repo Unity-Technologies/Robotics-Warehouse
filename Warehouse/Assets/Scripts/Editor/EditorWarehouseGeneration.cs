@@ -11,7 +11,6 @@ public class EditorWarehouseGeneration
     static WarehouseManager warehouseManager;
     static GameObject parentGenerated;
     static List<GameObject> shelves;
-    static List<GameObject> _paths = new List<GameObject>();
     
     [MenuItem("Simulation/Generate Warehouse")]
     static void Generate()
@@ -29,8 +28,12 @@ public class EditorWarehouseGeneration
         GenerateWarehouse();
         shelves = GenerateShelves();
 
-        var test = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
-        test.Randomize();
+        var scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
+        var randomizers = scenario.activeRandomizers;
+        foreach (var r in randomizers)
+        {
+            ((PerceptionRandomizer)r).OnEditorIteration();
+        }
     }
 
     static void GenerateWarehouse() 
@@ -134,78 +137,17 @@ public class EditorWarehouseGeneration
             Debug.LogWarning("Shelf rows will overlap with no space to navigate.");
         }
 
-        // Generate paths between shelves
-        GameObject v;
-        GameObject h;
-
         var shelfParent = new GameObject("Shelves").transform;
         shelfParent.parent = parentGenerated.transform;
-        var pathParent = new GameObject("Paths").transform;
-        pathParent.parent = parentGenerated.transform;
 
         for (var i = 1; i < warehouseManager.appParam.m_cols + 1; i++){
-            bool colPath = false;
             for (var j = 1; j < warehouseManager.appParam.m_rows + 1; j++){
                 GameObject o = PrefabUtility.InstantiatePrefab(warehouseManager.m_shelfPrefab) as GameObject;
                 o.transform.position = new Vector3(c * i - (warehouseManager.appParam.m_width / 2), 0, r * j - (warehouseManager.appParam.m_length / 2));
                 o.transform.parent = shelfParent;
                 shelves.Add(o);
-
-                // need to instantiate only once per row and once per column
-                if (!colPath && i < warehouseManager.appParam.m_cols){
-                    v = PrefabUtility.InstantiatePrefab(warehouseManager.m_roadPrefab) as GameObject;
-                    v.transform.position = new Vector3(o.transform.position.x + (c/2), WarehouseManager._pathHeight, 0);
-                    v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, warehouseManager.appParam.m_length / 10f);
-                    v.transform.parent = pathParent;
-                    _paths.Add(v);
-                    colPath = true;
-                }
-                if (i == 1 && j < warehouseManager.appParam.m_rows){
-                    h = PrefabUtility.InstantiatePrefab(warehouseManager.m_roadPrefab) as GameObject;
-                    h.transform.position = new Vector3(0, WarehouseManager._pathHeight, o.transform.position.z + (r/2));
-                    h.transform.localRotation = WarehouseManager._hRot;
-                    h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, warehouseManager.appParam.m_width / 10f);
-                    h.transform.parent = pathParent;
-                    _paths.Add(h);
-                }
             }
         }
-
-        // Station path
-        h = PrefabUtility.InstantiatePrefab(warehouseManager.m_roadPrefab) as GameObject;
-        h.transform.position = new Vector3(0, WarehouseManager._pathHeight, -(warehouseManager.appParam.m_length / 2));
-        h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, warehouseManager.appParam.m_width / 10f);
-        h.transform.localRotation = WarehouseManager._hRot;
-        h.transform.parent = pathParent;
-
-        // First path
-        v = PrefabUtility.InstantiatePrefab(warehouseManager.m_roadPrefab) as GameObject;
-        v.transform.position = new Vector3(-(warehouseManager.appParam.m_width / 2) + c/2, WarehouseManager._pathHeight, 0);
-        v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, warehouseManager.appParam.m_length / 10f);
-        v.transform.parent = pathParent;
-
-        h = PrefabUtility.InstantiatePrefab(warehouseManager.m_roadPrefab) as GameObject;
-        h.transform.position = new Vector3(0, WarehouseManager._pathHeight, -(warehouseManager.appParam.m_length / 2) + r/2);
-        h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, warehouseManager.appParam.m_width / 10f);
-        h.transform.localRotation = WarehouseManager._hRot;
-        h.transform.parent = pathParent;
-        _paths.Add(v);
-        _paths.Add(h);
-
-        // Last path
-        v = PrefabUtility.InstantiatePrefab(warehouseManager.m_roadPrefab) as GameObject;
-        v.transform.position = new Vector3(warehouseManager.appParam.m_width / 2 - (c/2), WarehouseManager._pathHeight, 0);
-        v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, warehouseManager.appParam.m_length / 10f);
-        v.transform.parent = pathParent;
-
-        h = PrefabUtility.InstantiatePrefab(warehouseManager.m_roadPrefab) as GameObject;
-        h.transform.position = new Vector3(0, WarehouseManager._pathHeight, warehouseManager.appParam.m_length /2 - (r/2));
-        h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, warehouseManager.appParam.m_width / 10f);
-        h.transform.localRotation = WarehouseManager._hRot;
-        h.transform.parent = pathParent;
-        _paths.Add(v);
-        _paths.Add(h);
-
         return shelves;
     }
 
@@ -213,9 +155,11 @@ public class EditorWarehouseGeneration
     static bool DeleteWarehouse() 
     {
         var warehouse = GameObject.Find("GeneratedWarehouse");
+        var spawned = GameObject.Find("SpawnedBoxes");
         if (warehouse != null)
         {
             Object.DestroyImmediate(warehouse);
+            Object.DestroyImmediate(spawned);
             return true;
         }
         return false;
@@ -228,38 +172,31 @@ public class EditorWarehouseGeneration
         {
             DrawDefaultInspector();
 
-            WarehouseManager warehouse = (WarehouseManager)target;
+            var warehouse = (WarehouseManager)target;
+            var scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Generate Warehouse"))
             {
                 Generate();
             }
-            if (GUILayout.Button("Delete Warehouse"))
-            {
-                DeleteWarehouse();
-            }
-            GUILayout.EndHorizontal();
-        }
-    }
-
-    [CustomEditor(typeof(PerceptionRandomizationScenario))]
-    public class IterateButton : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
-
-            PerceptionRandomizationScenario scenario = (PerceptionRandomizationScenario)target;
             if (GUILayout.Button("Increment iteration"))
             {
                 if (Application.isPlaying)
                     scenario.Randomize();   
                 else
                 {
-                    var shelfRand = scenario.GetRandomizer<ShelfBoxRandomizer>();
-                    shelfRand.EditorIteration();
+                    var randomizers = scenario.activeRandomizers;
+                    foreach (var r in randomizers)
+                    {
+                        ((PerceptionRandomizer)r).OnEditorIteration();
+                    }
                 }
             }
+            if (GUILayout.Button("Delete Warehouse"))
+            {
+                DeleteWarehouse();
+            }
+            GUILayout.EndHorizontal();
         }
     }
 }
