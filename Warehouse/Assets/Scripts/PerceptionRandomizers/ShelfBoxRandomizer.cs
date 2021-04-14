@@ -22,6 +22,8 @@ namespace UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers
         protected override void OnScenarioStart()
         {
             var tags = tagManager.Query<ShelfBoxRandomizerTag>();
+            if (!Application.isPlaying)
+                tags = GameObject.FindObjectsOfType<ShelfBoxRandomizerTag>();
             foreach (var tag in tags)
             {
                 tag.AssignMemberLayers();
@@ -32,6 +34,8 @@ namespace UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers
         protected override void OnIterationStart()
         {
             var tags = tagManager.Query<ShelfBoxRandomizerTag>();
+            if (!Application.isPlaying)
+                tags = GameObject.FindObjectsOfType<ShelfBoxRandomizerTag>();
             foreach (var tag in tags)
             {
                 foreach (Transform[] layer in tag.layers) 
@@ -52,9 +56,19 @@ namespace UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers
         {
             foreach (var b in spawnedBoxes)
             {
-                Object.Destroy(b);
+                if (!Application.isPlaying)
+                    Object.DestroyImmediate(b);
+                else
+                    Object.Destroy(b);
             }
             spawnedBoxes.Clear();
+        }
+
+        public void EditorIteration()
+        {
+            OnIterationEnd();
+            OnScenarioStart();
+            OnIterationStart();
         }
     }
 }

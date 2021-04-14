@@ -19,6 +19,12 @@ public class EditorWarehouseGeneration
         DeleteWarehouse();
 
         warehouseManager = GameObject.FindObjectOfType<WarehouseManager>();
+        if (warehouseManager == null) 
+        {
+            Debug.LogWarning("No WarehouseManager script in the scene!");
+            return;
+        }
+
         parentGenerated = new GameObject("GeneratedWarehouse");
         GenerateWarehouse();
         shelves = GenerateShelves();
@@ -246,7 +252,13 @@ public class EditorWarehouseGeneration
             PerceptionRandomizationScenario scenario = (PerceptionRandomizationScenario)target;
             if (GUILayout.Button("Increment iteration"))
             {
-                scenario.Randomize();   
+                if (Application.isPlaying)
+                    scenario.Randomize();   
+                else
+                {
+                    var shelfRand = scenario.GetRandomizer<ShelfBoxRandomizer>();
+                    shelfRand.EditorIteration();
+                }
             }
         }
     }

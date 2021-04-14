@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 /// </summary>
 [Serializable]
 [AddRandomizerMenu("Residential Interiors/Robot Placement")]
-public class TestRobotPlacementRandomizer : Randomizer
+public class RobotPlacementRandomizer : Randomizer
 {
     public GameObject[] floorObjects;
     public GameObject prefabToSpawn;

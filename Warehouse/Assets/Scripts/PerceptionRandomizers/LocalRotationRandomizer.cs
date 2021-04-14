@@ -10,7 +10,7 @@ using UnityEngine.Perception.Randomization.Samplers;
 /// </summary>
 [Serializable]
 [AddRandomizerMenu("Perception/Local Rotation Randomizer")]
-public class TestLocalRotationRandomizer : Randomizer
+public class LocalRotationRandomizer : Randomizer
 {
     /// <summary>
     /// Defines the range of random rotations that can be assigned to tagged objects
