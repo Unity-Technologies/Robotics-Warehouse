@@ -171,20 +171,41 @@ public class EditorWarehouseGeneration
         }
     }
 
-    [MenuItem("Simulation/Generate Warehouse", true)]
+    [MenuItem("Simulation/Save Warehouse")]
+    static void SaveWarehouse() 
+    {
+        var warehouse = GameObject.Find("GeneratedWarehouse");
+        var spawned = GameObject.Find("SpawnedBoxes");
+        if (warehouse != null)
+        {
+            string localPath = "Assets/Prefabs/" + warehouse.name + ".prefab";
+            // Make sure the file name is unique, in case an existing Prefab has the same name.
+            localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
+            // Create the new Prefab.
+            PrefabUtility.SaveAsPrefabAssetAndConnect(warehouse, localPath, InteractionMode.UserAction);
+        }
+    }
+
+    [MenuItem("Simulation/Generate Warehouse", true, 100)]
     static bool ValidateGenerate()
     {
         return (GameObject.FindObjectOfType<WarehouseManager>() != null);
     }
 
-    [MenuItem("Simulation/Increment Iteration", true)]
+    [MenuItem("Simulation/Increment Iteration", true, 100)]
     static bool ValidateIncrement()
     {
         return (scenario != null && GameObject.Find("GeneratedWarehouse") != null);
     }
 
-    [MenuItem("Simulation/Reset Warehouse", true)]
+    [MenuItem("Simulation/Reset Warehouse", true, 100)]
     static bool ValidateReset()
+    {
+        return (GameObject.Find("GeneratedWarehouse") != null);
+    }
+
+    [MenuItem("Simulation/Save Warehouse", true, 100)]
+    static bool ValidateSave()
     {
         return (GameObject.Find("GeneratedWarehouse") != null);
     }
@@ -198,26 +219,23 @@ public class EditorWarehouseGeneration
 
             var warehouse = (WarehouseManager)target;
             scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Generate Warehouse"))
-            {
-                Generate();
-            }
-            GUI.enabled = (GameObject.Find("GeneratedWarehouse") != null);
-            if (GUILayout.Button("Increment iteration"))
-            {
-                if (Application.isPlaying)
-                    scenario.Randomize();   
-                else
-                {
+            int selected = -1;
+            selected = GUILayout.SelectionGrid(selected, new string[]{"Generate", "Increment iteration", "Save prefab", "Delete"}, 2);
+
+            switch(selected) {
+                case 0:
+                    Generate();
+                    break;
+                case 1:
                     IncrementIteration();
-                }
+                    break;
+                case 2:
+                    SaveWarehouse();
+                    break;
+                case 3:
+                    DeleteWarehouse();
+                    break;
             }
-            if (GUILayout.Button("Delete Warehouse"))
-            {
-                DeleteWarehouse();
-            }
-            GUILayout.EndHorizontal();
         }
     }
 }

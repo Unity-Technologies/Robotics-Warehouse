@@ -54,7 +54,7 @@ namespace Unity.Simulation.Warehouse {
 
         #region MENU
 
-        [MenuItem("Simulation/Build Project")]
+        [MenuItem("Simulation/Build Project", false, 0)]
         public static void BuildProject()
         {
             var scenes = new string[]
@@ -64,7 +64,7 @@ namespace Unity.Simulation.Warehouse {
             Project.BuildProject("./build", "build", scenes);
         }
 
-        [MenuItem("Simulation/Execute Run")]
+        [MenuItem("Simulation/Execute Run", false, 0)]
         public static void Setup()
         {
             run = Run.Create("Warehouse_Robot", "Run");
@@ -171,7 +171,7 @@ namespace Unity.Simulation.Warehouse {
             
         }
 
-        [MenuItem("Simulation/Generate Params")]
+        [MenuItem("Simulation/Generate Params", false, 0)]
         static void ShowEditor() {
             ParamGenerator editor = EditorWindow.GetWindow<ParamGenerator>();
         }
