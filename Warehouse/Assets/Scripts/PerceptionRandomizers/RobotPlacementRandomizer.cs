@@ -10,7 +10,7 @@ using Unity.Robotics.SimulationControl;
 /// TODO
 /// </summary>
 [Serializable]
-[AddRandomizerMenu("Residential Interiors/Robot Placement")]
+[AddRandomizerMenu("Robotics/Robot Placement")]
 public class RobotPlacementRandomizer : PerceptionRandomizer
 {
     public GameObject[] floorObjects;

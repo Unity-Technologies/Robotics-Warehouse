@@ -156,11 +156,7 @@ public class EditorWarehouseGeneration
     {
         if (scenario == null)
             scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
-        var randomizers = scenario.activeRandomizers;
-        foreach (var r in randomizers)
-        {
-            ((PerceptionRandomizer)r).OnEditorIteration();
-        }
+        scenario.Randomize();
     }
 
     [MenuItem("Simulation/Reset Warehouse")]
@@ -207,6 +203,7 @@ public class EditorWarehouseGeneration
             {
                 Generate();
             }
+            GUI.enabled = (GameObject.Find("GeneratedWarehouse") != null);
             if (GUILayout.Button("Increment iteration"))
             {
                 if (Application.isPlaying)

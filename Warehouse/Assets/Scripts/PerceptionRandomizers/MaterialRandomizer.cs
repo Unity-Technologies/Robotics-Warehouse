@@ -19,7 +19,7 @@ public class MaterialToFriction
 /// Randomizes the material texture of objects tagged with a TextureRandomizerTag
 /// </summary>
 [Serializable]
-[AddRandomizerMenu("Perception/Material Randomizer")]
+[AddRandomizerMenu("Robotics/Material Randomizer")]
 public class MaterialRandomizer : PerceptionRandomizer
 {
     public MaterialToFrictionParameter material;

@@ -11,7 +11,7 @@ using Object = UnityEngine.Object;
 namespace UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers
 {
     [Serializable]
-    [AddRandomizerMenu("Perception/Shelf Box Randomizer")]
+    [AddRandomizerMenu("Robotics/Shelf Box Randomizer")]
     public class ShelfBoxRandomizer : PerceptionRandomizer
     {
         public GameObjectParameter boxParameter;

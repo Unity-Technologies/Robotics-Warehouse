@@ -15,7 +15,7 @@ using RosSharp.Control;
 using Object = UnityEngine.Object;
 
 [Serializable]
-[AddRandomizerMenu("Perception/Floor Box Randomizer")]
+[AddRandomizerMenu("Robotics/Floor Box Randomizer")]
 public class FloorBoxRandomizer : PerceptionRandomizer
 {
     public GameObject objectToSpawn;
@@ -54,6 +54,9 @@ public class FloorBoxRandomizer : PerceptionRandomizer
 
     protected override void OnIterationStart()
     {
+        if (GameObject.Find("GeneratedWarehouse") == null)
+            return;
+
         // Create floor boundaries for spawning
         var bounds = new Bounds(Vector3.zero, new Vector3(appParam.m_width, 0, appParam.m_length));
         placer = new SurfaceObjectPlacer(bounds, random, maxPlacementTries);
