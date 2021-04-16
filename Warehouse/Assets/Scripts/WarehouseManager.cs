@@ -8,8 +8,6 @@ namespace Unity.Simulation.Warehouse {
         [Header("Warehouse Prefabs")]
         public GameObject m_shelfPrefab;
         public GameObject m_stationPrefab;
-        public GameObject m_dropoffPrefab;
-        public GameObject m_roadPrefab;
         public GameObject m_warehousePrefab;
 
         public AppParam appParam;
@@ -25,10 +23,8 @@ namespace Unity.Simulation.Warehouse {
         GameObject _parentGenerated;
         GameObject _parentWarehouse;
         List<GameObject> _paths = new List<GameObject>();
-        List<GameObject> _dropoffs = new List<GameObject>();
         public static Quaternion _vRot = Quaternion.identity;
         public static Quaternion _hRot = Quaternion.Euler(0, 90, 0);
-        public static float _pathHeight = 0.0001f;
 
         // Start is called before the first frame update
         void Awake()
@@ -48,83 +44,7 @@ namespace Unity.Simulation.Warehouse {
 
                 var shelves = GenerateShelves();
                 var stations = GenerateStations();
-
-                var waypoints = GenerateWaypoints();
-                _dropoffs = GenerateDropoff(_paths);       
             }
-        }
-
-        private List<GameObject> GenerateDropoff(List<GameObject> paths){
-            var objects = new List<GameObject>();
-
-            float left = 9999;
-            float top = -9999;
-            float bottom = 9999;
-            float right = -9999;
-
-            float pickC = (appParam.m_dropoff > 1) ? appParam.m_width / (appParam.m_dropoff + 1.0f) : appParam.m_width / 2.0f;
-
-            foreach (var path in paths){
-                if (path.transform.position.x < left){
-                    left = path.transform.position.x;
-                }
-                if (path.transform.position.z > top){
-                    top = path.transform.position.z;
-                }
-                if (path.transform.position.x > right){
-                    right = path.transform.position.x;
-                }
-                if (path.transform.position.z < bottom){
-                    bottom = path.transform.position.z;
-                }
-            }
-
-            var cur = new Vector3(0, 0f, top);
-
-            var line = Instantiate(m_dropoffPrefab, cur, Quaternion.identity, _parentWarehouse.transform);
-            line.transform.localScale = new Vector3(appParam.m_width, line.transform.localScale.y, line.transform.localScale.z);
-
-            cur = new Vector3(left, 0f, top + 2f);
-
-            var parentDropoff = new GameObject("Dropoffs").transform;
-            parentDropoff.parent = _parentGenerated.transform;
-
-            while (cur.x < right + pickC){
-                var b = new GameObject("Dropoff").transform;
-                b.position = cur;
-                b.rotation = Quaternion.identity;
-                b.parent = parentDropoff;
-                cur.x += pickC;
-                objects.Add(b.gameObject);
-            }
-
-            return objects;
-        }
-
-        // Generate bot waypoint system
-        private List<Vector3> GenerateWaypoints(){
-            var pts = new List<Vector3>();
-
-            var xCoord = new List<float>();
-            var zCoord = new List<float>();
-
-            foreach (var p in _paths){
-                xCoord.Add(p.transform.position.x);
-                zCoord.Add(p.transform.position.z);
-            }
-
-            xCoord.Sort();
-            zCoord.Sort();
-
-            for (int i = 0; i < xCoord.Count; i++){
-                for (int j = 0; j < zCoord.Count; j++){
-                    if (!pts.Contains(new Vector3(xCoord[i], 0, zCoord[j])) && xCoord[i] != 0){
-                        pts.Add(new Vector3(xCoord[i], 0, zCoord[j]));
-                    }
-                }
-            }
-
-            return pts;
         }
 
         // Generate warehouse assets based on params
@@ -198,56 +118,6 @@ namespace Unity.Simulation.Warehouse {
             if (shelfSize.x >= r){
                 Debug.LogWarning("Shelf rows will overlap with no space to navigate.");
             }
-
-            // Generate paths between shelves
-            GameObject v;
-            GameObject h;
-
-            var shelfParent = new GameObject("Shelves").transform;
-            shelfParent.parent = _parentGenerated.transform;
-            var pathParent = new GameObject("Paths").transform;
-            pathParent.parent = _parentGenerated.transform;
-
-            for (var i = 1; i < appParam.m_cols + 1; i++){
-                bool colPath = false;
-                for (var j = 1; j < appParam.m_rows + 1; j++){
-                    var o = Instantiate(m_shelfPrefab, new Vector3(c * i - (appParam.m_width / 2), 0, r * j - (appParam.m_length / 2)), Quaternion.identity, shelfParent);
-                    shelves.Add(o);
-
-                    // need to instantiate only once per row and once per column
-                    if (!colPath && i < appParam.m_cols){
-                        v = Instantiate(m_roadPrefab, new Vector3(o.transform.position.x + (c/2), _pathHeight, 0), _vRot, pathParent);
-                        v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, appParam.m_length / 10f);
-                        _paths.Add(v);
-                        colPath = true;
-                    }
-                    if (i == 1 && j < appParam.m_rows){
-                        h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, o.transform.position.z + (r/2)), _hRot, pathParent);
-                        h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, appParam.m_width / 10f);
-                        _paths.Add(h);
-                    }
-                }
-            }
-
-            // Station path
-            h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, -(appParam.m_length / 2)), _hRot, pathParent);
-            h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, appParam.m_width / 10f);
-
-            // First path
-            v = Instantiate(m_roadPrefab, new Vector3(-(appParam.m_width / 2) + c/2, _pathHeight, 0), _vRot, pathParent);
-            v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, appParam.m_length / 10f);
-            h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, -(appParam.m_length / 2) + r/2), _hRot, pathParent);
-            h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, appParam.m_width / 10f);
-            _paths.Add(v);
-            _paths.Add(h);
-
-            // Last path
-            v = Instantiate(m_roadPrefab, new Vector3(appParam.m_width / 2 - (c/2), _pathHeight, 0), _vRot, pathParent);
-            v.transform.localScale = new Vector3(r / 30f, v.transform.localScale.y, appParam.m_length / 10f);
-            h = Instantiate(m_roadPrefab, new Vector3(0, _pathHeight, appParam.m_length /2 - (r/2)), _hRot, pathParent);
-            h.transform.localScale = new Vector3(c / 30f, h.transform.localScale.y, appParam.m_width / 10f);
-            _paths.Add(v);
-            _paths.Add(h);
 
             return shelves;
         }

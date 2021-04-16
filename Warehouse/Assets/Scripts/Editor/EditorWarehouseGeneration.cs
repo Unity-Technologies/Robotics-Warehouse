@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEditor;
 using Unity.Simulation.Warehouse;
 using Unity.Robotics.SimulationControl;
-using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers;
 
 public class EditorWarehouseGeneration 
 {

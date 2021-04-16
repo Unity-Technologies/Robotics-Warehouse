@@ -309,12 +309,6 @@ namespace Unity.Simulation.Warehouse {
             tmp.m_length = int.Parse(lists[1]);
             tmp.m_rows = int.Parse(lists[2]);
             tmp.m_cols = int.Parse(lists[3]);
-            // tmp.m_horizontal = bool.Parse(lists[4]);
-            tmp.m_numBots = int.Parse(lists[5]);
-            tmp.m_dropoff = int.Parse(lists[6]);
-            // tmp.m_lighting = Enum.Parse(typeof(LightingType), lists[7]).ToString();
-            // tmp.m_percentLight = float.Parse(lists[8]);
-            tmp.m_quitAfterSeconds = _quitAfterSeconds;
             
             return tmp;
         }
