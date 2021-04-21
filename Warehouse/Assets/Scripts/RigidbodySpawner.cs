@@ -47,7 +47,8 @@ namespace Unity.Simulation.Warehouse {
         {
             wasDebris = false;
             var boxIn = boxField.text.Split(',');
-            if (boxIn.Length != 3){
+            if (boxIn.Length != 3)
+            {
                 Debug.LogError($"Invalid box input dimensions!");
                 return;
             }
@@ -70,7 +71,6 @@ namespace Unity.Simulation.Warehouse {
                     for (int k = 0; k < boxDims[2]; k++)
                     {
                         var o = Instantiate(boxPrefab, new Vector3(i * boxSize.x, k * boxSize.y, j * boxSize.z), Quaternion.identity, spawned.transform);
-                        Destroy(o.GetComponent<BoxDropoff>());
                         boxPrefab = scenario.GetRandomizer<ShelfBoxRandomizer>().GetBoxPrefab();
                     }
                 }
@@ -96,7 +96,8 @@ namespace Unity.Simulation.Warehouse {
             {
                 var randShape = Random.Range(0, 4);
                 GameObject obj;
-                switch(randShape){
+                switch (randShape)
+                {
                     case 0:
                         obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         break;

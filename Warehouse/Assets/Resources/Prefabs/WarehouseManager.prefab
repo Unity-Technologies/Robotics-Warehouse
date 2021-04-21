@@ -47,15 +47,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_shelfPrefab: {fileID: 2320965680562459459, guid: 32ebf166e42304ddc80e0a743b25fb4f,
     type: 3}
-  m_stationPrefab: {fileID: 963488194655095976, guid: a6cfeacca8a21419c9d0d1bc4476cfa7,
-    type: 3}
-  m_warehousePrefab: {fileID: 1241700020277550981, guid: 4970bbd17fabd466b91b912433ca585a,
+  m_warehousePrefab: {fileID: 2837336270469590422, guid: 4970bbd17fabd466b91b912433ca585a,
     type: 3}
   appParam:
     m_width: 20
     m_length: 25
-    m_rows: 3
-    m_cols: 2
+    m_shelfRows: 4
+    m_shelfCols: 3
 --- !u!114 &7100074317435966469
 MonoBehaviour:
   m_ObjectHideFlags: 0

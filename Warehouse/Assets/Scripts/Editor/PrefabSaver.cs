@@ -10,14 +10,17 @@ public class PrefabSaver
     {
         var generatedWarehouse = GameObject.FindGameObjectWithTag("Generated");
         var children = generatedWarehouse.GetComponentsInChildren<Renderer>();
-        foreach (var e in children){
-            if (e.materials.Length == 1){
+        foreach (var e in children)
+        {
+            if (e.materials.Length == 1)
+            {
                 var matName = e.material.name.Replace(" (Instance)", "");
                 e.sharedMaterial = Resources.Load<Material>($"Materials/{matName}");
             }
             else {
                 var cpyMat = e.materials;
-                for (int i = 0; i < cpyMat.Length; i++){
+                for (int i = 0; i < cpyMat.Length; i++)
+                {
                     var matName = cpyMat[i].name.Replace(" (Instance)", "");
                     cpyMat[i] = Resources.Load<Material>($"Materials/{matName}");
                 }
