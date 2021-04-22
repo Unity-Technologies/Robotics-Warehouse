@@ -40,7 +40,8 @@ public class RobotPlacementRandomizer : PerceptionRandomizer
         Object.Destroy(spawnedObject);
     }
 
-    Vector3 SamplePoint(GameObject obj, float edge, int maxAttempts) {
+    Vector3 SamplePoint(GameObject obj, float edge, int maxAttempts) 
+    {
         var bounds = obj.GetComponent<Renderer>().bounds;
         int attempts = 0;
         var scaledExtents = Vector3.Scale(bounds.extents, obj.transform.localScale);

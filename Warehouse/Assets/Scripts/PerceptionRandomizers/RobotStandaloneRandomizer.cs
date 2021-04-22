@@ -4,6 +4,7 @@ using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Samplers;
 using Unity.Robotics.SimulationControl;
 
+[AddRandomizerMenu("Robotics/Robot Standalone Randomizer")]
 public class RobotStandaloneRandomizer : PerceptionRandomizer
 {
     private GameObject[] floorObjects;

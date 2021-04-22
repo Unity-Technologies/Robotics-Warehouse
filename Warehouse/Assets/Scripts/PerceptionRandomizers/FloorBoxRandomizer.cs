@@ -5,12 +5,10 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Randomizers;
-using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers;
 using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers.Tags;
 using UnityEngine.Perception.Randomization.Samplers;
 using Unity.Simulation.Warehouse;
 using Unity.Robotics.SimulationControl;
-using RosSharp.Control;
 
 using Object = UnityEngine.Object;
 
@@ -18,8 +16,7 @@ using Object = UnityEngine.Object;
 [AddRandomizerMenu("Robotics/Floor Box Randomizer")]
 public class FloorBoxRandomizer : PerceptionRandomizer
 {
-    public GameObject objectToSpawn;
-    public int numObjectToSpawn;
+    public int numBoxToSpawn;
     public int maxPlacementTries = 100;
     private FloatParameter random = new FloatParameter {value = new UniformSampler(0f, 1f)};
 
@@ -28,6 +25,7 @@ public class FloorBoxRandomizer : PerceptionRandomizer
     private List<CollisionConstraint> constraints;
     private CollisionConstraint turtleConstraint;
     private AppParam appParam;
+    private ShelfBoxRandomizer shelfBoxRandomizer;
 
     protected override void OnAwake()
     {
@@ -52,27 +50,34 @@ public class FloorBoxRandomizer : PerceptionRandomizer
         base.OnAwake();
     }
 
+    protected override void OnScenarioStart()
+    {
+        var scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
+        shelfBoxRandomizer = scenario.GetRandomizer<ShelfBoxRandomizer>();
+        base.OnScenarioStart();
+    }
+
     protected override void OnIterationStart()
     {
         if (GameObject.Find("GeneratedWarehouse") == null)
             return;
 
         // Create floor boundaries for spawning
-        var bounds = new Bounds(Vector3.zero, new Vector3(appParam.m_width, 0, appParam.m_length));
+        var bounds = new Bounds(Vector3.zero, new Vector3(appParam.width, 0, appParam.length));
         placer = new SurfaceObjectPlacer(bounds, random, maxPlacementTries);
 
         // Instantiate boxes at arbitrary location
         parentFloorBoxes = new GameObject("SpawnedBoxes");
-        for (int i = 0; i < numObjectToSpawn; i++) 
+        for (int i = 0; i < numBoxToSpawn; i++) 
         {
             GameObject o;
             if (!Application.isPlaying)
             {
-                o = PrefabUtility.InstantiatePrefab(objectToSpawn) as GameObject;
+                o = PrefabUtility.InstantiatePrefab(shelfBoxRandomizer.GetBoxPrefab()) as GameObject;
                 o.transform.parent = parentFloorBoxes.transform;
             }
             else
-                o = Object.Instantiate(objectToSpawn, parentFloorBoxes.transform);
+                o = Object.Instantiate(shelfBoxRandomizer.GetBoxPrefab(), parentFloorBoxes.transform);
             o.AddComponent<FloorBoxRandomizerTag>();
             o.AddComponent<RotationRandomizerTag>();
         }

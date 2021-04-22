@@ -10,7 +10,7 @@ using Unity.Robotics.SimulationControl;
 /// Randomizes the rotation of objects tagged with a RotationRandomizerTag
 /// </summary>
 [Serializable]
-[AddRandomizerMenu("Perception/Local Rotation Randomizer")]
+[AddRandomizerMenu("Robotics/Local Rotation Randomizer")]
 public class LocalRotationRandomizer : PerceptionRandomizer
 {
     /// <summary>
