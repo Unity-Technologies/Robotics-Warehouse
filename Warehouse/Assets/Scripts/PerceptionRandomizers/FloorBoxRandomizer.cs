@@ -63,7 +63,7 @@ public class FloorBoxRandomizer : PerceptionRandomizer
             return;
 
         // Create floor boundaries for spawning
-        var bounds = new Bounds(Vector3.zero, new Vector3(appParam.m_width, 0, appParam.m_length));
+        var bounds = new Bounds(Vector3.zero, new Vector3(appParam.width, 0, appParam.length));
         placer = new SurfaceObjectPlacer(bounds, random, maxPlacementTries);
 
         // Instantiate boxes at arbitrary location

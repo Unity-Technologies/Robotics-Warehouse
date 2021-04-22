@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Perception.Randomization.Randomizers;
 
 [Serializable]
-[AddComponentMenu("Perception/RandomizerTags/Shelf Box Randomizer Tag")]
+[AddComponentMenu("Robotics/RandomizerTags/Shelf Box Randomizer Tag")]
 public class ShelfBoxRandomizerTag : RandomizerTag { 
     public List<Transform[]> layers;
     Transform[] layer0;

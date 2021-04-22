@@ -8,5 +8,5 @@ using UnityEngine.Perception.Randomization.Randomizers;
 /// Used in conjunction with a TextureRandomizer to vary the material texture of GameObjects
 /// </summary>
 [Serializable]
-[AddComponentMenu("Perception/RandomizerTags/Material Randomizer Tag")]
+[AddComponentMenu("Robotics/RandomizerTags/Material Randomizer Tag")]
 public class MaterialRandomizerTag : RandomizerTag { }
