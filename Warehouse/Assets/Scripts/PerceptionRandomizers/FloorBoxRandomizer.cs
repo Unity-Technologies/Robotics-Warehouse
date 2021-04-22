@@ -67,7 +67,7 @@ public class FloorBoxRandomizer : PerceptionRandomizer
         placer = new SurfaceObjectPlacer(bounds, random, maxPlacementTries);
 
         // Instantiate boxes at arbitrary location
-        parentFloorBoxes = new GameObject("SpawnedBoxes");
+        parentFloorBoxes = new GameObject("FloorBoxes");
         for (int i = 0; i < numBoxToSpawn; i++) 
         {
             GameObject o;

@@ -49,7 +49,7 @@ public class EditorWarehouseGeneration
     static void DeleteWarehouse() 
     {
         var warehouse = GameObject.Find("GeneratedWarehouse");
-        var spawned = GameObject.Find("SpawnedBoxes");
+        var spawned = GameObject.Find("FloorBoxes");
         if (warehouse != null)
         {
             Object.DestroyImmediate(warehouse);
@@ -69,11 +69,11 @@ public class EditorWarehouseGeneration
     static void SaveEditorWarehouse() 
     {
         var warehouse = GameObject.Find("GeneratedWarehouse");
-        var spawned = GameObject.Find("SpawnedBoxes");
+        var spawned = GameObject.Find("FloorBoxes");
         if (warehouse != null)
         {
-            // Ensure path is unique; save to Assets/Prefabs
-            string localPath = "Assets/Prefabs/" + warehouse.name + ".prefab";
+            // Ensure path is unique; save to Assets/Resources/Prefabs/SavedWarehouses
+            string localPath = "Assets/Resources/Prefabs/SavedWarehouses/" + warehouse.name + ".prefab";
             localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
             PrefabUtility.SaveAsPrefabAssetAndConnect(warehouse, localPath, InteractionMode.UserAction);
         }
@@ -103,8 +103,8 @@ public class EditorWarehouseGeneration
             }
         }
 
-        // Ensure path is unique; save to Assets/Prefabs
-        string localPath = "Assets/Prefabs/" + warehouse.name + ".prefab";
+        // Ensure path is unique; save to Assets/Resources/Prefabs/SavedWarehouses
+        string localPath = "Assets/Resources/Prefabs/SavedWarehouses/" + warehouse.name + ".prefab";
         localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
         PrefabUtility.SaveAsPrefabAssetAndConnect(warehouse, localPath, InteractionMode.UserAction);
     }
