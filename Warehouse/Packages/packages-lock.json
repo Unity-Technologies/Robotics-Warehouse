@@ -131,7 +131,7 @@
       "hash": "2b09bf7e77e270b789676aef69a9b5f5c55e4315"
     },
     "com.unity.robotics.simulation-control": {
-      "version": "https://github.com/Unity-Technologies/Robotics-Simulation-Control.git",
+      "version": "git@github.com:Unity-Technologies/Robotics-Simulation-Control.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
