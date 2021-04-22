@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8095125946893382546}
   - component: {fileID: 8095125946893382550}
-  - component: {fileID: -7318733554474796636}
+  - component: {fileID: 7100074317435966469}
   m_Layer: 0
   m_Name: WarehouseManager
   m_TagString: Untagged
@@ -28,7 +28,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 9082987895096894745}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -44,27 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebd4b9c9c0ac940ccbce976daeb1893e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_shelfPrefab: {fileID: 2320965680562459459, guid: 32ebf166e42304ddc80e0a743b25fb4f,
+  shelfPrefab: {fileID: 2320965680562459459, guid: 32ebf166e42304ddc80e0a743b25fb4f,
     type: 3}
-  m_stationPrefab: {fileID: 963488194655095976, guid: a6cfeacca8a21419c9d0d1bc4476cfa7,
-    type: 3}
-  m_dropoffPrefab: {fileID: 3687013908571337764, guid: 16bac5b0502594c929baa75a2c1b6831,
-    type: 3}
-  m_roadPrefab: {fileID: 2502687427941708502, guid: 274fdb0b1872b46b0a5a385a3fe67938,
-    type: 3}
-  m_warehousePrefab: {fileID: 1241700020277550981, guid: 4970bbd17fabd466b91b912433ca585a,
+  warehousePrefab: {fileID: 2837336270469590422, guid: 4970bbd17fabd466b91b912433ca585a,
     type: 3}
   appParam:
-    m_width: 20
-    m_length: 25
-    m_rows: 3
-    m_cols: 2
-    m_numBots: 0
-    m_dropoff: 0
-    m_debrisSize: 0.025
-    m_debrisKinematic: 0
-    m_quitAfterSeconds: 0
---- !u!114 &-7318733554474796636
+    width: 50
+    length: 50
+    shelfRows: 4
+    shelfCols: 3
+--- !u!114 &7100074317435966469
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -79,13 +69,81 @@ MonoBehaviour:
   m_Randomizers:
   - id: 0
   - id: 1
+  - id: 2
+  - id: 3
+  - id: 4
   constants:
     randomSeed: 539662031
   references:
     version: 1
     00000000:
-      type: {class: ShelfBoxRandomizer, ns: UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers,
-        asm: Assembly-CSharp}
+      type: {class: FloorBoxRandomizer, ns: , asm: Assembly-CSharp}
+      data:
+        m_Enabled: 1
+        collapsed: 0
+        numBoxToSpawn: 0
+        maxPlacementTries: 100
+    00000001:
+      type: {class: LocalRotationRandomizer, ns: , asm: Assembly-CSharp}
+      data:
+        m_Enabled: 1
+        collapsed: 0
+        rotation:
+          collapsed: 0
+          x:
+            id: 5
+          y:
+            id: 6
+          z:
+            id: 7
+    00000002:
+      type: {class: MaterialRandomizer, ns: , asm: Assembly-CSharp}
+      data:
+        m_Enabled: 1
+        collapsed: 0
+        material:
+          collapsed: 0
+          probabilities:
+          - 0.25
+          - 0.25
+          - 0.25
+          - 0.25
+          uniform: 1
+          m_Sampler:
+            id: 8
+          m_Categories:
+          - material: {fileID: 2100000, guid: 71649fdce09f40a4c81a0768cf1f46f8, type: 2}
+            dynamicFriction: 0.2
+            staticFriction: 0.2
+          - material: {fileID: 2100000, guid: 89c8b91c56a71d946ad58f5ae4b77b2f, type: 2}
+            dynamicFriction: 0.5
+            staticFriction: 0.5
+          - material: {fileID: 2100000, guid: 96895972da32e4bb09fc4888b00d5111, type: 2}
+            dynamicFriction: 0.7
+            staticFriction: 0.7
+          - material: {fileID: 2100000, guid: 279db58e1a64545b08636fb68f88a0de, type: 2}
+            dynamicFriction: 1
+            staticFriction: 1
+    00000003:
+      type: {class: SunAngleRandomizer, ns: UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers,
+        asm: Unity.Perception.Runtime}
+      data:
+        m_Enabled: 1
+        collapsed: 0
+        hour:
+          collapsed: 0
+          value:
+            id: 9
+        dayOfTheYear:
+          collapsed: 0
+          value:
+            id: 10
+        latitude:
+          collapsed: 0
+          value:
+            id: 11
+    00000004:
+      type: {class: ShelfBoxRandomizer, ns: , asm: Assembly-CSharp}
       data:
         m_Enabled: 1
         collapsed: 0
@@ -96,24 +154,139 @@ MonoBehaviour:
           - 0.5
           uniform: 1
           m_Sampler:
-            id: 2
+            id: 12
           m_Categories:
           - {fileID: 2678313873110462349, guid: 105bacf345599411fbe2630849441c1d, type: 3}
           - {fileID: 3409260191325896975, guid: 37cebb7ddfec2458a88240fda8a699e4, type: 3}
         boxSpawnChance: 0.5
-    00000001:
-      type: {class: FloorBoxRandomizer, ns: , asm: Assembly-CSharp}
+    00000005:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
       data:
-        m_Enabled: 1
-        collapsed: 0
-        objectToSpawn: {fileID: 2678313873110462349, guid: 105bacf345599411fbe2630849441c1d,
-          type: 3}
-        numObjectToSpawn: 1
-        maxPlacementTries: 100
-    00000002:
+        range:
+          minimum: 0
+          maximum: 0
+    00000006:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: -15
+          maximum: 15
+    00000007:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: 0
+          maximum: 0
+    00000008:
       type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
         asm: Unity.Perception.Runtime}
       data:
         range:
           minimum: 0
           maximum: 1
+    00000009:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: 0
+          maximum: 24
+    0000000A:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: 0
+          maximum: 364
+    0000000B:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: -90
+          maximum: 90
+    0000000C:
+      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
+        asm: Unity.Perception.Runtime}
+      data:
+        range:
+          minimum: 0
+          maximum: 1
+--- !u!1001 &6427575763840260075
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8095125946893382546}
+    m_Modifications:
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827723213251261171, guid: 2b06e3834fbbb4804be84cad695166d1,
+        type: 3}
+      propertyPath: m_Name
+      value: RigidbodySpawner
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2b06e3834fbbb4804be84cad695166d1, type: 3}
+--- !u!4 &9082987895096894745 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2827723213251261170, guid: 2b06e3834fbbb4804be84cad695166d1,
+    type: 3}
+  m_PrefabInstance: {fileID: 6427575763840260075}
+  m_PrefabAsset: {fileID: 0}

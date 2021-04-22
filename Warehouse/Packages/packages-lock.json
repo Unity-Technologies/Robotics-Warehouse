@@ -139,7 +139,7 @@
         "com.unity.perception": "0.8.0-preview.2",
         "nuget.moq": "1.0.0"
       },
-      "hash": "8fb8cbf5fb0ddc0186213751557ac40ea5007e75"
+      "hash": "26afb2d10e8a97c98553bc83315ab0ba114630a6"
     },
     "com.unity.robotics.urdf-importer": {
       "version": "https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer",

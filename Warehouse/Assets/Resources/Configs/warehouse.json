@@ -5,7 +5,7 @@
 		"gameObjectName": "Warehouse"
 	},
 	{
-		"$type": "Unity.Robotics.SimulationControl.PerceptionRandomizationInstantiator, Unity.Robotics.SimulationContorl",
+		"$type": "Unity.Robotics.SimulationControl.PerceptionRandomizationInstantiator, Unity.Robotics.SimulationControl",
 		"randomizeOnInstantiation": true
 	}
 ]

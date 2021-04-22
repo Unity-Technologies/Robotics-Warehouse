@@ -2,22 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Randomizers;
-using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers;
 using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers.Tags;
 using UnityEngine.Perception.Randomization.Samplers;
 using Unity.Simulation.Warehouse;
-using RosSharp.Control;
+using Unity.Robotics.SimulationControl;
 
 using Object = UnityEngine.Object;
 
 [Serializable]
-[AddRandomizerMenu("Perception/Floor Box Randomizer")]
-public class FloorBoxRandomizer : Randomizer
+[AddRandomizerMenu("Robotics/Floor Box Randomizer")]
+public class FloorBoxRandomizer : PerceptionRandomizer
 {
-    public GameObject objectToSpawn;
-    public int numObjectToSpawn;
+    public int numBoxToSpawn;
     public int maxPlacementTries = 100;
     private FloatParameter random = new FloatParameter {value = new UniformSampler(0f, 1f)};
 
@@ -25,11 +24,20 @@ public class FloorBoxRandomizer : Randomizer
     private GameObject parentFloorBoxes;
     private List<CollisionConstraint> constraints;
     private CollisionConstraint turtleConstraint;
+    private AppParam appParam;
+    private ShelfBoxRandomizer shelfBoxRandomizer;
 
     protected override void OnAwake()
     {
+        if (WarehouseManager.instance == null)
+        {
+            var warehouseManager = GameObject.FindObjectOfType<WarehouseManager>();
+            appParam = warehouseManager.appParam;
+        }
         // Add collision constraints to spawned shelves
         var tags = tagManager.Query<ShelfBoxRandomizerTag>();
+        if (!Application.isPlaying)
+            tags = GameObject.FindObjectsOfType<ShelfBoxRandomizerTag>();
 
         constraints = new List<CollisionConstraint>();
 
@@ -42,17 +50,34 @@ public class FloorBoxRandomizer : Randomizer
         base.OnAwake();
     }
 
+    protected override void OnScenarioStart()
+    {
+        var scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
+        shelfBoxRandomizer = scenario.GetRandomizer<ShelfBoxRandomizer>();
+        base.OnScenarioStart();
+    }
+
     protected override void OnIterationStart()
     {
+        if (GameObject.Find("GeneratedWarehouse") == null)
+            return;
+
         // Create floor boundaries for spawning
-        var bounds = new Bounds(Vector3.zero, new Vector3(WarehouseManager.instance.m_width, 0, WarehouseManager.instance.m_length));
+        var bounds = new Bounds(Vector3.zero, new Vector3(appParam.width, 0, appParam.length));
         placer = new SurfaceObjectPlacer(bounds, random, maxPlacementTries);
 
         // Instantiate boxes at arbitrary location
-        parentFloorBoxes = new GameObject("SpawnedBoxes");
-        for (int i = 0; i < numObjectToSpawn; i++) 
+        parentFloorBoxes = new GameObject("FloorBoxes");
+        for (int i = 0; i < numBoxToSpawn; i++) 
         {
-            var o = Object.Instantiate(objectToSpawn, parentFloorBoxes.transform);
+            GameObject o;
+            if (!Application.isPlaying)
+            {
+                o = PrefabUtility.InstantiatePrefab(shelfBoxRandomizer.GetBoxPrefab()) as GameObject;
+                o.transform.parent = parentFloorBoxes.transform;
+            }
+            else
+                o = Object.Instantiate(shelfBoxRandomizer.GetBoxPrefab(), parentFloorBoxes.transform);
             o.AddComponent<FloorBoxRandomizerTag>();
             o.AddComponent<RotationRandomizerTag>();
         }
@@ -61,6 +86,8 @@ public class FloorBoxRandomizer : Randomizer
         placer.IterationStart();
         
         var tags = tagManager.Query<FloorBoxRandomizerTag>();
+        if (!Application.isPlaying)
+            tags = GameObject.FindObjectsOfType<FloorBoxRandomizerTag>();
 
         foreach (var tag in tags)
         {
@@ -74,6 +101,9 @@ public class FloorBoxRandomizer : Randomizer
 
     protected override void OnIterationEnd()
     {
-        Object.Destroy(parentFloorBoxes);
+        if (!Application.isPlaying)
+                Object.DestroyImmediate(parentFloorBoxes);
+            else
+                Object.Destroy(parentFloorBoxes);
     }
 }
