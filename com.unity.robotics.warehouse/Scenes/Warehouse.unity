@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   configFilePath:
-  - Assets/Resources/Configs/warehouse.json
+  - ../com.unity.robotics.warehouse/Resources/Configs/warehouse.json
 --- !u!4 &1243530624
 Transform:
   m_ObjectHideFlags: 0
