@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8095125946893382546}
   - component: {fileID: 8095125946893382550}
-  - component: {fileID: -7704388998282072422}
+  - component: {fileID: -3086731022458791582}
   m_Layer: 0
-  m_Name: WarehouseManager
+  m_Name: WarehouseManager 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ MonoBehaviour:
     length: 50
     shelfRows: 4
     shelfCols: 3
---- !u!114 &-7704388998282072422
+--- !u!114 &-3086731022458791582
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -66,119 +66,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c84223c2c59641b1b558ddbd2d28acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Randomizers:
-  - id: 0
-  - id: 1
-  - id: 2
-  - id: 3
+  m_Randomizers: []
   constants:
     randomSeed: 539662031
   references:
     version: 1
-    00000000:
-      type: {class: FloorBoxRandomizer, ns: , asm: Unity.Robotics.Warehouse}
-      data:
-        m_Enabled: 1
-        collapsed: 0
-        numBoxToSpawn: 0
-        maxPlacementTries: 100
-    00000001:
-      type: {class: LocalRotationRandomizer, ns: , asm: Unity.Robotics.Warehouse}
-      data:
-        m_Enabled: 1
-        collapsed: 0
-        rotation:
-          collapsed: 0
-          x:
-            id: 4
-          y:
-            id: 5
-          z:
-            id: 6
-    00000002:
-      type: {class: SunAngleRandomizer, ns: UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers,
-        asm: Unity.Perception.Runtime}
-      data:
-        m_Enabled: 1
-        collapsed: 0
-        hour:
-          collapsed: 0
-          value:
-            id: 7
-        dayOfTheYear:
-          collapsed: 0
-          value:
-            id: 8
-        latitude:
-          collapsed: 0
-          value:
-            id: 9
-    00000003:
-      type: {class: ShelfBoxRandomizer, ns: , asm: Unity.Robotics.Warehouse}
-      data:
-        m_Enabled: 1
-        collapsed: 0
-        boxParameter:
-          collapsed: 0
-          probabilities:
-          - 0.5
-          - 0.5
-          uniform: 1
-          m_Sampler:
-            id: 10
-          m_Categories:
-          - {fileID: 2678313873110462349, guid: 105bacf345599411fbe2630849441c1d, type: 3}
-          - {fileID: 3409260191325896975, guid: 37cebb7ddfec2458a88240fda8a699e4, type: 3}
-        boxSpawnChance: 0.5
-    00000004:
-      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
-        asm: Unity.Perception.Runtime}
-      data:
-        range:
-          minimum: 0
-          maximum: 0
-    00000005:
-      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
-        asm: Unity.Perception.Runtime}
-      data:
-        range:
-          minimum: -15
-          maximum: 15
-    00000006:
-      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
-        asm: Unity.Perception.Runtime}
-      data:
-        range:
-          minimum: 0
-          maximum: 0
-    00000007:
-      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
-        asm: Unity.Perception.Runtime}
-      data:
-        range:
-          minimum: 0
-          maximum: 24
-    00000008:
-      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
-        asm: Unity.Perception.Runtime}
-      data:
-        range:
-          minimum: 0
-          maximum: 364
-    00000009:
-      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
-        asm: Unity.Perception.Runtime}
-      data:
-        range:
-          minimum: -90
-          maximum: 90
-    0000000A:
-      type: {class: UniformSampler, ns: UnityEngine.Perception.Randomization.Samplers,
-        asm: Unity.Perception.Runtime}
-      data:
-        range:
-          minimum: 0
-          maximum: 1
 --- !u!1001 &6427575763840260075
 PrefabInstance:
   m_ObjectHideFlags: 0
