@@ -63,7 +63,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8095125946893382557}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c84223c2c59641b1b558ddbd2d28acd, type: 3}
+  m_Script: {fileID: 11500000, guid: 50ef6fafc8e84f4087ec9f164935abd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Randomizers:
@@ -76,14 +76,14 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: FloorBoxRandomizer, ns: , asm: Unity.Robotics.Warehouse}
+      type: {class: FloorBoxRandomizerShim, ns: , asm: Unity.Robotics.Warehouse}
       data:
         m_Enabled: 1
         collapsed: 0
         numBoxToSpawn: 0
         maxPlacementTries: 100
     00000001:
-      type: {class: LocalRotationRandomizer, ns: , asm: Unity.Robotics.Warehouse}
+      type: {class: LocalRotationRandomizerShim, ns: , asm: Unity.Robotics.Warehouse}
       data:
         m_Enabled: 1
         collapsed: 0
@@ -114,7 +114,7 @@ MonoBehaviour:
           value:
             id: 9
     00000003:
-      type: {class: ShelfBoxRandomizer, ns: , asm: Unity.Robotics.Warehouse}
+      type: {class: ShelfBoxRandomizerShim, ns: , asm: Unity.Robotics.Warehouse}
       data:
         m_Enabled: 1
         collapsed: 0

@@ -1,17 +1,17 @@
 using System;
+using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
 using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers.Tags;
 using UnityEngine.Perception.Randomization.Samplers;
-using Unity.Robotics.SimulationControl;
 
 /// <summary>
 /// Randomizes the rotation of objects tagged with a RotationRandomizerTag
 /// </summary>
 [Serializable]
 [AddRandomizerMenu("Robotics/Local Rotation Randomizer")]
-public class LocalRotationRandomizer : PerceptionRandomizer
+public class LocalRotationRandomizerShim : RandomizerShim
 {
     /// <summary>
     /// Defines the range of random rotations that can be assigned to tagged objects

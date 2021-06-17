@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
-using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Randomizers;
-using UnityEngine.Perception.Randomization.Samplers;
-using Unity.Robotics.SimulationControl;
 
 [Serializable]
 public class MaterialToFriction 
@@ -20,7 +16,7 @@ public class MaterialToFriction
 /// </summary>
 [Serializable]
 [AddRandomizerMenu("Robotics/Material Randomizer")]
-public class MaterialRandomizer : PerceptionRandomizer
+public class MaterialRandomizerShim : RandomizerShim
 {
     public MaterialToFrictionParameter material;
 

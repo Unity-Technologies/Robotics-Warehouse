@@ -1,15 +1,24 @@
+using System;
+using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
-using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Randomizers;
+using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Samplers;
-using Unity.Robotics.SimulationControl;
+using Object = UnityEngine.Object;
 
-[AddRandomizerMenu("Robotics/Robot Standalone Randomizer")]
-public class RobotStandaloneRandomizer : PerceptionRandomizer
+/// <summary>
+/// TODO
+/// </summary>
+[Serializable]
+[AddRandomizerMenu("Robotics/Robot Placement")]
+public class RobotPlacementRandomizerShim : RandomizerShim
 {
-    private GameObject[] floorObjects;
+    public GameObject[] floorObjects;
+    public GameObject prefabToSpawn;
     public float distFromEdge;
-    FloatParameter random = new FloatParameter { value = new UniformSampler(0, 1) };
+    GameObject spawnedObject;
+    GameObject spawnedConstraint;
+    FloatParameter random = new FloatParameter { value = new UniformSampler(0, 1)};
 
     protected override void OnScenarioStart()
     {
@@ -21,19 +30,23 @@ public class RobotStandaloneRandomizer : PerceptionRandomizer
     {
         int randIdx = Mathf.FloorToInt(random.Sample() * floorObjects.Length);
         var pt = SamplePoint(floorObjects[randIdx], distFromEdge, 10);
-
-        foreach (var tag in GameObject.FindObjectsOfType<RobotPlacementTag>())
-        {
-            tag.PlaceRobot(pt + new Vector3(0, 1, 0));
-        }
+        spawnedObject = GameObject.Instantiate(prefabToSpawn, pt, Quaternion.identity);
     }
 
-    Vector3 SamplePoint(GameObject obj, float edge, int maxAttempts)
+    protected override void OnIterationEnd()
+    {
+        if (spawnedConstraint == null) spawnedConstraint = GameObject.Find("TiltConstraint");
+        Object.Destroy(spawnedConstraint);
+        Object.Destroy(spawnedObject);
+    }
+
+    Vector3 SamplePoint(GameObject obj, float edge, int maxAttempts) 
     {
         var bounds = obj.GetComponent<Renderer>().bounds;
         int attempts = 0;
+        var scaledExtents = Vector3.Scale(bounds.extents, obj.transform.localScale);
 
-        while (attempts < maxAttempts)
+        while (attempts < maxAttempts) 
         {
             Vector3 pt;
 

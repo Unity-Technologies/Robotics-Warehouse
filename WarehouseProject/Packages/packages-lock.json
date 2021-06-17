@@ -104,7 +104,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "10.3.2",
+      "version": "10.4.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -113,13 +113,13 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.universal": {
-      "version": "10.3.2",
+      "version": "10.4.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.1.0",
-        "com.unity.render-pipelines.core": "10.3.2",
-        "com.unity.shadergraph": "10.3.2"
+        "com.unity.render-pipelines.core": "10.4.0",
+        "com.unity.shadergraph": "10.4.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -129,17 +129,6 @@
       "source": "git",
       "dependencies": {},
       "hash": "2b09bf7e77e270b789676aef69a9b5f5c55e4315"
-    },
-    "com.unity.robotics.simulation-control": {
-      "version": "git@github.com:Unity-Technologies/Robotics-Simulation-Control.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "1.1.2",
-        "com.unity.perception": "0.8.0-preview.2",
-        "nuget.moq": "1.0.0"
-      },
-      "hash": "26afb2d10e8a97c98553bc83315ab0ba114630a6"
     },
     "com.unity.robotics.urdf-importer": {
       "version": "https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer",
@@ -158,8 +147,6 @@
         "com.unity.perception": "0.8.0-preview.3",
         "com.unity.postprocessing": "3.0.3",
         "com.unity.render-pipelines.universal": "10.3.2",
-        "com.unity.robotics.ros-tcp-connector": "0.3.0",
-        "com.unity.robotics.simulation-control": "0.0.1",
         "com.unity.robotics.urdf-importer": "0.3.0"
       }
     },
@@ -171,11 +158,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "10.3.2",
+      "version": "10.4.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "10.3.2",
+        "com.unity.render-pipelines.core": "10.4.0",
         "com.unity.searcher": "4.3.1"
       },
       "url": "https://packages.unity.com"
@@ -279,22 +266,6 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
-    },
-    "nuget.castle-core": {
-      "version": "1.0.1",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "nuget.moq": {
-      "version": "1.0.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "nuget.castle-core": "1.0.1"
-      },
-      "url": "https://packages.unity.com"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
+using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
 using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Parameters;
 using UnityEngine.Perception.Randomization.Samplers;
-using Unity.Robotics.SimulationControl;
 
 using Object = UnityEngine.Object;
 
 [Serializable]
 [AddRandomizerMenu("Robotics/Shelf Box Randomizer")]
-public class ShelfBoxRandomizer : PerceptionRandomizer
+public class ShelfBoxRandomizerShim : RandomizerShim
 {
     public GameObjectParameter boxParameter;
     [Range(0, 1f)] public float boxSpawnChance = 0.5f;

@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Perception.Randomization.Scenarios;
 using UnityEngine.UI;
-using Unity.Robotics.SimulationControl;
 
 namespace Unity.Simulation.Warehouse {
     public class BoxTowerSpawner : MonoBehaviour
@@ -41,8 +39,8 @@ namespace Unity.Simulation.Warehouse {
             boxDims = new Vector3(int.Parse(boxIn[0]), int.Parse(boxIn[1]), int.Parse(boxIn[2]));
 
             // Grab random box prefab
-            var scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
-            var boxPrefab = scenario.GetRandomizer<ShelfBoxRandomizer>().GetBoxPrefab();
+            var scenario = GameObject.FindObjectOfType<Scenario<ScenarioConstants>>();
+            var boxPrefab = scenario.GetRandomizer<ShelfBoxRandomizerShim>().GetBoxPrefab();
             var boxSize = boxPrefab.GetComponentInChildren<Renderer>().bounds.size;
 
             // Instantiate boxes
@@ -53,7 +51,7 @@ namespace Unity.Simulation.Warehouse {
                     for (int k = 0; k < boxDims[2]; k++)
                     {
                         var o = Instantiate(boxPrefab, new Vector3(i * boxSize.x, k * boxSize.y, j * boxSize.z), Quaternion.identity, spawnedBoxes.transform);
-                        boxPrefab = scenario.GetRandomizer<ShelfBoxRandomizer>().GetBoxPrefab();
+                        boxPrefab = scenario.GetRandomizer<ShelfBoxRandomizerShim>().GetBoxPrefab();
                     }
                 }
             }

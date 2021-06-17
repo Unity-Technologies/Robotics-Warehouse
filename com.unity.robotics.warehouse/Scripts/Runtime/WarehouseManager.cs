@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using Unity.Robotics.SimulationControl;
+﻿using UnityEngine;
 
 namespace Unity.Simulation.Warehouse {
     public class WarehouseManager : MonoBehaviour

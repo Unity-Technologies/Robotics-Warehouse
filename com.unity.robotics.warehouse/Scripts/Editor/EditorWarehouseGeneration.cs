@@ -1,15 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
 using UnityEditor;
 using Unity.Simulation.Warehouse;
-using Unity.Robotics.SimulationControl;
 
 public class EditorWarehouseGeneration 
 {
     static WarehouseManager warehouseManager;
     static GameObject parentGenerated;
-    static PerceptionRandomizationScenario scenario;
+    static ScenarioShim s_ScenarioShim;
     
     [MenuItem("Simulation/Generate Warehouse")]
     static void Generate()
@@ -40,9 +38,9 @@ public class EditorWarehouseGeneration
     [MenuItem("Simulation/Increment Iteration")]
     static void IncrementIteration() 
     {
-        if (scenario == null)
-            scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
-        scenario.Randomize();
+        if (s_ScenarioShim == null)
+            s_ScenarioShim = GameObject.FindObjectOfType<ScenarioShim>();
+        s_ScenarioShim.RandomizeOnce();
     }
 
     [MenuItem("Simulation/Reset Warehouse")]
@@ -118,7 +116,7 @@ public class EditorWarehouseGeneration
     [MenuItem("Simulation/Increment Iteration", true, 100)]
     static bool ValidateIncrement()
     {
-        return (scenario != null && GameObject.Find("GeneratedWarehouse") != null);
+        return (s_ScenarioShim != null && GameObject.Find("GeneratedWarehouse") != null);
     }
 
     [MenuItem("Simulation/Reset Warehouse", true, 100)]
@@ -140,8 +138,7 @@ public class EditorWarehouseGeneration
         {
             DrawDefaultInspector();
 
-            var warehouse = (WarehouseManager)target;
-            scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
+            s_ScenarioShim = FindObjectOfType<ScenarioShim>();
             int selected = -1;
             selected = GUILayout.SelectionGrid(selected, new string[]{"Generate", "Increment iteration", "Save prefab", "Delete"}, 2);
 

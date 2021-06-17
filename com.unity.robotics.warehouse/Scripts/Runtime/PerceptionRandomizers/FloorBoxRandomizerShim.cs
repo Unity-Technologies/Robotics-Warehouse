@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System;
+using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Perception.Randomization.Parameters;
@@ -8,24 +8,23 @@ using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Randomizers.SampleRandomizers.Tags;
 using UnityEngine.Perception.Randomization.Samplers;
 using Unity.Simulation.Warehouse;
-using Unity.Robotics.SimulationControl;
-
+using UnityEngine.Perception.Randomization.Scenarios;
 using Object = UnityEngine.Object;
 
 [Serializable]
 [AddRandomizerMenu("Robotics/Floor Box Randomizer")]
-public class FloorBoxRandomizer : PerceptionRandomizer
+public class FloorBoxRandomizerShim : RandomizerShim
 {
     public int numBoxToSpawn;
     public int maxPlacementTries = 100;
-    private FloatParameter random = new FloatParameter {value = new UniformSampler(0f, 1f)};
+    FloatParameter random = new FloatParameter {value = new UniformSampler(0f, 1f)};
 
-    private SurfaceObjectPlacer placer;
-    private GameObject parentFloorBoxes;
-    private List<CollisionConstraint> constraints;
-    private CollisionConstraint turtleConstraint;
-    private AppParam appParam;
-    private ShelfBoxRandomizer shelfBoxRandomizer;
+    SurfaceObjectPlacer placer;
+    GameObject parentFloorBoxes;
+    List<CollisionConstraint> constraints;
+    CollisionConstraint turtleConstraint;
+    AppParam appParam;
+    ShelfBoxRandomizerShim m_ShelfBoxRandomizerShim;
 
     protected override void OnAwake()
     {
@@ -52,8 +51,8 @@ public class FloorBoxRandomizer : PerceptionRandomizer
 
     protected override void OnScenarioStart()
     {
-        var scenario = GameObject.FindObjectOfType<PerceptionRandomizationScenario>();
-        shelfBoxRandomizer = scenario.GetRandomizer<ShelfBoxRandomizer>();
+        var scenario = GameObject.FindObjectOfType<Scenario<ScenarioConstants>>();
+        m_ShelfBoxRandomizerShim = scenario.GetRandomizer<ShelfBoxRandomizerShim>();
         base.OnScenarioStart();
     }
 
@@ -73,11 +72,11 @@ public class FloorBoxRandomizer : PerceptionRandomizer
             GameObject o;
             if (!Application.isPlaying)
             {
-                o = PrefabUtility.InstantiatePrefab(shelfBoxRandomizer.GetBoxPrefab()) as GameObject;
+                o = PrefabUtility.InstantiatePrefab(m_ShelfBoxRandomizerShim.GetBoxPrefab()) as GameObject;
                 o.transform.parent = parentFloorBoxes.transform;
             }
             else
-                o = Object.Instantiate(shelfBoxRandomizer.GetBoxPrefab(), parentFloorBoxes.transform);
+                o = Object.Instantiate(m_ShelfBoxRandomizerShim.GetBoxPrefab(), parentFloorBoxes.transform);
             o.AddComponent<FloorBoxRandomizerTag>();
             o.AddComponent<RotationRandomizerTag>();
         }
