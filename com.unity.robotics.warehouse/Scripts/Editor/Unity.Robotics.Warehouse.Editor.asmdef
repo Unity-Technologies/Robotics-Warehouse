@@ -1,0 +1,22 @@
+{
+    "name": "Unity.Robotics.Warehouse.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1da8e23352f14494396eac5033ba9894",
+        "GUID:809aba06182a245ffbdf84314c44a7fb",
+        "GUID:465c1207fffb96245a352265e7622205",
+        "GUID:a3867139fb5f48e43972bdbc58ef9b3c",
+        "GUID:edb7dba05f4e832419d717440ad38764"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,17 @@
+{
+    "name": "Unity.Robotics.Warehouse",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a3867139fb5f48e43972bdbc58ef9b3c",
+        "GUID:b1ef917f7a8a86a4eb639ec2352edbf8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
