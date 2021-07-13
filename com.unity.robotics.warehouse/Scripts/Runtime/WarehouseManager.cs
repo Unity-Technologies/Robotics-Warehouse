@@ -1,40 +1,103 @@
-﻿using UnityEngine;
+﻿using Unity.Robotics.PerceptionRandomizers.Shims;
+using UnityEngine;
 
-namespace Unity.Simulation.Warehouse {
+namespace Unity.Simulation.Warehouse
+{
+    [RequireComponent(typeof(ScenarioShim))]
     public class WarehouseManager : MonoBehaviour
     {
-        public GameObject shelfPrefab;
-        public Transform warehousePrefab;
-
-        public AppParam appParam;
-        private static AppParam _instance;
-        public static AppParam instance
+        [SerializeField]
+        private GameObject m_ShelfPrefab;
+        public GameObject ShelfPrefab
         {
-            get { return _instance; }
+            get
+            {
+                if (m_ShelfPrefab == null)
+                {
+                    m_ShelfPrefab = Resources.Load<GameObject>("Prefabs/ShelvingRackRandom");
+                }
+                return m_ShelfPrefab;
+            }
+            set => m_ShelfPrefab = value;
         }
 
-        GameObject parentGenerated;
-        GameObject parentWarehouse;
+        [SerializeField]
+        private Transform m_WarehousePrefab;
+        public Transform WarehousePrefab
+        {
+            get
+            {
+                if (m_WarehousePrefab == null)
+                {
+                    m_WarehousePrefab = Resources.Load<GameObject>("Prefabs/Warehouse").transform;
+                }
+                return m_WarehousePrefab;
+            }
+            set => m_WarehousePrefab = value;
+        }
+
+        [SerializeField]
+        private AppParam m_AppParam;
+        public AppParam AppParam
+        {
+            get => m_AppParam;
+            set => m_AppParam = value;
+        }
+
+        // Warehouse manager singleton
+        private static WarehouseManager s_Instance;
+        public static WarehouseManager Instance
+        {
+            get
+            {
+                if (s_Instance == null)
+                {
+                    s_Instance = GameObject.FindObjectOfType<WarehouseManager>();
+                    s_Instance.ScenarioShim = FindObjectOfType<ScenarioShim>();
+                }
+                return s_Instance;
+            }
+        }
+
+        private GameObject m_ParentGenerated;
+        public GameObject ParentGenerated
+        {
+            get
+            {
+                if (m_ParentGenerated == null)
+                {
+                    m_ParentGenerated = new GameObject(k_GeneratedWarehouseObjectName);
+                }
+                return m_ParentGenerated;
+            }
+            private set => m_ParentGenerated = value;
+        }
+        public ScenarioShim ScenarioShim { get; set; }
+
+        public const string k_GeneratedWarehouseObjectName = "GeneratedWarehouse";
+
         public static Quaternion hRot = Quaternion.Euler(0, 90, 0);
 
-        // Start is called before the first frame update
-        void Start()
-        {            
-            if (GameObject.FindObjectsOfType<WarehouseManager>().Length > 1) 
+        public void Generate()
+        {
+            GenerateWarehouse();
+            GenerateShelves();
+            GenerateStations();
+        }
+
+        public void IncrementIteration()
+        {
+            ScenarioShim.RandomizeOnce();
+        }
+
+        public void Destroy()
+        {
+            var spawned = GameObject.Find("FloorBoxes");
+            if (ParentGenerated != null)
             {
-                Destroy(GameObject.FindObjectsOfType<WarehouseManager>()[1].gameObject);
-            }
-
-            _instance = appParam;
-            parentGenerated = GameObject.Find("GeneratedWarehouse");
-            if (parentGenerated == null)
-            {
-                parentGenerated = new GameObject("GeneratedWarehouse");
-
-                GenerateWarehouse();
-
-                GenerateShelves();
-                GenerateStations();
+                DestroyImmediate(ParentGenerated);
+                DestroyImmediate(spawned);
+                ParentGenerated = null;
             }
         }
 
@@ -42,13 +105,13 @@ namespace Unity.Simulation.Warehouse {
         private void GenerateWarehouse()
         {
             // Find component mesh in prefab
-            var floorTile = warehousePrefab.Find("Floor01").gameObject;
-            var ceilingTile = warehousePrefab.Find("Ceiling01").gameObject;
-            var wallTile = warehousePrefab.Find("WallPanel01").gameObject;
-            var lightTile = warehousePrefab.Find("LightFixture001").gameObject;
-            var skylight = warehousePrefab.Find("Skylight01").gameObject;
-            var column = warehousePrefab.Find("Column01").gameObject;
-            var glulam = warehousePrefab.Find("Glulam01").gameObject;
+            var floorTile = WarehousePrefab.Find("Floor01").gameObject;
+            var ceilingTile = WarehousePrefab.Find("Ceiling01").gameObject;
+            var wallTile = WarehousePrefab.Find("WallPanel01").gameObject;
+            var lightTile = WarehousePrefab.Find("LightFixture001").gameObject;
+            var skylight = WarehousePrefab.Find("Skylight01").gameObject;
+            var column = WarehousePrefab.Find("Column01").gameObject;
+            var glulam = WarehousePrefab.Find("Glulam01").gameObject;
 
             var floorTileSize = floorTile.GetComponent<Renderer>().bounds.size;
             var wallTileSize = wallTile.GetComponent<Renderer>().bounds.size;
@@ -56,14 +119,9 @@ namespace Unity.Simulation.Warehouse {
             var columnSize = column.GetComponent<Renderer>().bounds.size;
             var glulamSize = glulam.GetComponent<Renderer>().bounds.size;
 
-            if (parentWarehouse == null) 
-            {
-                parentWarehouse = new GameObject("Warehouse");
-            }
-
             // Create empty GameObject parents
-            var parentTransform = parentWarehouse.transform;
-            parentTransform.parent = parentGenerated.transform;
+            var parentTransform = new GameObject("Warehouse").transform;
+            parentTransform.parent = ParentGenerated.transform;
             var floorsParent = new GameObject("Floors").transform;
             floorsParent.parent = parentTransform;
             var ceilingParent = new GameObject("Ceilings").transform;
@@ -73,12 +131,12 @@ namespace Unity.Simulation.Warehouse {
 
             // Calculate offsets
             Vector3 floorScaled = floorTileSize * 0.75f;
-            Vector3 floorOffset = new Vector3(appParam.width/2, 0, appParam.length/2) + floorScaled;
+            Vector3 floorOffset = new Vector3(AppParam.width / 2.0f, 0, AppParam.length / 2.0f) + floorScaled;
 
             // Instantiate warehouse shell
-            for (var i = 1; i < appParam.width / floorTileSize.x + 1; i++)
+            for (var i = 1; i < AppParam.width / floorTileSize.x + 1; i++)
             {
-                for (var j = 1; j < appParam.length / floorTileSize.z + 1; j++)
+                for (var j = 1; j < AppParam.length / floorTileSize.z + 1; j++)
                 {
                     // Instantiate floors
                     Vector3 fPos = Vector3.Scale(new Vector3(i, 0, j), floorTileSize);
@@ -92,19 +150,19 @@ namespace Unity.Simulation.Warehouse {
                     // Walls (on edges only)
                     if (i == 1)
                         Instantiate(wallTile, new Vector3(floor.transform.position.x - floorTileSize.x/2, wallTileSize.y/2, floor.transform.position.z), Quaternion.identity, wallParent);
-                    
-                    if (i > appParam.width / floorTileSize.x)
+
+                    if (i > AppParam.width / floorTileSize.x)
                         Instantiate(wallTile, new Vector3(floor.transform.position.x + floorTileSize.x/2, wallTileSize.y/2, floor.transform.position.z), Quaternion.identity, wallParent);
-                    
+
                     if (j == 1)
                         Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y/2, floor.transform.position.z - floorTileSize.z/2), hRot, wallParent);
-                    
-                    if (j > appParam.length / floorTileSize.z)
+
+                    if (j > AppParam.length / floorTileSize.z)
                         Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y/2, floor.transform.position.z + floorTileSize.z/2), hRot, wallParent);
-                    
+
 
                     // Lights
-                    if (i <  appParam.width / floorTileSize.x && j < appParam.length / floorTileSize.z)
+                    if (i < AppParam.width / floorTileSize.x && j < AppParam.length / floorTileSize.z)
                     {
                         // Only create every other light
                         if ((i % 2 == 0) && (j % 2 == 0))
@@ -115,7 +173,7 @@ namespace Unity.Simulation.Warehouse {
                         if (i == 1)
                         {
                             var g = Instantiate(glulam, new Vector3(0, ceiling.transform.position.y - glulamSize.y/2, ceiling.transform.position.z + floorTileSize.z/2), Quaternion.identity, ceilingParent);
-                            g.transform.localScale = new Vector3((appParam.width / 30f) * g.transform.localScale.x, g.transform.localScale.y, g.transform.localScale.z);
+                            g.transform.localScale = new Vector3((AppParam.width / 30f) * g.transform.localScale.x, g.transform.localScale.y, g.transform.localScale.z);
                         }
                     }
                 }
@@ -126,10 +184,10 @@ namespace Unity.Simulation.Warehouse {
         private void GenerateShelves()
         {
             // Calculate distance between shelves
-            float r = (appParam.shelfRows > 1) ? appParam.length / (appParam.shelfRows + 1.0f) : appParam.length / 2.0f;
-            float c = (appParam.shelfCols > 1) ? appParam.width / (appParam.shelfCols + 1.0f) : appParam.width / 2.0f;
+            float r = (AppParam.shelfRows > 1) ? AppParam.length / (AppParam.shelfRows + 1.0f) : AppParam.length / 2.0f;
+            float c = (AppParam.shelfCols > 1) ? AppParam.width / (AppParam.shelfCols + 1.0f) : AppParam.width / 2.0f;
 
-            var shelfSize = shelfPrefab.transform.Find("Rack").GetComponent<Renderer>().bounds.size;
+            var shelfSize = ShelfPrefab.transform.Find("Rack").GetComponent<Renderer>().bounds.size;
 
             if (shelfSize.y >= c || shelfSize.x >= r)
             {
@@ -137,14 +195,14 @@ namespace Unity.Simulation.Warehouse {
             }
 
             var shelfParent = new GameObject("Shelves").transform;
-            shelfParent.parent = parentGenerated.transform;
+            shelfParent.parent = ParentGenerated.transform;
 
             // Instantiate shelves
-            for (var i = 1; i < appParam.shelfCols + 1; i++)
+            for (var i = 1; i < AppParam.shelfCols + 1; i++)
             {
-                for (var j = 1; j < appParam.shelfRows + 1; j++)
+                for (var j = 1; j < AppParam.shelfRows + 1; j++)
                 {
-                    var o = Instantiate(shelfPrefab, new Vector3(c * i - (appParam.width/2), 0, r * j - (appParam.length/2)), Quaternion.identity, shelfParent);
+                    var o = Instantiate(ShelfPrefab, new Vector3(c * i - (AppParam.width/2), 0, r * j - (AppParam.length/2)), Quaternion.identity, shelfParent);
                 }
             }
         }
@@ -152,14 +210,14 @@ namespace Unity.Simulation.Warehouse {
         // Generate placeholder "cubes" for "stations," for visual effect
         private void GenerateStations()
         {
-            var station = warehousePrefab.Find("Station").gameObject;
+            var station = WarehousePrefab.Find("Station").gameObject;
 
-            var cur = new Vector3(-appParam.width/2, 0.1f, -appParam.length/2);
+            var cur = new Vector3(-AppParam.width/2, 0.1f, -AppParam.length/2);
 
             var parentStations = new GameObject("Stations").transform;
-            parentStations.parent = parentGenerated.transform;
+            parentStations.parent = ParentGenerated.transform;
 
-            while (cur.x < (appParam.width/2f))
+            while (cur.x < (AppParam.width/2f))
             {
                 Instantiate(station, cur, Quaternion.identity, parentStations);
                 cur.x += 2;

@@ -28,10 +28,9 @@ public class FloorBoxRandomizerShim : RandomizerShim
 
     protected override void OnAwake()
     {
-        if (WarehouseManager.instance == null)
+        if (WarehouseManager.Instance == null)
         {
-            var warehouseManager = GameObject.FindObjectOfType<WarehouseManager>();
-            appParam = warehouseManager.appParam;
+            appParam = WarehouseManager.Instance.AppParam;
         }
         // Add collision constraints to spawned shelves
         var tags = tagManager.Query<ShelfBoxRandomizerTag>();
@@ -58,7 +57,7 @@ public class FloorBoxRandomizerShim : RandomizerShim
 
     protected override void OnIterationStart()
     {
-        if (GameObject.Find("GeneratedWarehouse") == null)
+        if (WarehouseManager.Instance.ParentGenerated == null)
             return;
 
         // Create floor boundaries for spawning
@@ -67,7 +66,7 @@ public class FloorBoxRandomizerShim : RandomizerShim
 
         // Instantiate boxes at arbitrary location
         parentFloorBoxes = new GameObject("FloorBoxes");
-        for (int i = 0; i < numBoxToSpawn; i++) 
+        for (int i = 0; i < numBoxToSpawn; i++)
         {
             GameObject o;
             if (!Application.isPlaying)
@@ -83,7 +82,7 @@ public class FloorBoxRandomizerShim : RandomizerShim
 
         // Begin placement interation
         placer.IterationStart();
-        
+
         var tags = tagManager.Query<FloorBoxRandomizerTag>();
         if (!Application.isPlaying)
             tags = GameObject.FindObjectsOfType<FloorBoxRandomizerTag>();
@@ -101,8 +100,12 @@ public class FloorBoxRandomizerShim : RandomizerShim
     protected override void OnIterationEnd()
     {
         if (!Application.isPlaying)
-                Object.DestroyImmediate(parentFloorBoxes);
-            else
-                Object.Destroy(parentFloorBoxes);
+        {
+            Object.DestroyImmediate(parentFloorBoxes);
+        }
+        else
+        {
+            Object.Destroy(parentFloorBoxes);
+        }
     }
 }
