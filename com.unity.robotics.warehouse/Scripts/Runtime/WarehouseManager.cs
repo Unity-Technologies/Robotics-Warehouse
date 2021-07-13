@@ -79,7 +79,7 @@ namespace Unity.Simulation.Warehouse
 
         public const string k_GeneratedWarehouseObjectName = "GeneratedWarehouse";
 
-        public static Quaternion hRot = Quaternion.Euler(0, 90, 0);
+        private static Quaternion s_WallRotation = Quaternion.Euler(0, 90, 0);
 
         public void Generate()
         {
@@ -158,10 +158,10 @@ namespace Unity.Simulation.Warehouse
                         Instantiate(wallTile, new Vector3(floor.transform.position.x + floorTileSize.x/2, wallTileSize.y/2, floor.transform.position.z), Quaternion.identity, wallParent);
 
                     if (j == 1)
-                        Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y/2, floor.transform.position.z - floorTileSize.z/2), hRot, wallParent);
+                        Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y/2, floor.transform.position.z - floorTileSize.z/2), s_WallRotation, wallParent);
 
                     if (j > AppParam.length / floorTileSize.z)
-                        Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y/2, floor.transform.position.z + floorTileSize.z/2), hRot, wallParent);
+                        Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y/2, floor.transform.position.z + floorTileSize.z/2), s_WallRotation, wallParent);
 
 
                     // Lights
