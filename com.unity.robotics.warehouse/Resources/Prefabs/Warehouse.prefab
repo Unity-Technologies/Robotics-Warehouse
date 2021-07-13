@@ -51,6 +51,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skylight01
       objectReference: {fileID: 0}
+    - target: {fileID: 1396547629514036516, guid: 2bf556854c75b4bacaa246d98bb9d648,
+        type: 3}
+      propertyPath: m_TagString
+      value: Skylight
+      objectReference: {fileID: 0}
     - target: {fileID: 8587742001791092767, guid: 2bf556854c75b4bacaa246d98bb9d648,
         type: 3}
       propertyPath: m_RootOrder
@@ -181,6 +186,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ceiling01
       objectReference: {fileID: 0}
+    - target: {fileID: 8444005593878882231, guid: 0b8647f248da544aaa38291fe7142a67,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ceiling
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b8647f248da544aaa38291fe7142a67, type: 3}
 --- !u!4 &4336365115017368089 stripped
@@ -200,6 +210,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LightFixture001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940453108056003960, guid: 19a6ef8b9ed50447bb45689af77a42c8,
+        type: 3}
+      propertyPath: m_TagString
+      value: LightFixture
       objectReference: {fileID: 0}
     - target: {fileID: 4895892039257500471, guid: 19a6ef8b9ed50447bb45689af77a42c8,
         type: 3}
@@ -331,6 +346,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Glulam01
       objectReference: {fileID: 0}
+    - target: {fileID: 9033764868323589134, guid: 8aa8482980c72413189047e3134119d0,
+        type: 3}
+      propertyPath: m_TagString
+      value: Glulam
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8aa8482980c72413189047e3134119d0, type: 3}
 --- !u!4 &3073506764395502060 stripped
@@ -425,6 +445,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WallPanel01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3912415489885240614, guid: edbf65f90d739447ab7f049873670531,
+        type: 3}
+      propertyPath: m_TagString
+      value: WallPanel
       objectReference: {fileID: 0}
     - target: {fileID: 4136927436372033369, guid: edbf65f90d739447ab7f049873670531,
         type: 3}
@@ -555,6 +580,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Column01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460020223202332810, guid: b92d773fb22e7401fb39f40bcfe4cb19,
+        type: 3}
+      propertyPath: m_TagString
+      value: Column
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b92d773fb22e7401fb39f40bcfe4cb19, type: 3}

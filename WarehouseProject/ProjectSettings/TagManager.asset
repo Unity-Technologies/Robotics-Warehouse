@@ -11,6 +11,12 @@ TagManager:
   - robot
   - Generated
   - Floor
+  - Ceiling
+  - WallPanel
+  - LightFixture
+  - Skylight
+  - Column
+  - Glulam
   layers:
   - Default
   - TransparentFX

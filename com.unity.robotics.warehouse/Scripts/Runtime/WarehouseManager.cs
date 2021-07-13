@@ -1,4 +1,6 @@
-﻿using Unity.Robotics.PerceptionRandomizers.Shims;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
 
 namespace Unity.Simulation.Warehouse
@@ -108,13 +110,13 @@ namespace Unity.Simulation.Warehouse
         private void GenerateWarehouse()
         {
             // Find component mesh in prefab
-            var floorTile = WarehousePrefab.Find("Floor01").gameObject;
-            var ceilingTile = WarehousePrefab.Find("Ceiling01").gameObject;
-            var wallTile = WarehousePrefab.Find("WallPanel01").gameObject;
-            var lightTile = WarehousePrefab.Find("LightFixture001").gameObject;
-            var skylight = WarehousePrefab.Find("Skylight01").gameObject;
-            var column = WarehousePrefab.Find("Column01").gameObject;
-            var glulam = WarehousePrefab.Find("Glulam01").gameObject;
+            var floorTile = GetChildTransformsByTag(WarehousePrefab, "Floor")[0].gameObject;
+            var ceilingTile = GetChildTransformsByTag(WarehousePrefab, "Ceiling")[0].gameObject;
+            var wallTile = GetChildTransformsByTag(WarehousePrefab, "WallPanel")[0].gameObject;
+            var lightTile = GetChildTransformsByTag(WarehousePrefab, "LightFixture")[0].gameObject;
+            var skylight = GetChildTransformsByTag(WarehousePrefab, "Skylight")[0].gameObject;
+            var column = GetChildTransformsByTag(WarehousePrefab, "Column")[0].gameObject;
+            var glulam = GetChildTransformsByTag(WarehousePrefab, "Glulam")[0].gameObject;
 
             var floorTileSize = floorTile.GetComponent<Renderer>().bounds.size;
             var wallTileSize = wallTile.GetComponent<Renderer>().bounds.size;
@@ -225,6 +227,19 @@ namespace Unity.Simulation.Warehouse
                 Instantiate(station, cur, Quaternion.identity, parentStations);
                 cur.x += 2;
             }
+        }
+
+        private static Transform[] GetChildTransformsByTag(Transform transform, string tag)
+        {
+            var children = new List<Transform>();
+            foreach (Transform child in transform)
+            {
+                if (child.tag.Equals(tag))
+                {
+                    children.Add(child);
+                }
+            }
+            return children.ToArray();
         }
     }
 }
