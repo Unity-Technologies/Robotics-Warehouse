@@ -52,8 +52,11 @@ namespace Unity.Simulation.Warehouse
             {
                 if (s_Instance == null)
                 {
-                    s_Instance = GameObject.FindObjectOfType<WarehouseManager>();
-                    s_Instance.ScenarioShim = FindObjectOfType<ScenarioShim>();
+                    s_Instance = FindObjectOfType<WarehouseManager>();
+                    if (s_Instance != null)
+                    {
+                        s_Instance.ScenarioShim = FindObjectOfType<ScenarioShim>();
+                    }
                 }
                 return s_Instance;
             }

@@ -105,6 +105,10 @@ public class EditorWarehouseGeneration
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
+            if (WarehouseManager.Instance == null)
+            {
+                return;
+            }
 
             WarehouseManager.Instance.ScenarioShim = FindObjectOfType<ScenarioShim>();
             int selected = -1;
