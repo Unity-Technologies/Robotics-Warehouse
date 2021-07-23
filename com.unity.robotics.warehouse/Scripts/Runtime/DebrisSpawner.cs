@@ -29,9 +29,12 @@ namespace Unity.Simulation.Warehouse
 
             pickerArea = locationPicker.GetComponent<Renderer>().bounds;
 
-            // Turn on Canvas GameObject during runtime
             debrisSizeSlider.value = debrisSize;
             debrisSizeText.text = debrisSize.ToString("0.000");
+            
+            // If Canvas is disabled, disable this behaviour as well
+            var canvas = transform.Find("Canvas").gameObject;
+            enabled = canvas.activeInHierarchy;
         }
 
         // Button OnClick for spawning random primitives
