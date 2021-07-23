@@ -18,7 +18,9 @@ namespace Unity.Simulation.Warehouse {
             showPickerToggle.onValueChanged.AddListener(delegate { OnValueChange(); });
 
             // Turn on Canvas GameObject during runtime
-            transform.Find("Canvas").gameObject.SetActive(true);
+            var canvas = transform.Find("Canvas").gameObject;
+            // If Canvas is disabled, disable this behaviour as well
+            enabled = canvas.activeInHierarchy;
         }
 
         // Button OnClick for spawning box towers
