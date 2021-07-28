@@ -12,5 +12,5 @@ public class RobotPlacementTag : RandomizerTag
             .GetComponent<ArticulationBody>()
             .TeleportRoot(position, Quaternion.identity);
     }
-    
+
 }

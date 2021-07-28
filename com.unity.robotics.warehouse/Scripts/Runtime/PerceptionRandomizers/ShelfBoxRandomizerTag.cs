@@ -5,14 +5,15 @@ using UnityEngine.Perception.Randomization.Randomizers;
 
 [Serializable]
 [AddComponentMenu("Robotics/RandomizerTags/Shelf Box Randomizer Tag")]
-public class ShelfBoxRandomizerTag : RandomizerTag { 
+public class ShelfBoxRandomizerTag : RandomizerTag
+{
     public List<Transform[]> layers;
     Transform[] layer0;
     Transform[] layer1;
     Transform[] layer2;
     Transform[] layer3;
 
-    public void AssignMemberLayers() 
+    public void AssignMemberLayers()
     {
         layer0 = GetChildTransforms(transform.Find("layer0"));
         layer1 = GetChildTransforms(transform.Find("layer1"));
@@ -26,7 +27,7 @@ public class ShelfBoxRandomizerTag : RandomizerTag {
     Transform[] GetChildTransforms(Transform t)
     {
         var children = new List<Transform>();
-        foreach (Transform tr in t) 
+        foreach (Transform tr in t)
         {
             children.Add(tr);
         }

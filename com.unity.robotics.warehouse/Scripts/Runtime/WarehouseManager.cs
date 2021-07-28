@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
@@ -154,16 +154,16 @@ namespace Unity.Simulation.Warehouse
 
                     // Walls (on edges only)
                     if (i == 1)
-                        Instantiate(wallTile, new Vector3(floor.transform.position.x - floorTileSize.x/2, wallTileSize.y/2, floor.transform.position.z), Quaternion.identity, wallParent);
+                        Instantiate(wallTile, new Vector3(floor.transform.position.x - floorTileSize.x / 2, wallTileSize.y / 2, floor.transform.position.z), Quaternion.identity, wallParent);
 
                     if (i > AppParam.width / floorTileSize.x)
-                        Instantiate(wallTile, new Vector3(floor.transform.position.x + floorTileSize.x/2, wallTileSize.y/2, floor.transform.position.z), Quaternion.identity, wallParent);
+                        Instantiate(wallTile, new Vector3(floor.transform.position.x + floorTileSize.x / 2, wallTileSize.y / 2, floor.transform.position.z), Quaternion.identity, wallParent);
 
                     if (j == 1)
-                        Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y/2, floor.transform.position.z - floorTileSize.z/2), s_WallRotation, wallParent);
+                        Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y / 2, floor.transform.position.z - floorTileSize.z / 2), s_WallRotation, wallParent);
 
                     if (j > AppParam.length / floorTileSize.z)
-                        Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y/2, floor.transform.position.z + floorTileSize.z/2), s_WallRotation, wallParent);
+                        Instantiate(wallTile, new Vector3(floor.transform.position.x, wallTileSize.y / 2, floor.transform.position.z + floorTileSize.z / 2), s_WallRotation, wallParent);
 
 
                     // Lights
@@ -172,12 +172,12 @@ namespace Unity.Simulation.Warehouse
                         // Only create every other light
                         if ((i % 2 == 0) && (j % 2 == 0))
                         {
-                            var light = Instantiate(lightTile, new Vector3(ceiling.transform.position.x + floorTileSize.x/2, ceiling.transform.position.y - glulamSize.y, ceiling.transform.position.z + floorTileSize.z/2), Quaternion.identity, ceilingParent);
+                            var light = Instantiate(lightTile, new Vector3(ceiling.transform.position.x + floorTileSize.x / 2, ceiling.transform.position.y - glulamSize.y, ceiling.transform.position.z + floorTileSize.z / 2), Quaternion.identity, ceilingParent);
                         }
                         // Create one glulam per tile row
                         if (i == 1)
                         {
-                            var g = Instantiate(glulam, new Vector3(0, ceiling.transform.position.y - glulamSize.y/2, ceiling.transform.position.z + floorTileSize.z/2), Quaternion.identity, ceilingParent);
+                            var g = Instantiate(glulam, new Vector3(0, ceiling.transform.position.y - glulamSize.y / 2, ceiling.transform.position.z + floorTileSize.z / 2), Quaternion.identity, ceilingParent);
                             g.transform.localScale = new Vector3((AppParam.width / 30f) * g.transform.localScale.x, g.transform.localScale.y, g.transform.localScale.z);
                         }
                     }
@@ -207,7 +207,7 @@ namespace Unity.Simulation.Warehouse
             {
                 for (var j = 1; j < AppParam.shelfRows + 1; j++)
                 {
-                    var o = Instantiate(ShelfPrefab, new Vector3(c * i - (AppParam.width/2), 0, r * j - (AppParam.length/2)), Quaternion.identity, shelfParent);
+                    var o = Instantiate(ShelfPrefab, new Vector3(c * i - (AppParam.width / 2), 0, r * j - (AppParam.length / 2)), Quaternion.identity, shelfParent);
                 }
             }
         }
@@ -217,12 +217,12 @@ namespace Unity.Simulation.Warehouse
         {
             var station = WarehousePrefab.Find("Station").gameObject;
 
-            var cur = new Vector3(-AppParam.width/2, 0.1f, -AppParam.length/2);
+            var cur = new Vector3(-AppParam.width / 2, 0.1f, -AppParam.length / 2);
 
             var parentStations = new GameObject("Stations").transform;
             parentStations.parent = ParentGenerated.transform;
 
-            while (cur.x < (AppParam.width/2f))
+            while (cur.x < (AppParam.width / 2f))
             {
                 Instantiate(station, cur, Quaternion.identity, parentStations);
                 cur.x += 2;

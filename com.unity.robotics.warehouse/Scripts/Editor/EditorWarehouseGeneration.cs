@@ -58,7 +58,8 @@ public class EditorWarehouseGeneration
                 var matName = e.material.name.Replace(" (Instance)", "");
                 e.sharedMaterial = Resources.Load<Material>($"Materials/{matName}");
             }
-            else {
+            else
+            {
                 var cpyMat = e.materials;
                 for (int i = 0; i < cpyMat.Length; i++)
                 {
@@ -112,9 +113,9 @@ public class EditorWarehouseGeneration
 
             WarehouseManager.Instance.ScenarioShim = FindObjectOfType<ScenarioShim>();
             int selected = -1;
-            selected = GUILayout.SelectionGrid(selected, new string[]{"Generate", "Increment iteration", "Save prefab", "Delete"}, 2);
+            selected = GUILayout.SelectionGrid(selected, new string[] { "Generate", "Increment iteration", "Save prefab", "Delete" }, 2);
 
-            switch(selected)
+            switch (selected)
             {
                 case 0:
                     Generate();

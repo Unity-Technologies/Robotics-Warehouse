@@ -24,7 +24,7 @@ public class CollisionConstraint : PlacementConstraint
     public float z;
     public float radius;
 
-    public CollisionConstraint() {}
+    public CollisionConstraint() { }
 
     public CollisionConstraint(float tx, float tz, float tradius)
     {

@@ -28,11 +28,11 @@ public class ShelfBoxRandomizerShim : RandomizerShim
         foreach (var tag in tags)
         {
             tag.AssignMemberLayers();
-            foreach (Transform[] layer in tag.layers) 
+            foreach (Transform[] layer in tag.layers)
             {
-                foreach (Transform t in layer) 
+                foreach (Transform t in layer)
                 {
-                    if (boxSpawnParam.Sample() <= boxSpawnChance) 
+                    if (boxSpawnParam.Sample() <= boxSpawnChance)
                     {
                         var box = Object.Instantiate(boxParameter.Sample(), t);
                         box.transform.localScale = boxScale;

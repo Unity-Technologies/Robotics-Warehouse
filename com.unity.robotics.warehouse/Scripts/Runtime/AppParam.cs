@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using UnityEngine;
 
-namespace Unity.Simulation.Warehouse {
+namespace Unity.Simulation.Warehouse
+{
     [System.Serializable]
     public class AppParam
     {
@@ -14,7 +15,7 @@ namespace Unity.Simulation.Warehouse {
         {
             return "AppParam: " +
                 "\nwidth: " + width +
-                "\nlength: " + length + 
+                "\nlength: " + length +
                 "\nshelfRows: " + shelfRows +
                 "\nshelfCols: " + shelfCols;
         }
