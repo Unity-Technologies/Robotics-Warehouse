@@ -26,7 +26,6 @@ Please describe the tests that you ran to verify your changes. Please also provi
 
 ## Checklist
 - [ ] Ensured this PR is up-to-date with the target branch
-<!-- - [ ] Followed the style guidelines as described in the [Contribution Guidelines](../CONTRIBUTING.md)) -->
 - [ ] Added tests that prove my fix is effective or that my feature works
 - [ ] Updated the [Changelog](../CHANGELOG.md) and described changes in the [Unreleased section](../CHANGELOG.md#unreleased)
 - [ ] Updated the documentation as appropriate

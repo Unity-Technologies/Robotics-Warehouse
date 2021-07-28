@@ -41,4 +41,5 @@ This feature is only implemented in Play mode.
   - **Debris Size**: This slider defines the maximum scale of the debris spawned.
   - **Debris is kinematic**: This toggle defines if the debris spawned is kinematic or not.
   - **Spawn debris**: The text field to the right of this button expects an integer input that describes the number of objects to spawn. Pressing the `Spawn debris` button will instantiate that number of random primitives of randomized scale (up to the `Debris Size`).
+
     ![](img/debris.gif)
