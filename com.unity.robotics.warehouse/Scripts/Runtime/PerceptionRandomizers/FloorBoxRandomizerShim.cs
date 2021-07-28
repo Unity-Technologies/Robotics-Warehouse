@@ -17,7 +17,7 @@ public class FloorBoxRandomizerShim : RandomizerShim
 {
     public int numBoxToSpawn;
     public int maxPlacementTries = 100;
-    FloatParameter random = new FloatParameter {value = new UniformSampler(0f, 1f)};
+    FloatParameter random = new FloatParameter { value = new UniformSampler(0f, 1f) };
 
     SurfaceObjectPlacer placer;
     GameObject parentFloorBoxes;

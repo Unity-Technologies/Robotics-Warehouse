@@ -2,14 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Perception.GroundTruth;
 
-namespace Unity.Simulation.Warehouse {
+namespace Unity.Simulation.Warehouse
+{
     public class DebrisSpawner : MonoBehaviour
     {
         public GameObject locationPicker;
         private int debrisSpawn;
         private GameObject spawnedDebris;
         private Bounds pickerArea;
-        private float debrisSize = 0.05f; 
+        private float debrisSize = 0.05f;
         private bool debrisKinematic = false;
 
         public Slider debrisSizeSlider;
@@ -35,11 +36,11 @@ namespace Unity.Simulation.Warehouse {
         {
             debrisSpawn = int.Parse(debrisField.text);
 
-            if (spawnedDebris != null) 
+            if (spawnedDebris != null)
             {
                 Destroy(spawnedDebris);
             }
-                
+
             spawnedDebris = new GameObject("SpawnedDebris");
 
             // Instantiate random primitives 
@@ -67,8 +68,8 @@ namespace Unity.Simulation.Warehouse {
                 }
 
                 // Modify transform based on user input
-                var pos = new Vector3(Random.Range(pickerArea.center.x - pickerArea.extents.x, pickerArea.center.x + pickerArea.extents.x), debrisSize/2, Random.Range(pickerArea.center.z - pickerArea.extents.z, pickerArea.center.z + pickerArea.extents.z));
-                
+                var pos = new Vector3(Random.Range(pickerArea.center.x - pickerArea.extents.x, pickerArea.center.x + pickerArea.extents.x), debrisSize / 2, Random.Range(pickerArea.center.z - pickerArea.extents.z, pickerArea.center.z + pickerArea.extents.z));
+
                 obj.transform.localScale = new Vector3(Random.Range(0.005f, debrisSize), Random.Range(0.005f, debrisSize), Random.Range(0.005f, debrisSize));
                 obj.transform.parent = spawnedDebris.transform;
                 obj.transform.localPosition = pos;

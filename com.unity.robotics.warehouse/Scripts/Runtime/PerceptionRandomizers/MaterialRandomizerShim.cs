@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Perception.Randomization.Randomizers;
 
 [Serializable]
-public class MaterialToFriction 
+public class MaterialToFriction
 {
     public Material material;
     public float dynamicFriction;

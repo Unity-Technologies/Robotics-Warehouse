@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.Perception.Randomization.Scenarios;
 
@@ -20,7 +20,7 @@ namespace Unity.Robotics.PerceptionRandomizers.Shims
             m_ShouldRandomize = false;
 #endif
         }
-        
+
 #if UNITY_EDITOR
         void EditorIteration()
         {

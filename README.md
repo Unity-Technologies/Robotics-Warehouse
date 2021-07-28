@@ -1,60 +1,36 @@
-# Robotics-Warehouse
+![](Documentation/img/boxes.png)
 
-- [Robotics-Warehouse](#robotics-warehouse)
-  - [Using the Warehouse](#using-the-warehouse)
-    - [Editor Mode](#editor-mode)
-    - [Play Mode](#play-mode)
-  - [Scenario](#scenario)
-  - [Rigidbody Spawning](#rigidbody-spawning)
-## Using the Warehouse 
+# Robotics Warehouse
 
-**Unity version:** 2020.3.0f1
+<!-- [![Version](https://img.shields.io/github/v/tag/Unity-Technologies/Robotics-Warehouse)](https://github.com/Unity-Technologies/Robotics-Warehouse/releases) -->
+[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE.md)
+![Unity](https://img.shields.io/badge/unity-2020.3+-brightgreen)
 
-1. Open the project and open the Assets/Scenes/Warehouse scene.
-2. From here, there are two main uses of the generation: [Editor Mode](#editor-mode), or [Play Mode](#play-mode).
+## Introduction
 
-### Editor Mode
-1. The scene should contain a Main Camera, Directional Light, and Simulation Control GameObject in the Hierarchy. The Simulation Control object can instantiate the WarehouseManager. Select the `Simulation Control` object, and click `Instantiate`.
-    ![](Documentation/img/simulation.png)
-2. A `Warehouse` GameObject should appear in the Hierarchy. Select it--there should be a `WarehouseManager` and `Perception Randomization Scenario` component on it. 
-   ![](Documentation/img/warehousemanager.png)
-   1. Expand the `App Param` member on the `WarehouseManager` component. This defines the length and width of the warehouse, and how many rows and columns of shelves are instantiated. Set these values as you want the warehouse to look.
-   2. Click the `Generate` button on the WarehouseManager to generate the warehouse with the specified parameters.
-   3. Click `Save prefab` to save this version of the warehouse to `Assets/Prefabs`. Note: the spawned boxes and debris will not appear in this saved prefab.
-   4. Use this spawned prefab in a new scene, or however you'd like!
+This repository contains a configurable warehouse environment that is ready for use in robotics simulation. The project comes in two formats: a standalone [Unity project](WarehouseProject/), and as a [Unity package](com.unity.robotics.warehouse/package.json).
 
-### Play Mode
+You can see the warehouse in action in our [Navigation 2 SLAM Example](https://github.com/Unity-Technologies/Robotics-Nav2-SLAM-Example)!
 
-1. The scene should contain a Main Camera, Directional Light, and Simulation Control GameObject in the Hierarchy. Enter Play mode. The Simulation Control object will instantiate the WarehouseManager on runtime. 
-    ![](Documentation/img/simulation.png)
-1. A `Warehouse` GameObject should appear in the Hierarchy. Select it--there should be a `WarehouseManager` and `Perception Randomization Scenario` component on it. 
-   ![](Documentation/img/warehousemanager.png)
-   2. Expand the `App Param` member on the `WarehouseManager` component. This defines the length and width of the warehouse, and how many rows and columns of shelves are instantiated. Set these values as you want the warehouse to look.
-   3. Click the `Generate` button on the WarehouseManager to generate the warehouse with the specified parameters.
-   4. Click `Save prefab` to save this version of the warehouse to `Assets/Prefabs`. Note: the spawned boxes and debris will not appear in this saved prefab.
-   5. Use this spawned prefab in a new scene, or however you'd like!
+> This repository has been adapted from the [Unity Simulation Sample Project: Warehouse Robot](https://assetstore.unity.com/packages/essentials/tutorial-projects/unity-simulation-sample-project-warehouse-robot-176606).
 
-## Scenario
+## Getting Started
+To use the warehouse in your own project, check out the [Usage](Documentation/Usage.md) documentation.
 
-- The **Perception Randomization Scenario** defines the core logic for randomization. Assign the values as desired (usage defined below):
-  - **SunAngleRandomizer** - Directional Light angle and location
-  - **LocalRotationRandomizer** - Assigns local rather than global rotation, most notably on the shelves. As a sanity check, this should probably keep the X and Z fields zeroed out, or the shelves will rotate in all DOF.
-  - **MaterialRandomizer** - Assigns a material and physic material friction value to the floor.
-  - **ShelfBoxRandomizer** - Randomizes the boxes on the shelves. Use `Box Spawn Chance` to define the % chance of a box spawning at each possible location.
-  - **FloorBoxRandomizer** - Spawns random boxes on the floor of the warehouse with an attempt at making sure it doesn't spawn inside a shelf. Use `Num Box To Spawn` to define how many boxes are spawned on the ground.
-- This can be re-run by incrementing the scenario iteration. This can be done via the `Warehouse` GameObject's `WarehouseManager` component, which shows an `Increment Iteration` button in the Inspector.
+## Additional Resources
+- [Navigation 2 SLAM Example](https://github.com/Unity-Technologies/Robotics-Nav2-SLAM-Example)
+- [Computer Vision Perception Package](https://github.com/Unity-Technologies/com.unity.perception/)
 
-## Rigidbody Spawning
+## Support
+For questions or discussions about Unity Robotics package installations or how to best set up and integrate your robotics projects, please create a new thread on the [Unity Robotics forum](https://forum.unity.com/forums/robotics.623/) and make sure to include as much detail as possible.
 
-This feature is only implemented in Play mode.
+For feature requests, bugs, or other issues, please file a [GitHub issue](https://github.com/Unity-Technologies/Robotics-Object-Pose-Estimation/issues) using the provided templates and the Robotics team will investigate as soon as possible.
 
-![](Documentation/img/rbspawner.png)
+For any other questions or feedback, connect directly with the
+Robotics team at [unity-robotics@unity3d.com](mailto:unity-robotics@unity3d.com).
 
-- A UI overlay will appear in the top-right corner of the Game view. This can be used to spawn box towers or piles of debris with specified parameters.
-  - **Show Location Picker**: This toggle simply turns on and off a green box that displays where the objects will approximately spawn.
-  - **Spawn boxes**: The text field to the right of this button expects an input with the format `width,length,height`, e.g. `2,3,4`. Pressing the `Spawn boxes` button after this will create a tower of boxes with the given dimensions on the Location Picker location.
-    ![](Documentation/img/boxes.png)
-  - **Debris Size**: This slider defines the size of the debris spawned, and can be changed even after the objects have already been added to the scene. The number corresponds to the object max scaling.
-  - **Debris is kinematic**: This toggle defines if the debris spawned is kinematic or not.
-  - **Spawn debris**: The text field to the right of this button expects an integer input that describes the number of objects to spawn. Pressing the `Spawn debris` button will instantiate that number of random primitives of randomized scale, with respect to the `Debris Size`.
-    ![](Documentation/img/debris.gif)
+## More from Unity Robotics
+Visit the [Robotics Hub](https://github.com/Unity-Technologies/Unity-Robotics-Hub) for more tutorials, tools, and information on robotics simulation in Unity!
+
+## License
+[Apache License 2.0](LICENSE)

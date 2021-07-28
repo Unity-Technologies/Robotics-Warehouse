@@ -30,7 +30,7 @@ public class LocalRotationRandomizerShim : RandomizerShim
     {
         var tags = tagManager.Query<RotationRandomizerTag>();
         if (!Application.isPlaying)
-                tags = GameObject.FindObjectsOfType<RotationRandomizerTag>();
+            tags = GameObject.FindObjectsOfType<RotationRandomizerTag>();
         foreach (var taggedObject in tags)
             taggedObject.transform.localRotation = Quaternion.Euler(rotation.Sample());
     }

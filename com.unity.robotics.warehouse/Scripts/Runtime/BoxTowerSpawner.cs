@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.Perception.Randomization.Scenarios;
 using UnityEngine.UI;
 
-namespace Unity.Simulation.Warehouse {
+namespace Unity.Simulation.Warehouse
+{
     public class BoxTowerSpawner : MonoBehaviour
     {
         public GameObject locationPicker;
@@ -32,9 +33,9 @@ namespace Unity.Simulation.Warehouse {
                 return;
             }
 
-            if (spawnedBoxes != null) 
+            if (spawnedBoxes != null)
                 Destroy(spawnedBoxes);
-                
+
             spawnedBoxes = new GameObject("SpawnedBoxes");
             boxDims = new Vector3(int.Parse(boxIn[0]), int.Parse(boxIn[1]), int.Parse(boxIn[2]));
 

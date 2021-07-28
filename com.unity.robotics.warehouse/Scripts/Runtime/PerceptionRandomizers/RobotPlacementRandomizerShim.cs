@@ -18,7 +18,7 @@ public class RobotPlacementRandomizerShim : RandomizerShim
     public float distFromEdge;
     GameObject spawnedObject;
     GameObject spawnedConstraint;
-    FloatParameter random = new FloatParameter { value = new UniformSampler(0, 1)};
+    FloatParameter random = new FloatParameter { value = new UniformSampler(0, 1) };
 
     protected override void OnScenarioStart()
     {
@@ -40,13 +40,13 @@ public class RobotPlacementRandomizerShim : RandomizerShim
         Object.Destroy(spawnedObject);
     }
 
-    Vector3 SamplePoint(GameObject obj, float edge, int maxAttempts) 
+    Vector3 SamplePoint(GameObject obj, float edge, int maxAttempts)
     {
         var bounds = obj.GetComponent<Renderer>().bounds;
         int attempts = 0;
         var scaledExtents = Vector3.Scale(bounds.extents, obj.transform.localScale);
 
-        while (attempts < maxAttempts) 
+        while (attempts < maxAttempts)
         {
             Vector3 pt;
 
