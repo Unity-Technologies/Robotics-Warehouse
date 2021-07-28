@@ -36,10 +36,6 @@ trim_trailing_whitespace = false
 ; uncomment to enable basic formatting of markdown files
 #formatters = generic
 
-[{Makefile,makefile}]
-; tab characters are part of the Makefile format
-indent_style = tab
-
 [*.asmdef]
 indent_size = 4
 
