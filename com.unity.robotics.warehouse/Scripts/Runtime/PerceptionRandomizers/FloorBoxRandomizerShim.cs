@@ -58,9 +58,15 @@ public class FloorBoxRandomizerShim : RandomizerShim
     protected override void OnIterationStart()
     {
         if (WarehouseManager.Instance.ParentGenerated == null)
+        {
             return;
+        }
 
         // Create floor boundaries for spawning
+        if (appParam == null)
+        {
+            appParam = WarehouseManager.Instance.AppParam;
+        }
         var bounds = new Bounds(Vector3.zero, new Vector3(appParam.width, 0, appParam.length));
         placer = new SurfaceObjectPlacer(bounds, random, maxPlacementTries);
 
