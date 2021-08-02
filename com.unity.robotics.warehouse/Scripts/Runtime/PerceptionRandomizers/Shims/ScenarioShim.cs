@@ -24,11 +24,17 @@ namespace Unity.Robotics.PerceptionRandomizers.Shims
         void EditorIteration()
         {
             foreach (var randomizer in activeRandomizers)
+            {
                 if (randomizer is RandomizerShim extended)
+                {
                     extended.OnEditorIteration();
+                }
                 else
+                {
                     Debug.LogWarning(
                         $"{randomizer} is not a {nameof(RandomizerShim)} and can't be randomized manually in editor.");
+                }
+            }
         }
 #endif
     }
