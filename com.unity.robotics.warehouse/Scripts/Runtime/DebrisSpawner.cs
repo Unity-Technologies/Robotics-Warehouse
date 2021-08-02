@@ -1,22 +1,25 @@
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Perception.GroundTruth;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Unity.Simulation.Warehouse
 {
     public class DebrisSpawner : MonoBehaviour
     {
+        const float k_MinDebrisSize = 0.005f;
         public GameObject locationPicker;
-        private int debrisSpawn;
-        private GameObject spawnedDebris;
-        private Bounds pickerArea;
-        private float debrisSize = 0.05f;
-        private bool debrisKinematic = false;
 
         public Slider debrisSizeSlider;
         public Text debrisSizeText;
         public Toggle debrisKinematicToggle;
         public InputField debrisField;
+        bool debrisKinematic;
+        float debrisSize = 0.05f;
+        int debrisSpawn;
+        Bounds pickerArea;
+        GameObject spawnedDebris;
 
         // Start is called before the first frame update
         void Start()
@@ -43,8 +46,8 @@ namespace Unity.Simulation.Warehouse
 
             spawnedDebris = new GameObject("SpawnedDebris");
 
-            // Instantiate random primitives 
-            for (int i = 0; i < debrisSpawn; i++)
+            // Instantiate random primitives
+            for (var i = 0; i < debrisSpawn; i++)
             {
                 var randShape = Random.Range(0, 4);
                 GameObject obj;
@@ -68,13 +71,18 @@ namespace Unity.Simulation.Warehouse
                 }
 
                 // Modify transform based on user input
-                var pos = new Vector3(Random.Range(pickerArea.center.x - pickerArea.extents.x, pickerArea.center.x + pickerArea.extents.x), debrisSize / 2, Random.Range(pickerArea.center.z - pickerArea.extents.z, pickerArea.center.z + pickerArea.extents.z));
+                var pos = new Vector3(
+                    Random.Range(pickerArea.center.x - pickerArea.extents.x,
+                        pickerArea.center.x + pickerArea.extents.x), debrisSize / 2,
+                    Random.Range(pickerArea.center.z - pickerArea.extents.z,
+                        pickerArea.center.z + pickerArea.extents.z));
 
-                obj.transform.localScale = new Vector3(Random.Range(0.005f, debrisSize), Random.Range(0.005f, debrisSize), Random.Range(0.005f, debrisSize));
+                obj.transform.localScale = new Vector3(Random.Range(k_MinDebrisSize, debrisSize),
+                    Random.Range(k_MinDebrisSize, debrisSize), Random.Range(k_MinDebrisSize, debrisSize));
                 obj.transform.parent = spawnedDebris.transform;
                 obj.transform.localPosition = pos;
                 obj.transform.rotation = Random.rotation;
-                obj.GetComponent<Renderer>().material = Resources.Load<Material>($"Materials/Debris");
+                obj.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Debris");
 
                 var lab = obj.AddComponent<Labeling>();
                 lab.labels.Add("debris");
@@ -95,14 +103,14 @@ namespace Unity.Simulation.Warehouse
 
             // Resize debris if appropriate
             if (spawnedDebris != null)
-            {
-                for (int i = 0; i < spawnedDebris.transform.childCount; i++)
+                for (var i = 0; i < spawnedDebris.transform.childCount; i++)
                 {
                     var o = spawnedDebris.transform.GetChild(i);
-                    o.localScale = new Vector3(Random.Range(0.005f, debrisSize), Random.Range(0.005f, debrisSize), Random.Range(0.005f, debrisSize));
+                    o.localScale = new Vector3(Random.Range(k_MinDebrisSize, debrisSize),
+                        Random.Range(k_MinDebrisSize, debrisSize),
+                        Random.Range(k_MinDebrisSize, debrisSize));
                     o.GetComponent<Rigidbody>().isKinematic = debrisKinematic;
                 }
-            }
         }
-    };
+    }
 }

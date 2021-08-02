@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Perception.Randomization.Scenarios;
 using UnityEngine.UI;
@@ -7,11 +8,11 @@ namespace Unity.Simulation.Warehouse
     public class BoxTowerSpawner : MonoBehaviour
     {
         public GameObject locationPicker;
-        private Vector3 boxDims;
-        private GameObject spawnedBoxes;
 
         public Toggle showPickerToggle;
         public InputField boxField;
+        Vector3 boxDims;
+        GameObject spawnedBoxes;
 
         // Start is called before the first frame update
         void Start()
@@ -29,7 +30,7 @@ namespace Unity.Simulation.Warehouse
             var boxIn = boxField.text.Split(',');
             if (boxIn.Length != 3)
             {
-                Debug.LogError($"Invalid box input dimensions!");
+                Debug.LogError("Invalid box input dimensions!");
                 return;
             }
 
@@ -40,22 +41,19 @@ namespace Unity.Simulation.Warehouse
             boxDims = new Vector3(int.Parse(boxIn[0]), int.Parse(boxIn[1]), int.Parse(boxIn[2]));
 
             // Grab random box prefab
-            var scenario = GameObject.FindObjectOfType<Scenario<ScenarioConstants>>();
+            var scenario = FindObjectOfType<Scenario<ScenarioConstants>>();
             var boxPrefab = scenario.GetRandomizer<ShelfBoxRandomizerShim>().GetBoxPrefab();
             var boxSize = boxPrefab.GetComponentInChildren<Renderer>().bounds.size;
 
             // Instantiate boxes
-            for (int i = 0; i < boxDims[0]; i++)
-            {
-                for (int j = 0; j < boxDims[1]; j++)
-                {
-                    for (int k = 0; k < boxDims[2]; k++)
+            for (var i = 0; i < boxDims[0]; i++)
+                for (var j = 0; j < boxDims[1]; j++)
+                    for (var k = 0; k < boxDims[2]; k++)
                     {
-                        var o = Instantiate(boxPrefab, new Vector3(i * boxSize.x, k * boxSize.y, j * boxSize.z), Quaternion.identity, spawnedBoxes.transform);
+                        var o = Instantiate(boxPrefab, new Vector3(i * boxSize.x, k * boxSize.y, j * boxSize.z),
+                            Quaternion.identity, spawnedBoxes.transform);
                         boxPrefab = scenario.GetRandomizer<ShelfBoxRandomizerShim>().GetBoxPrefab();
                     }
-                }
-            }
 
             spawnedBoxes.transform.position = locationPicker.transform.position;
         }
@@ -65,5 +63,5 @@ namespace Unity.Simulation.Warehouse
         {
             locationPicker.SetActive(showPickerToggle.isOn);
         }
-    };
+    }
 }

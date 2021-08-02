@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Perception.Randomization.Parameters;
-
 
 public class PlacementConstraint
 {
@@ -18,40 +16,38 @@ public class PlacementConstraint
 
 public class CollisionConstraint : PlacementConstraint
 {
+    public float radius;
     /* Checks if objects are placed far enough apart, so they cannot collide. */
 
     public float x;
     public float z;
-    public float radius;
 
     public CollisionConstraint() { }
 
     public CollisionConstraint(float tx, float tz, float tradius)
     {
-        this.x = tx;
-        this.z = tz;
-        this.radius = tradius;
+        x = tx;
+        z = tz;
+        radius = tradius;
     }
 
     public override bool Passes(float placementX, float placementZ, float objectRadius)
     {
-        Vector2 placementPt = new Vector2(placementX, placementZ);
-        Vector2 basePt = new Vector2(x, z);
-        float distance = Vector2.Distance(placementPt, basePt);
-        float minDistance = objectRadius + radius;
+        var placementPt = new Vector2(placementX, placementZ);
+        var basePt = new Vector2(x, z);
+        var distance = Vector2.Distance(placementPt, basePt);
+        var minDistance = objectRadius + radius;
         return distance > minDistance;
     }
 }
 
 public class SurfaceObjectPlacer
 {
-    private Bounds bounds;
-    private FloatParameter random; //[0, 1]
-    private int maxPlacementTries = 100;
+    Bounds bounds;
 
-
-    private List<PlacementConstraint> collisionConstraints = new List<PlacementConstraint>();
-
+    List<PlacementConstraint> collisionConstraints = new List<PlacementConstraint>();
+    int maxPlacementTries = 100;
+    FloatParameter random; //[0, 1]
 
     public SurfaceObjectPlacer(Bounds bounds, FloatParameter random, int maxPlacementTries)
     {
@@ -59,7 +55,6 @@ public class SurfaceObjectPlacer
         this.random = random;
         this.maxPlacementTries = maxPlacementTries;
     }
-
 
     public void IterationStart()
     {
@@ -71,118 +66,122 @@ public class SurfaceObjectPlacer
         if (obj.activeInHierarchy)
         {
             // try to sample a valid point
-            Bounds objBounds = obj.GetComponent<Renderer>().bounds;
-            float radius = objBounds.extents.magnitude;
-            float heightAbovePlane = objBounds.extents.y;
+            var objBounds = obj.GetComponent<Renderer>().bounds;
+            var radius = objBounds.extents.magnitude;
+            var heightAbovePlane = objBounds.extents.y;
 
-            List<PlacementConstraint> constraints = GetAllConstraints();
-            Vector3? point = SampleValidGlobalPointOnPlane(radius, constraints, bounds);
+            var constraints = GetAllConstraints();
+            var point = SampleValidGlobalPointOnPlane(radius, constraints, bounds);
 
             if (point.HasValue)
             {
                 // place object
-                Vector3 foundPoint = point ?? Vector3.zero;
+                var foundPoint = point ?? Vector3.zero;
                 obj.transform.position = new Vector3(foundPoint.x, foundPoint.y + heightAbovePlane, foundPoint.z);
 
                 // update constraints so subsequently placed object cannot collide with this one
-                CollisionConstraint newConstraint = new CollisionConstraint();
+                var newConstraint = new CollisionConstraint();
                 newConstraint.x = foundPoint.x;
                 newConstraint.z = foundPoint.z;
                 newConstraint.radius = radius;
                 collisionConstraints.Add(newConstraint);
-
             }
             else
             {
                 return false;
             }
         }
-        return true;
 
+        return true;
     }
 
     // PRIVATE HELPERS
 
-    private Vector3? SampleValidGlobalPointOnPlane(float objectRadius, List<PlacementConstraint> constraints, Bounds bounds)
+    Vector3? SampleValidGlobalPointOnPlane(float objectRadius, List<PlacementConstraint> constraints, Bounds bounds)
     {
-        // return a valid point and if not found one it return null 
-        int tries = 0;
+        // return a valid point and if not found one it return null
+        var tries = 0;
 
         while (tries < maxPlacementTries)
         {
-            Vector3 point = SampleGlobalPointOnPlane(objectRadius, bounds);
-            bool valid = PassesConstraints(point, objectRadius, constraints);
-            if (valid) { return point; }
+            var point = SampleGlobalPointOnPlane(objectRadius, bounds);
+            var valid = PassesConstraints(point, objectRadius, constraints);
+            if (valid)
+            {
+                return point;
+            }
 
             tries += 1;
         }
+
         return null;
     }
 
-    private List<PlacementConstraint> GetAllConstraints()
+    List<PlacementConstraint> GetAllConstraints()
     {
-        // return a list of all the constraints: combination of permanent constraint and additional constraint like the maxReachabilityConstraint or the 
-        // collision constraint 
-        List<PlacementConstraint> allConstraints = new List<PlacementConstraint>();
+        // return a list of all the constraints: combination of permanent constraint and additional constraint like the maxReachabilityConstraint or the
+        // collision constraint
+        var allConstraints = new List<PlacementConstraint>();
         allConstraints.AddRange(collisionConstraints);
         return allConstraints;
     }
 
-    private Vector3 SampleGlobalPointOnPlane(float minEdgeDistance, Bounds bounds)
+    Vector3 SampleGlobalPointOnPlane(float minEdgeDistance, Bounds bounds)
     {
-        Rect planePlacementZone = PlanePlacementZone(bounds, minEdgeDistance);
+        var planePlacementZone = PlanePlacementZone(bounds, minEdgeDistance);
 
-        Vector2 randomPlanePoint = RandomPointInRect(planePlacementZone);
-        Vector3 globalPt = new Vector3(randomPlanePoint.x, bounds.center.y, randomPlanePoint.y);
+        var randomPlanePoint = RandomPointInRect(planePlacementZone);
+        var globalPt = new Vector3(randomPlanePoint.x, bounds.center.y, randomPlanePoint.y);
         return globalPt;
     }
 
-    private static Rect PlanePlacementZone(Bounds bounds, float minEdgeDistance)
+    static Rect PlanePlacementZone(Bounds bounds, float minEdgeDistance)
     {
-        float x = bounds.center.x - bounds.extents.x + minEdgeDistance;
-        float z = bounds.center.z - bounds.extents.z + minEdgeDistance;
-        float dx = (bounds.extents.x - minEdgeDistance) * 2;
-        float dz = (bounds.extents.z - minEdgeDistance) * 2;
+        var x = bounds.center.x - bounds.extents.x + minEdgeDistance;
+        var z = bounds.center.z - bounds.extents.z + minEdgeDistance;
+        var dx = (bounds.extents.x - minEdgeDistance) * 2;
+        var dz = (bounds.extents.z - minEdgeDistance) * 2;
         return new Rect(x, z, dx, dz);
     }
 
-    private Vector2 RandomPointInRect(Rect rect)
+    Vector2 RandomPointInRect(Rect rect)
     {
-        float x = random.Sample() * rect.width + rect.xMin;
-        float y = random.Sample() * rect.height + rect.yMin;
+        var x = random.Sample() * rect.width + rect.xMin;
+        var y = random.Sample() * rect.height + rect.yMin;
         return new Vector2(x, y);
     }
 
-    private static Rect Intersection(Rect rectA, Rect rectB)
+    static Rect Intersection(Rect rectA, Rect rectB)
     {
-        float minX = Mathf.Max(rectA.xMin, rectB.xMin);
-        float maxX = Mathf.Min(rectA.xMax, rectB.xMax);
-        float minY = Mathf.Max(rectA.yMin, rectB.yMin);
-        float maxY = Mathf.Min(rectA.yMax, rectB.yMax);
+        var minX = Mathf.Max(rectA.xMin, rectB.xMin);
+        var maxX = Mathf.Min(rectA.xMax, rectB.xMax);
+        var minY = Mathf.Max(rectA.yMin, rectB.yMin);
+        var maxY = Mathf.Min(rectA.yMax, rectB.yMax);
 
-        bool xValid = (minX < maxX);
-        bool yValid = (minY < maxY);
-        bool valid = (xValid && yValid);
+        var xValid = minX < maxX;
+        var yValid = minY < maxY;
+        var valid = xValid && yValid;
         if (!valid)
         {
             throw new Exception("Rectangles have no intersection!");
         }
 
         return new Rect(minX, minY, maxX - minX, maxY - minY);
-
     }
 
-    private static bool PassesConstraints(Vector3 point, float objectRadius, List<PlacementConstraint> constraints)
+    static bool PassesConstraints(Vector3 point, float objectRadius, List<PlacementConstraint> constraints)
     {
         /* Checks if sampled point on plane passes all provided constraints. */
 
-        foreach (PlacementConstraint constraint in constraints)
+        foreach (var constraint in constraints)
         {
-            bool pass = constraint.Passes(point.x, point.z, objectRadius);
-            if (!pass) { return false; }
+            var pass = constraint.Passes(point.x, point.z, objectRadius);
+            if (!pass)
+            {
+                return false;
+            }
         }
+
         return true;
     }
-
-
 }
