@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Perception.Randomization.Randomizers;
 
@@ -12,5 +11,4 @@ public class RobotPlacementTag : RandomizerTag
             .GetComponent<ArticulationBody>()
             .TeleportRoot(position, Quaternion.identity);
     }
-
 }

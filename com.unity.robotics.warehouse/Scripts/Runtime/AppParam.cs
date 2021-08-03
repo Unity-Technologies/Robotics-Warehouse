@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Unity.Simulation.Warehouse
 {
-    [System.Serializable]
+    [Serializable]
     public class AppParam
     {
         public int width = 50;

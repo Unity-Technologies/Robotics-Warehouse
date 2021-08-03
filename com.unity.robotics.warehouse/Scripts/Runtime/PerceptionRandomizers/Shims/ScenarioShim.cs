@@ -6,11 +6,10 @@ namespace Unity.Robotics.PerceptionRandomizers.Shims
 {
     public class ScenarioShim : Scenario<ScenarioConstants>
     {
+        bool m_ShouldRandomize;
         protected override bool isScenarioReadyToStart => m_ShouldRandomize;
         protected override bool isIterationComplete => m_ShouldRandomize;
         protected override bool isScenarioComplete => false;
-
-        bool m_ShouldRandomize;
 
         public void RandomizeOnce()
         {

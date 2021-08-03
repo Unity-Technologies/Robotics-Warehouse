@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.Perception.Randomization.Randomizers;
 
 namespace Unity.Robotics.PerceptionRandomizers.Shims

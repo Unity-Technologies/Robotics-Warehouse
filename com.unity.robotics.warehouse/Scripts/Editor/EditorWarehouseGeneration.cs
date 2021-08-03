@@ -1,10 +1,15 @@
+using System;
+using System.IO;
 using Unity.Robotics.PerceptionRandomizers.Shims;
-using UnityEngine;
-using UnityEditor;
 using Unity.Simulation.Warehouse;
+using UnityEditor;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class EditorWarehouseGeneration
 {
+    const string k_SaveWarehousePath = "Assets/Resources/";
+
     [MenuItem("Simulation/Generate Warehouse")]
     static void Generate()
     {
@@ -29,9 +34,13 @@ public class EditorWarehouseGeneration
     static void SaveWarehouse()
     {
         if (Application.isPlaying)
+        {
             SaveRuntimeWarehouse();
+        }
         else
+        {
             SaveEditorWarehouse();
+        }
     }
 
     static void SaveEditorWarehouse()
@@ -39,10 +48,15 @@ public class EditorWarehouseGeneration
         var spawned = GameObject.Find("FloorBoxes");
         if (WarehouseManager.Instance.ParentGenerated != null)
         {
-            // Ensure path is unique; save to Assets/Resources/Prefabs/SavedWarehouses
-            string localPath = "Assets/Resources/Prefabs/SavedWarehouses/" + WarehouseManager.Instance.ParentGenerated.name + ".prefab";
+            // Ensure path is unique; save to Assets/Resources/
+            if (!Directory.Exists(k_SaveWarehousePath))
+            {
+                Directory.CreateDirectory(k_SaveWarehousePath);
+            }
+            var localPath = $"{k_SaveWarehousePath}{WarehouseManager.Instance.ParentGenerated.name}.prefab";
             localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
-            PrefabUtility.SaveAsPrefabAssetAndConnect(WarehouseManager.Instance.ParentGenerated, localPath, InteractionMode.UserAction);
+            PrefabUtility.SaveAsPrefabAssetAndConnect(WarehouseManager.Instance.ParentGenerated, localPath,
+                InteractionMode.UserAction);
         }
     }
 
@@ -61,31 +75,37 @@ public class EditorWarehouseGeneration
             else
             {
                 var cpyMat = e.materials;
-                for (int i = 0; i < cpyMat.Length; i++)
+                for (var i = 0; i < cpyMat.Length; i++)
                 {
                     var matName = cpyMat[i].name.Replace(" (Instance)", "");
                     cpyMat[i] = Resources.Load<Material>($"Materials/{matName}");
                 }
+
                 e.materials = cpyMat;
             }
         }
 
-        // Ensure path is unique; save to Assets/Resources/Prefabs/SavedWarehouses
-        string localPath = "Assets/Resources/Prefabs/SavedWarehouses/" + WarehouseManager.Instance.ParentGenerated.name + ".prefab";
+        // Ensure path is unique; save to Assets/Resources/
+        if (!Directory.Exists(k_SaveWarehousePath))
+        {
+            Directory.CreateDirectory(k_SaveWarehousePath);
+        }
+        var localPath = $"{k_SaveWarehousePath}{WarehouseManager.Instance.ParentGenerated.name}.prefab";
         localPath = AssetDatabase.GenerateUniqueAssetPath(localPath);
-        PrefabUtility.SaveAsPrefabAssetAndConnect(WarehouseManager.Instance.ParentGenerated, localPath, InteractionMode.UserAction);
+        PrefabUtility.SaveAsPrefabAssetAndConnect(WarehouseManager.Instance.ParentGenerated, localPath,
+            InteractionMode.UserAction);
     }
 
     [MenuItem("Simulation/Generate Warehouse", true, 100)]
     static bool ValidateGenerate()
     {
-        return (GameObject.FindObjectOfType<WarehouseManager>() != null);
+        return Object.FindObjectOfType<WarehouseManager>() != null;
     }
 
     [MenuItem("Simulation/Increment Iteration", true, 100)]
     static bool ValidateIncrement()
     {
-        return (WarehouseManager.Instance.ScenarioShim != null && WarehouseManager.Instance.ParentGenerated != null);
+        return WarehouseManager.Instance.ScenarioShim != null && WarehouseManager.Instance.ParentGenerated != null;
     }
 
     [MenuItem("Simulation/Reset Warehouse", true, 100)]
@@ -112,8 +132,9 @@ public class EditorWarehouseGeneration
             }
 
             WarehouseManager.Instance.ScenarioShim = FindObjectOfType<ScenarioShim>();
-            int selected = -1;
-            selected = GUILayout.SelectionGrid(selected, new string[] { "Generate", "Increment iteration", "Save prefab", "Delete" }, 2);
+            var selected = -1;
+            selected = GUILayout.SelectionGrid(selected,
+                new[] { "Generate", "Increment iteration", "Save prefab", "Delete" }, 2);
 
             switch (selected)
             {

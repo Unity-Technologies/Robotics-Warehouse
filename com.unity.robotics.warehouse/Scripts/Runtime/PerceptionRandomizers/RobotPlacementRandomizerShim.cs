@@ -1,13 +1,13 @@
 using System;
 using Unity.Robotics.PerceptionRandomizers.Shims;
 using UnityEngine;
-using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Parameters;
+using UnityEngine.Perception.Randomization.Randomizers;
 using UnityEngine.Perception.Randomization.Samplers;
 using Object = UnityEngine.Object;
 
 /// <summary>
-/// TODO
+///     TODO
 /// </summary>
 [Serializable]
 [AddRandomizerMenu("Robotics/Robot Placement")]
@@ -16,9 +16,9 @@ public class RobotPlacementRandomizerShim : RandomizerShim
     public GameObject[] floorObjects;
     public GameObject prefabToSpawn;
     public float distFromEdge;
-    GameObject spawnedObject;
-    GameObject spawnedConstraint;
     FloatParameter random = new FloatParameter { value = new UniformSampler(0, 1) };
+    GameObject spawnedConstraint;
+    GameObject spawnedObject;
 
     protected override void OnScenarioStart()
     {
@@ -28,14 +28,17 @@ public class RobotPlacementRandomizerShim : RandomizerShim
 
     protected override void OnIterationStart()
     {
-        int randIdx = Mathf.FloorToInt(random.Sample() * floorObjects.Length);
+        var randIdx = Mathf.FloorToInt(random.Sample() * floorObjects.Length);
         var pt = SamplePoint(floorObjects[randIdx], distFromEdge, 10);
-        spawnedObject = GameObject.Instantiate(prefabToSpawn, pt, Quaternion.identity);
+        spawnedObject = Object.Instantiate(prefabToSpawn, pt, Quaternion.identity);
     }
 
     protected override void OnIterationEnd()
     {
-        if (spawnedConstraint == null) spawnedConstraint = GameObject.Find("TiltConstraint");
+        if (spawnedConstraint == null)
+        {
+            spawnedConstraint = GameObject.Find("TiltConstraint");
+        }
         Object.Destroy(spawnedConstraint);
         Object.Destroy(spawnedObject);
     }
@@ -43,16 +46,20 @@ public class RobotPlacementRandomizerShim : RandomizerShim
     Vector3 SamplePoint(GameObject obj, float edge, int maxAttempts)
     {
         var bounds = obj.GetComponent<Renderer>().bounds;
-        int attempts = 0;
+        var attempts = 0;
         var scaledExtents = Vector3.Scale(bounds.extents, obj.transform.localScale);
 
         while (attempts < maxAttempts)
         {
             Vector3 pt;
 
-            pt.x = (edge > bounds.extents.x) ? bounds.center.x : (random.Sample() * ((bounds.extents.x * 2) - (edge * 2))) + (bounds.center.x - bounds.extents.x);
+            pt.x = edge > bounds.extents.x
+                ? bounds.center.x
+                : random.Sample() * (bounds.extents.x * 2 - edge * 2) + (bounds.center.x - bounds.extents.x);
             pt.y = bounds.center.y + bounds.extents.y;
-            pt.z = (edge > bounds.extents.z) ? bounds.center.z : (random.Sample() * ((bounds.extents.z * 2) - (edge * 2))) + (bounds.center.z - bounds.extents.z);
+            pt.z = edge > bounds.extents.z
+                ? bounds.center.z
+                : random.Sample() * (bounds.extents.z * 2 - edge * 2) + (bounds.center.z - bounds.extents.z);
 
             // TODO: bounding box check
             attempts++;
