@@ -25,7 +25,8 @@ Please describe the tests that you ran to verify your changes. Please also provi
 - ROS–Unity communication: [e.g. Docker]
 
 ## Checklist
-- [ ] Ensured this PR is up-to-date with the target branch
+- [ ] Ensured this PR is up-to-date with the `dev` branch
+- [ ] Created this PR to target the `dev` branch
 - [ ] Added tests that prove my fix is effective or that my feature works
 - [ ] Updated the [Changelog](../CHANGELOG.md) and described changes in the [Unreleased section](../CHANGELOG.md#unreleased)
 - [ ] Updated the documentation as appropriate
