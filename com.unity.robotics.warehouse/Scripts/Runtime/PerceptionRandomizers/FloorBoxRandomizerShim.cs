@@ -24,7 +24,6 @@ public class FloorBoxRandomizerShim : RandomizerShim
 
     SurfaceObjectPlacer placer;
     FloatParameter random = new FloatParameter { value = new UniformSampler(0f, 1f) };
-    CollisionConstraint turtleConstraint;
 
     protected override void OnAwake()
     {
@@ -75,11 +74,13 @@ public class FloorBoxRandomizerShim : RandomizerShim
         parentFloorBoxes = new GameObject("FloorBoxes");
         for (var i = 0; i < numBoxToSpawn; i++)
         {
-            GameObject o;
+            GameObject o = null;
             if (!Application.isPlaying)
             {
+#if UNITY_EDITOR
                 o = PrefabUtility.InstantiatePrefab(m_ShelfBoxRandomizerShim.GetBoxPrefab()) as GameObject;
                 o.transform.parent = parentFloorBoxes.transform;
+#endif //UNITY_EDITOR
             }
             else
             {
