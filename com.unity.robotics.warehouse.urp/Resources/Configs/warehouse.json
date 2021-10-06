@@ -1,0 +1,11 @@
+[
+	{
+		"$type": "Unity.Robotics.SimulationControl.PrefabInstantiator, Unity.Robotics.SimulationControl",
+		"assetPath": "Prefabs/WarehouseManager",
+		"gameObjectName": "Warehouse"
+	},
+	{
+		"$type": "Unity.Robotics.SimulationControl.PerceptionRandomizationInstantiator, Unity.Robotics.SimulationControl",
+		"randomizeOnInstantiation": true
+	}
+]

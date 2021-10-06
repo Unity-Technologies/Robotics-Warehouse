@@ -1,7 +1,8 @@
 {
-  "name": "com.unity.robotics.warehouse",
+  "name": "com.unity.robotics.warehouse.base",
   "version": "0.0.1-preview",
-  "displayName": "Robotics Warehouse",
+  "displayName": "Robotics Warehouse Shared Code",
+  "description": "",
   "unity": "2020.3",
   "unityRelease": "0f1",
   "dependencies": {
