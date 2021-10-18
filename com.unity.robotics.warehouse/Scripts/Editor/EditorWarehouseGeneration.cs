@@ -105,18 +105,33 @@ public class EditorWarehouseGeneration
     [MenuItem("Simulation/Increment Iteration", true, 100)]
     static bool ValidateIncrement()
     {
+        if (WarehouseManager.Instance == null)
+        {
+            return false;
+        }
+
         return WarehouseManager.Instance.ScenarioShim != null && WarehouseManager.Instance.ParentGenerated != null;
     }
 
     [MenuItem("Simulation/Reset Warehouse", true, 100)]
     static bool ValidateReset()
     {
+        if (WarehouseManager.Instance == null)
+        {
+            return false;
+        }
+
         return WarehouseManager.Instance.ParentGenerated != null;
     }
 
     [MenuItem("Simulation/Save Warehouse", true, 100)]
     static bool ValidateSave()
     {
+        if (WarehouseManager.Instance == null)
+        {
+            return false;
+        }
+
         return WarehouseManager.Instance.ParentGenerated != null;
     }
 
