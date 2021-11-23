@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Unity.Robotics.PerceptionRandomizers.Shims;
+using System.Collections;
 using UnityEngine;
 
 namespace Unity.Simulation.Warehouse
@@ -9,15 +9,21 @@ namespace Unity.Simulation.Warehouse
     public class WarehouseManager : MonoBehaviour
     {
         public const string k_GeneratedWarehouseObjectName = "GeneratedWarehouse";
+        [Tooltip(
+            "When set to true, generation will  to happen before the first frame is rendered. " +
+            "This is required if using Perception.")]
+        public bool GenerateAllOnStart = true;
 
         // Warehouse manager singleton
         static WarehouseManager s_Instance;
 
         static Quaternion s_WallRotation = Quaternion.Euler(0, 90, 0);
         [SerializeField]
+	[FormerlySerializedAs("shelfPrefab")]
         GameObject m_ShelfPrefab;
 
         [SerializeField]
+	[FormerlySerializedAs("warehousePrefab")]
         Transform m_WarehousePrefab;
 
         [SerializeField]
@@ -109,11 +115,27 @@ namespace Unity.Simulation.Warehouse
                 DestroyImmediate(ParentGenerated);
                 DestroyImmediate(spawned);
                 ParentGenerated = null;
+	    }
+	}
+
+	public void Start()
+	{
+            if (GenerateAllOnStart)
+            {
+                var coroutine = GenerateWarehouse();
+	        while (coroutine.MoveNext())
+                {
+                    // do nothing - just waiting for coroutine to return
+		}
+            }
+            else
+            {
+                StartCoroutine(GenerateWarehouse());
             }
         }
 
         // Generate warehouse assets based on params
-        void GenerateWarehouse()
+        IEnumerator GenerateWarehouse()
         {
             // Find component mesh in prefab
             var floorTile = GetChildTransformsByTag(WarehousePrefab, "Floor")[0].gameObject;
@@ -206,11 +228,17 @@ namespace Unity.Simulation.Warehouse
                                 g.transform.localScale.y, g.transform.localScale.z);
                         }
                     }
+
+                    yield return null;
                 }
+
+            yield return GenerateShelves();
+            yield return GenerateStations();
+            Debug.Log("Warehouse generation complete!");
         }
 
         // Instantiate empty shelf racks
-        void GenerateShelves()
+        IEnumerator GenerateShelves()
         {
             // Calculate distance between shelves
             var r = AppParam.shelfRows > 1 ? AppParam.length / (AppParam.shelfRows + 1.0f) : AppParam.length / 2.0f;
@@ -231,15 +259,14 @@ namespace Unity.Simulation.Warehouse
             {
                 for (var j = 1; j < AppParam.shelfRows + 1; j++)
                 {
-                    var o = Instantiate(ShelfPrefab,
-                        new Vector3(c * i - AppParam.width / 2, 0, r * j - AppParam.length / 2), Quaternion.identity,
-                        shelfParent);
+                    var o = Instantiate(shelfPrefab, new Vector3(c * i - (appParam.width/2), 0, r * j - (appParam.length/2)), Quaternion.identity, shelfParent);
+                    yield return null;
                 }
             }
         }
 
         // Generate placeholder "cubes" for "stations," for visual effect
-        void GenerateStations()
+        IEnumerator GenerateStations()
         {
             var station = WarehousePrefab.Find("Station").gameObject;
 
@@ -252,6 +279,7 @@ namespace Unity.Simulation.Warehouse
             {
                 Instantiate(station, cur, Quaternion.identity, parentStations);
                 cur.x += 2;
+                yield return null;
             }
         }
 

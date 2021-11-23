@@ -68,7 +68,7 @@ public class SurfaceObjectPlacer
             // try to sample a valid point
             var objBounds = obj.GetComponent<Renderer>().bounds;
             var radius = objBounds.extents.magnitude;
-            var heightAbovePlane = objBounds.extents.y;
+            var heightAbovePlane = -objBounds.min.y;
 
             var constraints = GetAllConstraints();
             var point = SampleValidGlobalPointOnPlane(radius, constraints, bounds);
