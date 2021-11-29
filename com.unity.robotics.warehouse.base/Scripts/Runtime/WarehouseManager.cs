@@ -9,10 +9,11 @@ namespace Unity.Simulation.Warehouse
     public class WarehouseManager : MonoBehaviour
     {
         public const string k_GeneratedWarehouseObjectName = "GeneratedWarehouse";
-        [Tooltip(
-            "When set to true, generation will  to happen before the first frame is rendered. " +
-            "This is required if using Perception.")]
-        public bool GenerateAllOnStart = true;
+        
+        //[Tooltip(
+        //    "When set to true, generation will  to happen before the first frame is rendered. " +
+        //    "This is required if using Perception.")]
+        //public bool GenerateAllOnStart = true;
 
         // Warehouse manager singleton
         static WarehouseManager s_Instance;
@@ -115,26 +116,34 @@ namespace Unity.Simulation.Warehouse
                 DestroyImmediate(ParentGenerated);
                 DestroyImmediate(spawned);
                 ParentGenerated = null;
-	    }
-	}
-
-	public void Start()
-	{
-            if (GenerateAllOnStart)
-            {
-                var coroutine = GenerateWarehouse();
-	        while (coroutine.MoveNext())
-                {
-                    // do nothing - just waiting for coroutine to return
-		}
-            }
-            else
-            {
-                StartCoroutine(GenerateWarehouse());
             }
         }
 
+        public void Start()
+        {
+            Debug.LogWarning(
+                "Automated warehouse generation is currently broken and has been disabled - " +
+                "you much manually click the 'Generate' button in the Inspector to generate a Warehouse.");
+            //parentGenerated = new GameObject("GeneratedWarehouse");
+
+            //if (GenerateAllOnStart)
+            //{
+            //    var coroutine = GenerateWarehouse();
+            //    while (coroutine.MoveNext())
+            //    {
+            //        // do nothing - just waiting for coroutine to return
+            //    }
+            //}
+            //else
+            //{
+            //    StartCoroutine(GenerateWarehouse());
+            //}
+            
+        }
+
+        // TODO: AIRO-1600 Consolidate this logic with the EditorWarehouseGeneration version of the same code
         // Generate warehouse assets based on params
+        /*
         IEnumerator GenerateWarehouse()
         {
             // Find component mesh in prefab
@@ -295,5 +304,5 @@ namespace Unity.Simulation.Warehouse
             }
             return children.ToArray();
         }
-    }
+    */
 }
