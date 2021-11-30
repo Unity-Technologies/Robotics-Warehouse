@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Shelf
+  - Floor
+  - Ceiling
+  - WallPanel
+  - LightFixture
+  - Skylight
+  - Column
+  - Glulam
   layers:
   - Default
   - TransparentFX

@@ -169,7 +169,8 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.perception": "0.8.0-preview.3"
+        "com.unity.perception": "0.8.0-preview.3",
+        "com.unity.postprocessing": "3.0.3"
       }
     },
     "com.unity.searcher": {

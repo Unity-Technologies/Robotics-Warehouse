@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.Robotics.PerceptionRandomizers.Shims;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Unity.Simulation.Warehouse
 {
@@ -9,27 +10,30 @@ namespace Unity.Simulation.Warehouse
     public class WarehouseManager : MonoBehaviour
     {
         public const string k_GeneratedWarehouseObjectName = "GeneratedWarehouse";
-        
-        //[Tooltip(
-        //    "When set to true, generation will  to happen before the first frame is rendered. " +
-        //    "This is required if using Perception.")]
-        //public bool GenerateAllOnStart = true;
+
+        // Hiding this for now since using the coroutine seems to cause ordering problems when spawning boxes
+        [Tooltip(
+            "When set to true, generation will happen in chunks over several frames instead of all in one frame. " +
+            "Keep this false if using Perception, or your first generated frames will not be useful data.")]
+        static readonly bool UseGenerateCoroutine = false;
 
         // Warehouse manager singleton
         static WarehouseManager s_Instance;
 
         static Quaternion s_WallRotation = Quaternion.Euler(0, 90, 0);
         [SerializeField]
-	[FormerlySerializedAs("shelfPrefab")]
+        [FormerlySerializedAs("shelfPrefab")]
         GameObject m_ShelfPrefab;
 
         [SerializeField]
-	[FormerlySerializedAs("warehousePrefab")]
+        [FormerlySerializedAs("warehousePrefab")]
         Transform m_WarehousePrefab;
 
         [SerializeField]
         AppParam m_AppParam;
 
+        // TODO: Figure out why this reference is set to null whenever PlayMode starts
+        [SerializeField]
         GameObject m_ParentGenerated;
 
         public GameObject ShelfPrefab
@@ -40,6 +44,7 @@ namespace Unity.Simulation.Warehouse
                 {
                     m_ShelfPrefab = Resources.Load<GameObject>("Prefabs/ShelvingRackRandom");
                 }
+
                 return m_ShelfPrefab;
             }
             set => m_ShelfPrefab = value;
@@ -53,6 +58,7 @@ namespace Unity.Simulation.Warehouse
                 {
                     m_WarehousePrefab = Resources.Load<GameObject>("Prefabs/Warehouse").transform;
                 }
+
                 return m_WarehousePrefab;
             }
             set => m_WarehousePrefab = value;
@@ -89,6 +95,7 @@ namespace Unity.Simulation.Warehouse
                 {
                     m_ParentGenerated = new GameObject(k_GeneratedWarehouseObjectName);
                 }
+
                 return m_ParentGenerated;
             }
             private set => m_ParentGenerated = value;
@@ -98,9 +105,21 @@ namespace Unity.Simulation.Warehouse
 
         public void Generate()
         {
-            GenerateWarehouse();
-            GenerateShelves();
-            GenerateStations();
+            StopAllCoroutines();
+            if (UseGenerateCoroutine && Application.isPlaying)
+            {
+                StartCoroutine(GenerateWarehouse());
+            }
+            else
+            {
+                GenerateImmediate();
+            }
+        }
+
+        void GenerateImmediate()
+        {
+            var coroutine = GenerateWarehouse();
+            while (coroutine.MoveNext()) { }
         }
 
         public void IncrementIteration()
@@ -110,6 +129,8 @@ namespace Unity.Simulation.Warehouse
 
         public void Destroy()
         {
+            StopAllCoroutines();
+
             var spawned = GameObject.Find("FloorBoxes");
             if (ParentGenerated != null)
             {
@@ -119,31 +140,8 @@ namespace Unity.Simulation.Warehouse
             }
         }
 
-        public void Start()
-        {
-            Debug.LogWarning(
-                "Automated warehouse generation is currently broken and has been disabled - " +
-                "you much manually click the 'Generate' button in the Inspector to generate a Warehouse.");
-            //parentGenerated = new GameObject("GeneratedWarehouse");
-
-            //if (GenerateAllOnStart)
-            //{
-            //    var coroutine = GenerateWarehouse();
-            //    while (coroutine.MoveNext())
-            //    {
-            //        // do nothing - just waiting for coroutine to return
-            //    }
-            //}
-            //else
-            //{
-            //    StartCoroutine(GenerateWarehouse());
-            //}
-            
-        }
-
         // TODO: AIRO-1600 Consolidate this logic with the EditorWarehouseGeneration version of the same code
         // Generate warehouse assets based on params
-        /*
         IEnumerator GenerateWarehouse()
         {
             // Find component mesh in prefab
@@ -241,8 +239,20 @@ namespace Unity.Simulation.Warehouse
                     yield return null;
                 }
 
-            yield return GenerateShelves();
-            yield return GenerateStations();
+            // Typically we'd be able to simply yield Coroutines in sequence here to enforce ordering, but this
+            // causes strange behavior in editor so we have to explicitly step through the subroutines here
+            Debug.Log("Warehouse shell generated.");
+            var shelvesGeneration = GenerateShelves();
+            do
+            {
+                yield return null;
+            } while (shelvesGeneration.MoveNext());
+            Debug.Log("Shelf generation complete.");
+            var stationsGeneration = GenerateStations();
+            do
+            {
+                yield return null;
+            } while (stationsGeneration.MoveNext());
             Debug.Log("Warehouse generation complete!");
         }
 
@@ -263,12 +273,16 @@ namespace Unity.Simulation.Warehouse
             var shelfParent = new GameObject("Shelves").transform;
             shelfParent.parent = ParentGenerated.transform;
 
+            Debug.Log($"Generating {AppParam.shelfCols * AppParam.shelfRows} shelves.");
             // Instantiate shelves
             for (var i = 1; i < AppParam.shelfCols + 1; i++)
             {
                 for (var j = 1; j < AppParam.shelfRows + 1; j++)
                 {
-                    var o = Instantiate(shelfPrefab, new Vector3(c * i - (appParam.width/2), 0, r * j - (appParam.length/2)), Quaternion.identity, shelfParent);
+                    Instantiate(m_ShelfPrefab,
+                        new Vector3(c * i - (m_AppParam.width/2f), 0, r * j - (m_AppParam.length/2f)),
+                        Quaternion.identity,
+                        shelfParent);
                     yield return null;
                 }
             }
@@ -279,11 +293,12 @@ namespace Unity.Simulation.Warehouse
         {
             var station = WarehousePrefab.Find("Station").gameObject;
 
-            var cur = new Vector3(-AppParam.width / 2, 0.1f, -AppParam.length / 2);
+            var cur = new Vector3(-AppParam.width / 2f, 0.1f, -AppParam.length / 2f);
 
             var parentStations = new GameObject("Stations").transform;
             parentStations.parent = ParentGenerated.transform;
 
+            Debug.Log($"Generating {Mathf.Floor(AppParam.width / 2f)} stations.");
             while (cur.x < AppParam.width / 2f)
             {
                 Instantiate(station, cur, Quaternion.identity, parentStations);
@@ -304,5 +319,5 @@ namespace Unity.Simulation.Warehouse
             }
             return children.ToArray();
         }
-    */
+    }
 }
