@@ -280,7 +280,7 @@ namespace Unity.Simulation.Warehouse
                 for (var j = 1; j < AppParam.shelfRows + 1; j++)
                 {
                     Instantiate(m_ShelfPrefab,
-                        new Vector3(c * i - (m_AppParam.width/2f), 0, r * j - (m_AppParam.length/2f)),
+                        new Vector3(c * i - (m_AppParam.width / 2f), 0, r * j - (m_AppParam.length / 2f)),
                         Quaternion.identity,
                         shelfParent);
                     yield return null;

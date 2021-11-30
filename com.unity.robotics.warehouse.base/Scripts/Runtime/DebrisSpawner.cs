@@ -31,7 +31,7 @@ namespace Unity.Simulation.Warehouse
 
             debrisSizeSlider.value = debrisSize;
             debrisSizeText.text = debrisSize.ToString("0.000");
-            
+
             // If Canvas is disabled, disable this behaviour as well
             var canvas = transform.Find("Canvas").gameObject;
             enabled = canvas.activeInHierarchy;
