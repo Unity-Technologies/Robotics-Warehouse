@@ -6,7 +6,7 @@ agent:
 variables:
     PROJECT_PATH: WarehouseProject
     SONARQUBE_PROJECT_KEY: ai-robotics-warehouse-csharp
-    SONARQUBE_PROJECT_BASE_DIR: /Users/bokken/build/output/Unity-Technologies/Unity-Robotics-Hub/Robotics-Warehouse/com.unity.robotics.warehouse
+    SONARQUBE_PROJECT_BASE_DIR: /Users/bokken/build/output/Unity-Technologies/Robotics-Warehouse/com.unity.robotics.warehouse
     MSBUILD_SLN_PATH: ./WarehouseProject/WarehouseProject.sln
 commands:
     - npm install upm-ci-utils@stable -g --registry https://artifactory.prd.it.unity3d.com/artifactory/api/npm/upm-npm
