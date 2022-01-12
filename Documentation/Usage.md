@@ -4,12 +4,12 @@
     ![image](https://user-images.githubusercontent.com/29758400/110989310-8ea36180-8326-11eb-8318-f67ee200a23d.png)
 
 2. Enter the following URL.
-`https://github.com/Unity-Technologies/Robotics-Warehouse.git?path=/com.unity.robotics.warehouse`
+`https://github.com/Unity-Technologies/Robotics-Warehouse.git?path=com.unity.robotics.warehouse`
 3. Click `Add`.
 
 # Generating a Warehouse
 
-1. Using the project as a package, you can navigate to the sample scene in your Project window via `Packages/com.unity.robotics.warehouse/Scenes/Warehouse`. As the scene is provided in a read-only package, you can copy the scene into your own project's Assets. Double click the copied scene to open it.
+1. Using the project as a package, you can navigate to the sample scene in your Project window via `Packages/Robotics Warehouse/Scenes/Warehouse`. As the scene is provided in a read-only package, you can copy the scene into your own project's Assets. Double click the copied scene to open it.
 2. You can generate the warehouse in Editor Mode or Play Mode. The scene contains `Main Camera`, `Directional Light`, and `Warehouse Manager` GameObjects in the Hierarchy. Select the `Warehouse Manager` object, and click `Generate`.
 
    ![](img/warehousemanager.png)
