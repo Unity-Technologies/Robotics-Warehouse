@@ -82,7 +82,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.perception": {
-      "version": "0.8.0-preview.3",
+      "version": "0.9.0-preview.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -90,9 +90,9 @@
         "com.unity.collections": "0.9.0-preview.6",
         "com.unity.nuget.newtonsoft-json": "1.1.2",
         "com.unity.render-pipelines.core": "7.1.6",
-        "com.unity.simulation.capture": "0.0.10-preview.20",
+        "com.unity.simulation.capture": "0.0.10-preview.24",
         "com.unity.simulation.client": "0.0.10-preview.10",
-        "com.unity.simulation.core": "0.0.10-preview.22"
+        "com.unity.simulation.core": "0.0.10-preview.25"
       },
       "url": "https://packages.unity.com"
     },
@@ -146,10 +146,17 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.perception": "0.8.0-preview.3",
+        "com.unity.perception": "0.9.0-preview.2",
         "com.unity.postprocessing": "3.0.3",
         "com.unity.render-pipelines.universal": "10.3.2"
       }
+    },
+    "com.unity.scripting.python": {
+      "version": "4.0.0-exp.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
       "version": "4.3.2",
@@ -169,11 +176,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.simulation.capture": {
-      "version": "0.0.10-preview.20",
+      "version": "0.0.10-preview.24",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.simulation.core": "0.0.10-preview.22"
+        "com.unity.simulation.core": "0.0.10-preview.25"
       },
       "url": "https://packages.unity.com"
     },
@@ -185,10 +192,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.simulation.core": {
-      "version": "0.0.10-preview.22",
+      "version": "0.0.10-preview.25",
       "depth": 1,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.0-preview"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.sysroot": {
