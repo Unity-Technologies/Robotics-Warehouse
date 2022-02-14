@@ -1,0 +1,14 @@
+{
+  "name": "com.unity.robotics.warehouse",
+  "version": "0.0.1-preview",
+  "displayName": "Robotics Warehouse HDRP",
+  "description": "",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "dependencies": {
+    "com.unity.perception": "0.9.0-preview.2",
+    "com.unity.postprocessing": "3.0.3",
+    "com.unity.render-pipelines.universal": "10.3.2",
+    "com.unity.robotics.warehouse.base": "0.0.1-preview"
+ }
+}

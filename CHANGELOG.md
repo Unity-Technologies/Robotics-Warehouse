@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Upgrade Notes
 
+Miscellaneous warehouse generation fixes, updated menu option to copy template scene.
+
+Updated documentation for new workflows.
+
+HDRP and URP package separation.
+
 ### Known Issues
 
 ### Added
