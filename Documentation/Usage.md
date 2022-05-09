@@ -120,7 +120,7 @@ If you would like to use the base **provided Unity project**, follow the steps d
 
 7. You can now use the warehouse environment for your simulation needs!
 
-    If desired, you can click `Save prefab` to save this version of the warehouse to `Assets/Resources/`, fine-tune the dimensions of the warehouse, or continue to increment iterations for new randomizations.
+    If desired, you can click `Save prefab` to save this version of the warehouse to `Assets/Prefabs/`, fine-tune the dimensions of the warehouse, or continue to increment iterations for new randomizations.
 
 ---
 

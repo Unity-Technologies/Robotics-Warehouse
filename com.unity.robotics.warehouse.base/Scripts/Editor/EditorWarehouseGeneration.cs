@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 public class EditorWarehouseGeneration
 {
-    const string k_SaveWarehousePath = "Assets/Resources/";
+    const string k_SaveWarehousePath = "Assets/Prefabs/";
 
     [MenuItem("Warehouse/Generate Warehouse")]
     public static void Generate()
@@ -48,7 +48,7 @@ public class EditorWarehouseGeneration
         var spawned = GameObject.Find("FloorBoxes");
         if (WarehouseManager.Instance.ParentGenerated != null)
         {
-            // Ensure path is unique; save to Assets/Resources/
+            // Ensure path is unique
             if (!Directory.Exists(k_SaveWarehousePath))
             {
                 Directory.CreateDirectory(k_SaveWarehousePath);
@@ -85,7 +85,7 @@ public class EditorWarehouseGeneration
             }
         }
 
-        // Ensure path is unique; save to Assets/Resources/
+        // Save warehouse
         if (!Directory.Exists(k_SaveWarehousePath))
         {
             Directory.CreateDirectory(k_SaveWarehousePath);
