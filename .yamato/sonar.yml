@@ -1,20 +1,25 @@
 name: Sonarqube Scan C#
 agent:
     type: Unity::metal::macmini
-    image: package-ci/mac
+    image: package-ci/mac:v1.8.1-822785
     flavor: m1.mac
 variables:
-    PROJECT_PATH: WarehouseProject
+    PROJECT_PATH: WarehouseProjectURP
     SONARQUBE_PROJECT_KEY: ai-robotics-warehouse-csharp
-    SONARQUBE_PROJECT_BASE_DIR: /Users/bokken/build/output/Unity-Technologies/Robotics-Warehouse/com.unity.robotics.warehouse
-    MSBUILD_SLN_PATH: ./WarehouseProject/WarehouseProject.sln
+    SONARQUBE_PROJECT_BASE_DIR: /Users/bokken/build/output/Unity-Technologies/Robotics-Warehouse/com.unity.robotics.warehouse.base
+    MSBUILD_SLN_PATH: ./WarehouseProjectURP/WarehouseProjectURP.sln
+    UNITY_VERSION: 2021.1.11f1
 commands:
     - npm install upm-ci-utils@stable -g --registry https://artifactory.prd.it.unity3d.com/artifactory/api/npm/upm-npm
-    - unity-downloader-cli -u 2020.3.11f1 -c Editor
+    - unity-downloader-cli -u $UNITY_VERSION -c Editor
     - brew install mono corretto
     - curl https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.1.31210/sonar-scanner-msbuild-5.2.1.31210-net46.zip -o sonar-scanner-msbuild-net46.zip -L
     - unzip sonar-scanner-msbuild-net46.zip -d ~/sonar-scanner-msbuild
     - chmod a+x ~/sonar-scanner-msbuild/sonar-scanner-4.6.1.2450/bin/sonar-scanner
+    - brew install --cask visual-studio-code
+    - defaults write ~/Library/Preferences/com.unity3d.UnityEditor5.x.plist kScriptsDefaultApp "/Application/Visual Studio Code.app"
+    - defaults write ~/Library/Preferences/com.unity3d.UnityEditor5.x.plist unity_generate_all_csproj -int 1
+    - defaults write ~/Library/Preferences/com.unity3d.UnityEditor5.x.plist unity_project_generation_flag -int 3
     - .Editor/Unity.app/Contents/MacOS/Unity -projectPath $PROJECT_PATH -batchmode -quit -nographics -logFile - -executeMethod "UnityEditor.SyncVS.SyncSolution"
     - command: |
         cd $PROJECT_PATH
