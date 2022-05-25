@@ -32,7 +32,7 @@ If you would like to use the base **provided Unity project**, follow the steps d
 2. Enter the following URL to add the Warehouse base package:
 
     ```
-    https://github.com/Unity-Technologies/Robotics-Warehouse.git?path=/com.unity.robotics.warehouse.base#dev
+    https://github.com/Unity-Technologies/Robotics-Warehouse.git?path=/com.unity.robotics.warehouse.base
     ```
 
     > This base package contains shared scripts and resources between the URP and HDRP versions of the Warehouse.
@@ -47,11 +47,11 @@ If you would like to use the base **provided Unity project**, follow the steps d
 
    - Universal Render Pipeline (URP):
         ```
-        https://github.com/Unity-Technologies/Robotics-Warehouse.git?path=/com.unity.robotics.warehouse.urp#dev
+        https://github.com/Unity-Technologies/Robotics-Warehouse.git?path=/com.unity.robotics.warehouse.urp
         ```
    - High Definition Render Pipeline (HDRP):
         ```
-        https://github.com/Unity-Technologies/Robotics-Warehouse.git?path=/com.unity.robotics.warehouse.hdrp#dev
+        https://github.com/Unity-Technologies/Robotics-Warehouse.git?path=/com.unity.robotics.warehouse.hdrp
         ```
 
 5. Once both packages have finished importing and compiling, you can proceed to [Generating a Warehouse](#generating-a-warehouse).
@@ -65,7 +65,7 @@ If you would like to use the base **provided Unity project**, follow the steps d
 1. Clone this repository to your machine:
 
     ```bash
-    git clone -b dev https://github.com/Unity-Technologies/Robotics-Warehouse.git
+    git clone https://github.com/Unity-Technologies/Robotics-Warehouse.git
     ```
 
 2. If you don't already have it, install and open the [Unity Hub](https://unity.com/download).
