@@ -1,12 +1,13 @@
 {
   "dependencies": {
-    "com.unity.robotics.warehouse.base": "file:../../com.unity.robotics.warehouse.base",
-    "com.unity.robotics.warehouse": "file:../../com.unity.robotics.warehouse.urp",
     "com.unity.collab-proxy": "1.5.7",
     "com.unity.ide.rider": "3.0.7",
     "com.unity.ide.visualstudio": "2.0.8",
     "com.unity.ide.vscode": "1.2.3",
     "com.unity.render-pipelines.universal": "11.0.0",
+    "com.unity.robotics.warehouse": "file:../../com.unity.robotics.warehouse.urp",
+    "com.unity.robotics.warehouse.base": "file:../../com.unity.robotics.warehouse.base",
+    "com.unity.scripting.python": "4.0.0-exp.5",
     "com.unity.test-framework": "1.1.24",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.5.5",
