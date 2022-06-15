@@ -11,8 +11,6 @@ This repository contains a configurable warehouse environment that is ready for 
 
 You can see the warehouse in action in our [Navigation 2 SLAM Example](https://github.com/Unity-Technologies/Robotics-Nav2-SLAM-Example)!
 
-> This repository has been adapted from the [Unity Simulation Sample Project: Warehouse Robot](https://assetstore.unity.com/packages/essentials/tutorial-projects/unity-simulation-sample-project-warehouse-robot-176606).
-
 ## Getting Started
 To use the warehouse in your own project, please visit the [Usage](Documentation/Usage.md) documentation for more details.
 
